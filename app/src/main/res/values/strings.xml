@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">FastAurion</string>
+
+    <!-- LOGIN -->
+    <string name="loginHint">Your login</string>
+    <string name="passwordHint">Your password</string>
+    <string name="login">Sign in</string>
+    <string name="error_no_login">Empty login !</string>
+    <string name="error_no_password">Empty password !</string>
+
+    <!-- MENU -->
+    <string name="action_logout">Logout</string>
+
 </resources>

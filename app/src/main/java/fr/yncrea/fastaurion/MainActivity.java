@@ -1,22 +1,19 @@
 package fr.yncrea.fastaurion;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import fr.yncrea.fastaurion.api.AurionService;
-import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+import fr.yncrea.fastaurion.utils.Constants;
+import fr.yncrea.fastaurion.utils.PreferenceUtils;
 
 public class MainActivity extends AppCompatActivity {
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -28,33 +25,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        OkHttpClient client = new OkHttpClient.Builder()
-                .followRedirects(false)
-                .followSslRedirects(false)
-                .build();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(client)
-                .baseUrl("https://aurion.yncrea.fr")
-                .build();
+        final Intent intent = getIntent();
+        if (null != intent) {
+            final Bundle extras = intent.getExtras();
+            if ((null != extras) && (extras.containsKey(Constants.Login.EXTRA_LOGIN))) {
+                final String login = extras.getString((Constants.Login.EXTRA_LOGIN));
+                getSupportActionBar().setSubtitle(login);
+                TextView textView = findViewById(R.id.helloTextView);
+                textView.setText(login);
+            }
+        }
+    }
 
-        AurionService aurionService = retrofit.create(AurionService.class);
-        executor.execute(() -> {
-            Response<ResponseBody> res = null;
-            Call<ResponseBody> request = aurionService.getSessionIdResponse(username, password);
-            request.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    String cookies = response.headers().get("Set-Cookie");
-                    TextView textView = findViewById(R.id.helloTextView);
-                    textView.setText(response.code() == 302? "Login success :\n" + cookies.substring(cookies.indexOf("JSESSIONID"), cookies.indexOf(";", cookies.indexOf("JSESSIONID"))): "Login failed");
-                }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.fastaurion, menu);
+        return true;
+    }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.d("ok", t.getMessage());
-                }
-            });
-        });
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+        if( id == R.id.actionLogout)
+        {
+            PreferenceUtils.setLogin(null);
+            finish();
+            return true;
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

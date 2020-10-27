@@ -35,4 +35,14 @@ public class PreferenceUtils {
 		final SharedPreferences prefs = getSharedPreferences();
 		prefs.edit().putString(Constants.Preferences.PREF_PASSWORD, password).apply();
 	}
+
+	public static String getName(){
+		final SharedPreferences prefs = getSharedPreferences();
+		return prefs.getString(Constants.Preferences.PREF_NAME, null);
+	}
+
+	public static void setName(String name){
+		final SharedPreferences prefs = getSharedPreferences();
+		prefs.edit().putString(Constants.Preferences.PREF_NAME, name).apply();
+	}
 }

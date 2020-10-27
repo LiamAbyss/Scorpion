@@ -14,6 +14,7 @@ public class Constants {
 		public static final String SHARED_PREFERENCES_FILE_NAME = "fastAurionSharedPrefs";
 		public static final String PREF_LOGIN = "prefLogin";
 		public static final String PREF_PASSWORD = "prefPassword";
+		public static final String PREF_NAME = "prefName";
 	}
 }
 	

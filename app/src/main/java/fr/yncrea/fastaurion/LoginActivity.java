@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
             connect(username, password);
         }
-
+        canClick = true;
         /*OkHttpClient client = new OkHttpClient.Builder()
                 .followRedirects(false)
                 .followSslRedirects(false)

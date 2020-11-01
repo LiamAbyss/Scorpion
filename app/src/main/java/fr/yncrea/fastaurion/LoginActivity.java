@@ -25,6 +25,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private AurionService aurionService;
     private Aurion aurion = new Aurion();
     private Toast mToast;
+    private boolean canClick = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,9 +55,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-
+        if(!canClick) return;
+        canClick = false;
         if(TextUtils.isEmpty(mLoginEditText.getText())){
             showToast(this, R.string.error_no_login, Toast.LENGTH_LONG);
+            canClick = true;
             return;
         }
 
@@ -64,6 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if(TextUtils.isEmpty(mPasswordEditText.getText())){
             showToast(this, R.string.error_no_password, Toast.LENGTH_LONG);
+            canClick = true;
             return;
         }
 
@@ -87,12 +91,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String[] name = aurion.getName(sessionID[1]);
                 if(name[0] == "success"){
                     PreferenceUtils.setName(name[1]);
-                    PreferenceUtils.setLogin(mLoginEditText.getText().toString());
-                    PreferenceUtils.setPassword(mPasswordEditText.getText().toString());
+                    PreferenceUtils.setLogin(username);
+                    PreferenceUtils.setPassword(password);
                     runOnUiThread(() -> {
                         mLoginEditText.setEnabled(true);
                         mPasswordEditText.setEnabled(true);
                     });
+                    canClick = true;
                     startActivity(getHomeIntent(sessionID[1], name[1]));
                     return;
                 }
@@ -111,6 +116,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         mLoginEditText.setEnabled(true);
                         mPasswordEditText.setEnabled(true);
                     });
+                    canClick = true;
                     return;
                 }
             }
@@ -128,6 +134,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     showToast(FastAurionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG);
                 });
             }
+            canClick = true;
             /*Response<ResponseBody> res = null;
             final String[] sessionID = {""};
             Call<ResponseBody> request = aurionService.getSessionIdResponse(mLoginEditText.getText().toString(), mPasswordEditText.getText().toString());

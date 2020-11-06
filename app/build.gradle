@@ -38,4 +38,5 @@ dependencies {
     def room_version = "2.2.5"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
+    implementation 'com.github.smart-fun:XmlToJson:1.4.5'
 }

@@ -15,15 +15,24 @@ public class PreferenceUtils {
 	private static SharedPreferences getSharedPreferences(){
 		return FastAurionApplication.getContext().getSharedPreferences(Constants.Preferences.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
 	}
-	
+
 	public static String getLogin(){
 		final SharedPreferences prefs = getSharedPreferences();
 		return prefs.getString(Constants.Preferences.PREF_LOGIN, null);
 	}
-	
+
 	public static void setLogin(String login){
 		final SharedPreferences prefs = getSharedPreferences();
 		prefs.edit().putString(Constants.Preferences.PREF_LOGIN, login).apply();
+	}
+	public static String getSessionId(){
+		final SharedPreferences prefs = getSharedPreferences();
+		return prefs.getString(Constants.Preferences.PREF_SESSION_ID, null);
+	}
+
+	public static void setSessionId(String id){
+		final SharedPreferences prefs = getSharedPreferences();
+		prefs.edit().putString(Constants.Preferences.PREF_SESSION_ID, id).apply();
 	}
 	
 	public static String getPassword(){

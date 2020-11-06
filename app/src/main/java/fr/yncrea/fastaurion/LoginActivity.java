@@ -84,7 +84,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             });
             String[] sessionID = aurion.connect(username, password);
             if(sessionID[0] == "success"){
-                PreferenceUtils.setLogin(sessionID[1]);
+                PreferenceUtils.setSessionId(sessionID[1]);
                 runOnUiThread(()-> {
                     showToast(FastAurionApplication.getContext(), "Retrieving data...", Toast.LENGTH_LONG);
                 });
@@ -135,87 +135,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
             }
             canClick = true;
-            /*Response<ResponseBody> res = null;
-            final String[] sessionID = {""};
-            Call<ResponseBody> request = aurionService.getSessionIdResponse(mLoginEditText.getText().toString(), mPasswordEditText.getText().toString());
-            runOnUiThread(()-> {
-                showToast(FastAurionApplication.getContext(), "Logging in...", Toast.LENGTH_SHORT);
-            });
-            request.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    String cookies = response.headers().get("Set-Cookie");
-                    if(response.code() == 302){
-                        Log.d("LOGIN", "Login success \n");
-                        sessionID[0] = cookies.substring(cookies.indexOf("JSESSIONID"), cookies.indexOf(";", cookies.indexOf("JSESSIONID")));
-                        PreferenceUtils.setLogin(sessionID[0]);
-
-                        // Request home page to get user real name
-                        // Stores it into PreferenceUtils
-                        getNameThenLogIn();
-                    }
-                    else{
-                        runOnUiThread(()-> {
-                            showToast(FastAurionApplication.getContext(), "Login Failed", Toast.LENGTH_LONG);
-                        });
-                        mLoginEditText.setEnabled(true);
-                        mPasswordEditText.setEnabled(true);
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.d("LOGIN", t.getMessage());
-                    runOnUiThread(()-> {
-                        showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG);
-                    });
-                    mLoginEditText.setEnabled(true);
-                    mPasswordEditText.setEnabled(true);
-                }
-            });*/
         });
     }
-
-    /*private void getNameThenLogIn(){
-        String login = PreferenceUtils.getLogin();
-        final String[] name = {""};
-        Call<ResponseBody> requestName = aurionService.getHomePageHtml(login);
-        requestName.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                String body = null;
-                try {
-                    body = response.body().string();
-                    name[0] = body.substring(body.indexOf("<h3>") + 4, body.indexOf("</h3>"));
-                    PreferenceUtils.setName(name[0]);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(response.isSuccessful()){
-                    Log.d("LOGIN", "Name parsing success \n");
-                    startActivity(getHomeIntent(login, name[0]));
-                    mLoginEditText.setEnabled(true);
-                    mPasswordEditText.setEnabled(true);
-                }
-                else{
-                    runOnUiThread(()-> {
-                        showToast(FastAurionApplication.getContext(), "Name parsing failed", Toast.LENGTH_LONG);
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.d("LOGIN", t.getMessage());
-                runOnUiThread(()-> {
-                    showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG);
-                });
-                mLoginEditText.setEnabled(true);
-                mPasswordEditText.setEnabled(true);
-            }
-        });
-    }*/
 
     private Intent getHomeIntent(String userName, String name)
     {

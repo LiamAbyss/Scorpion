@@ -18,6 +18,16 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    def project = "Aurion"
+                    def SEP = "_"
+                    def date = new Date();
+                    def formattedDate = date.format('ddMMyy_HHmm')
+                    def newApkName = project + SEP + formattedDate + ".apk"
+                    outputFileName = new File(newApkName)
+                }
+            }
         }
     }
     compileOptions {

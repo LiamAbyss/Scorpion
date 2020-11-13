@@ -1,8 +1,13 @@
 package fr.yncrea.fastaurion.utils;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
@@ -37,5 +42,21 @@ public class UtilsMethods {
         }
 
         return null;
+    }
+
+    public static List<Course> JSONArrayToCourseList(JSONArray JSONCourses) throws JSONException {
+        JSONObject currentCourse;
+        Course course = new Course();
+        List<Course> planning = new ArrayList<>();
+
+        for(int i = 0; i < JSONCourses.length(); i++){
+            currentCourse = JSONCourses.getJSONObject(i);
+            course.title = currentCourse.getString("title");
+            course.start = currentCourse.getString("start");
+            course.end = currentCourse.getString("end");
+            course.course_type = currentCourse.getString("className");
+            planning.add(course);
+        }
+        return planning;
     }
 }

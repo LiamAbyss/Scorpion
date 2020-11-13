@@ -8,29 +8,31 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import fr.yncrea.fastaurion.api.AurionService;
+import fr.yncrea.fastaurion.api.Aurion;
+import fr.yncrea.fastaurion.ui.fragments.coursesFragment;
 import fr.yncrea.fastaurion.utils.Constants;
+import fr.yncrea.fastaurion.utils.Course;
 import fr.yncrea.fastaurion.utils.PreferenceUtils;
+import fr.yncrea.fastaurion.utils.UtilsMethods;
 import okhttp3.OkHttpClient;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
-    private Executor executor = Executors.newSingleThreadExecutor();
-    private AurionService aurionService;
-    private String username = "";
-    private String password = "";
-    private String name = "";
+    private Executor mExecutor = Executors.newSingleThreadExecutor();
+    private Aurion mAurion = new Aurion();
+    private String mUsername = "";
+    private String mPassword = "";
+    private String mName = "";
+    private JSONArray mPlanning;
+    private coursesFragment mCoursesFragment = new coursesFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,14 +54,31 @@ public class MainActivity extends AppCompatActivity {
                         .client(client)
                         .baseUrl("https://aurion.yncrea.fr")
                         .build();
-                this.aurionService = retrofit.create(AurionService.class);
 
-                final String login = extras.getString((Constants.Login.EXTRA_LOGIN));
-                TextView textView = findViewById(R.id.helloTextView);
-                textView.setText(login);
-                getSupportActionBar().setSubtitle(extras.getString(Constants.Preferences.PREF_NAME));
+
+                getSupportActionBar().setSubtitle (extras.getString(Constants.Preferences.PREF_NAME));
+
+
+
             }
         }
+        if(savedInstanceState==null)  {
+            getSupportFragmentManager().beginTransaction().add(R.id.container, mCoursesFragment).commit();
+            mExecutor.execute(()->{
+                String xml = mAurion.getCalendarAsXML(PreferenceUtils.getSessionId(),0,0)[1];
+
+                Log.d("TAG", "DONE");
+                this.mPlanning = UtilsMethods.XMLToJSONArray(xml);
+                try {
+                    List<Course> planning = UtilsMethods.JSONArrayToCourseList(this.mPlanning);
+                    runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(planning));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
     }
 
     @Override
@@ -68,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.fastaurion, menu);
         return true;
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {

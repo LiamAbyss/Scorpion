@@ -37,6 +37,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String username = PreferenceUtils.getLogin();
         final String password = PreferenceUtils.getPassword();
         if(!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
+            mLoginEditText.setText(username);
+            mPasswordEditText.setText(password);
             connect(username, password);
         }
         canClick = true;
@@ -79,17 +81,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPasswordEditText.setEnabled(false);
 
         executor.execute(() -> {
-            runOnUiThread(()-> {
-                showToast(FastAurionApplication.getContext(), "Logging in...", Toast.LENGTH_SHORT);
-            });
+            runOnUiThread(()-> showToast(FastAurionApplication.getContext(), "Logging in...", Toast.LENGTH_SHORT));
             String[] sessionID = aurion.connect(username, password);
-            if(sessionID[0] == "success"){
+            if(sessionID[0].equals("success")){
                 PreferenceUtils.setSessionId(sessionID[1]);
-                runOnUiThread(()-> {
-                    showToast(FastAurionApplication.getContext(), "Retrieving data...", Toast.LENGTH_LONG);
-                });
+                runOnUiThread(()-> showToast(FastAurionApplication.getContext(), "Retrieving data...", Toast.LENGTH_LONG));
                 String[] name = aurion.getName(sessionID[1]);
-                if(name[0] == "success"){
+                if(name[0].equals("success")){
                     PreferenceUtils.setName(name[1]);
                     PreferenceUtils.setLogin(username);
                     PreferenceUtils.setPassword(password);
@@ -99,40 +97,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     });
                     canClick = true;
                     startActivity(getHomeIntent(sessionID[1], name[1]));
-                    return;
                 }
                 else {
                     if(name[0].contains("connection")) {
-                        runOnUiThread(() -> {
-                            showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG);
-                        });
+                        runOnUiThread(() -> showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
                     }
                     else {
-                        runOnUiThread(() -> {
-                            showToast(FastAurionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG);
-                        });
+                        runOnUiThread(() -> showToast(FastAurionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
                     }
                     runOnUiThread(() -> {
                         mLoginEditText.setEnabled(true);
                         mPasswordEditText.setEnabled(true);
                     });
                     canClick = true;
-                    return;
                 }
+                return;
             }
             runOnUiThread(() -> {
                 mLoginEditText.setEnabled(true);
                 mPasswordEditText.setEnabled(true);
             });
             if(sessionID[0].contains("connection")){
-                runOnUiThread(()-> {
-                    showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG);
-                });
+                runOnUiThread(()-> showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
             }
             else {
-                runOnUiThread(() -> {
-                    showToast(FastAurionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG);
-                });
+                runOnUiThread(() -> showToast(FastAurionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
             }
             canClick = true;
         });

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/grey_round_corners_background">
+
+
+    <TextView
+        android:id="@+id/courseTitleTextView"
+        android:layout_width="58dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_list_item_left_padding"
+        android:layout_marginTop="@dimen/course_list_item_top_padding"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/courseTypeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_list_item_left_padding"
+        android:layout_marginTop="@dimen/course_list_item_top_padding"
+        android:layout_marginBottom="@dimen/login_item_bottom_padding"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/courseStartTextView" />
+
+    <TextView
+        android:id="@+id/courseEndTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_marginStart="@dimen/course_list_item_left_padding"
+        android:layout_marginTop="@dimen/course_list_item_top_padding"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/courseStartTextView"
+        app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />
+
+    <TextView
+        android:id="@+id/courseStartTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/course_list_item_left_padding"
+        android:layout_marginTop="@dimen/course_list_item_top_padding"
+        android:text="TextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />
+</androidx.constraintlayout.widget.ConstraintLayout>

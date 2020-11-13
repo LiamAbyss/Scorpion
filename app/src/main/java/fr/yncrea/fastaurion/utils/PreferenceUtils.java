@@ -3,6 +3,9 @@ package fr.yncrea.fastaurion.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import fr.yncrea.fastaurion.FastAurionApplication;
 
 public class PreferenceUtils {
@@ -43,6 +46,29 @@ public class PreferenceUtils {
 	public static void setPassword(String password){
 		final SharedPreferences prefs = getSharedPreferences();
 		prefs.edit().putString(Constants.Preferences.PREF_PASSWORD, password).apply();
+	}
+
+	public static void setPlanning(List<Course> planning){
+		final SharedPreferences prefs = getSharedPreferences();
+		StringBuilder planningString = new StringBuilder();
+		for(Course c : planning){
+			planningString.append(c.toString()).append("#");
+		}
+		prefs.edit().putString(Constants.Preferences.PREF_PLANNING, planningString.toString()).apply();
+	}
+
+	public static List<Course> getPlanning(){
+		final SharedPreferences prefs = getSharedPreferences();
+		String planningString =  prefs.getString(Constants.Preferences.PREF_PLANNING, null);
+		if(null == planningString){
+			return new ArrayList<>();
+		}
+		String[] coursesString = planningString.split("#");
+		List<Course> courses = new ArrayList<>();
+		for(String course : coursesString){
+			courses.add(Course.fromString(course));
+		}
+		return courses;
 	}
 
 	public static String getName(){

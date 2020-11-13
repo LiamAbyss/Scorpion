@@ -1,5 +1,7 @@
 package fr.yncrea.fastaurion.utils;
 
+import java.util.List;
+
 public class Constants {
 
 	public class General {
@@ -16,7 +18,8 @@ public class Constants {
 		public static final String PREF_SESSION_ID = "prefSessionId";
 		public static final String PREF_PASSWORD = "prefPassword";
 		public static final String PREF_NAME = "prefName";
-	}
+        public static final String PREF_PLANNING = "prefPlanning";
+    }
 }
 	
 

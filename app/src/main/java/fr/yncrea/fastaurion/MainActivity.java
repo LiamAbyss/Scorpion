@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private String mUsername = "";
     private String mPassword = "";
     private String mName = "";
-    private JSONArray mPlanning;
+    private List<Course> mPlanning;
     private coursesFragment mCoursesFragment = new coursesFragment();
 
     @Override
@@ -65,16 +65,21 @@ public class MainActivity extends AppCompatActivity {
         if(savedInstanceState==null)  {
             getSupportFragmentManager().beginTransaction().add(R.id.container, mCoursesFragment).commit();
             mExecutor.execute(()->{
-                String xml = mAurion.getCalendarAsXML(PreferenceUtils.getSessionId(),0,0)[1];
+                mPlanning = PreferenceUtils.getPlanning();
+                if(mPlanning.size() != 0){
+                    runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mPlanning));
+                }
+                else{
+                    String xml = mAurion.getCalendarAsXML(PreferenceUtils.getSessionId(),0,0)[1];
 
-                Log.d("TAG", "DONE");
-                this.mPlanning = UtilsMethods.XMLToJSONArray(xml);
-                try {
-                    List<Course> planning = UtilsMethods.JSONArrayToCourseList(this.mPlanning);
-                    runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(planning));
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    JSONArray planningJSON = UtilsMethods.XMLToJSONArray(xml);
+                    try {
+                        mPlanning = UtilsMethods.JSONArrayToCourseList(planningJSON);
+                        PreferenceUtils.setPlanning(mPlanning);
+                        runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mPlanning));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }

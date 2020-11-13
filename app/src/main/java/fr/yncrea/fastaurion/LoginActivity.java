@@ -39,7 +39,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
             mLoginEditText.setText(username);
             mPasswordEditText.setText(password);
-            connect(username, password);
+            if(!PreferenceUtils.getSessionId().equals("")){
+                startActivity(getHomeIntent(PreferenceUtils.getSessionId(), PreferenceUtils.getName()));
+            }
+            else{
+                connect(username, password);
+            }
         }
         canClick = true;
         /*OkHttpClient client = new OkHttpClient.Builder()

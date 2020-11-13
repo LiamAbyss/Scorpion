@@ -29,4 +29,18 @@ public class Course {
         return null;
     }
 
+    public String toString(){
+        return this.title + ";" + this.start + ";" + this.end + ";" + this.course_type + ";";
+    }
+
+    public static Course fromString(String course){
+        Course newCourse = new Course();
+        String[] splitString = course.split(";");
+        newCourse.title = splitString[0];
+        newCourse.start = splitString[1];
+        newCourse.end = splitString[2];
+        newCourse.course_type = splitString[3];
+        return newCourse;
+    }
+
 }

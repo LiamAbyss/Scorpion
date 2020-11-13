@@ -24,9 +24,7 @@ public class UtilsMethods {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Log.d("LOGIN", data);
-        data = data.replace("\\","");
-        data = data.replace(" ","");
+        data = data.replace("\\n","\n");
         data = data.replace("\u200B","");
         JSONObject events = null;
         try {

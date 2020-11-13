@@ -19,16 +19,6 @@ public class Course {
     @SerializedName("course_type")
     public String course_type;
 
-    public Date stringToDate(String dateString){
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        try {
-            return format.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public String toString(){
         return this.title + ";" + this.start + ";" + this.end + ";" + this.course_type + ";";
     }

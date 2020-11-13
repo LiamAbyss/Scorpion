@@ -56,8 +56,6 @@ public class CoursesAdapter extends BaseAdapter{
         final Course course = (Course) getItem(position);
         Log.d("TAG", course.title);
         holder.title.setText(course.title);
-        holder.start.setText(course.start);
-        holder.end.setText(course.end);
         holder.course_type.setText(course.course_type);
 
         return convertView;
@@ -68,14 +66,10 @@ public class CoursesAdapter extends BaseAdapter{
     private class ViewHolder{
 
         public TextView title;
-        public TextView start;
-        public TextView end;
         public TextView course_type;
 
         public ViewHolder(View view) {
             title = (TextView) view.findViewById(R.id.courseTitleTextView);
-            start = (TextView) view.findViewById(R.id.courseStartTextView);
-            end = (TextView) view.findViewById(R.id.courseEndTextView);
             course_type = (TextView) view.findViewById(R.id.courseTypeTextView);
         }
     }

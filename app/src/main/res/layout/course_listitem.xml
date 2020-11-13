@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/courseTitleTextView"
-        android:layout_width="58dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/course_list_item_left_padding"
         android:layout_marginTop="@dimen/course_list_item_top_padding"
@@ -27,25 +27,6 @@
         android:text="TextView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseStartTextView" />
-
-    <TextView
-        android:id="@+id/courseEndTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:layout_marginStart="@dimen/course_list_item_left_padding"
-        android:layout_marginTop="@dimen/course_list_item_top_padding"
-        android:text="TextView"
-        app:layout_constraintStart_toEndOf="@+id/courseStartTextView"
         app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />
 
-    <TextView
-        android:id="@+id/courseStartTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/course_list_item_left_padding"
-        android:layout_marginTop="@dimen/course_list_item_top_padding"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />
 </androidx.constraintlayout.widget.ConstraintLayout>

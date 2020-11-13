@@ -67,8 +67,6 @@ public class CourseFragment extends Fragment {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.course_listitem,container,false);
         ((TextView) view.findViewById(R.id.courseTitleTextView)).setText(mTitle);
-        ((TextView) view.findViewById(R.id.courseStartTextView)).setText(mStart);
-        ((TextView) view.findViewById(R.id.courseEndTextView)).setText(mEnd);
         ((TextView) view.findViewById(R.id.courseTypeTextView)).setText(mCourseType);
 
         return view;

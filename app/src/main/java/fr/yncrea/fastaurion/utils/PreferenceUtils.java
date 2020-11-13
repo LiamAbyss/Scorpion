@@ -60,7 +60,7 @@ public class PreferenceUtils {
 	public static List<Course> getPlanning(){
 		final SharedPreferences prefs = getSharedPreferences();
 		String planningString =  prefs.getString(Constants.Preferences.PREF_PLANNING, null);
-		if(null == planningString){
+		if(null == planningString || planningString.length() == 0){
 			return new ArrayList<>();
 		}
 		String[] coursesString = planningString.split("#");

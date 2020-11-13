@@ -24,6 +24,7 @@ public class UtilsMethods {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        Log.d("LOGIN", data);
         data = data.replace("\\","");
         data = data.replace(" ","");
         data = data.replace("\u200B","");
@@ -44,13 +45,14 @@ public class UtilsMethods {
         return null;
     }
 
-    public static List<Course> JSONArrayToCourseList(JSONArray JSONCourses) throws JSONException {
+    public static List<Course> JSONArrayToCourseList(JSONArray coursesJSON) throws JSONException {
+        if(coursesJSON == null) return new ArrayList<>();
         JSONObject currentCourse;
         Course course = new Course();
         List<Course> planning = new ArrayList<>();
 
-        for(int i = 0; i < JSONCourses.length(); i++){
-            currentCourse = JSONCourses.getJSONObject(i);
+        for(int i = 0; i < coursesJSON.length(); i++){
+            currentCourse = coursesJSON.getJSONObject(i);
             course.title = currentCourse.getString("title");
             course.start = currentCourse.getString("start");
             course.end = currentCourse.getString("end");

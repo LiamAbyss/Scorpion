@@ -2,6 +2,7 @@ package fr.yncrea.fastaurion;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
@@ -9,8 +10,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -29,29 +32,20 @@ import fr.yncrea.fastaurion.utils.UtilsMethods;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
     private Executor mExecutor = Executors.newSingleThreadExecutor();
     private Aurion mAurion = new Aurion();
     private List<Course> mPlanning;
     private coursesFragment mCoursesFragment = new coursesFragment();
-    private SwipeRefreshLayout mSwipeRefreshLayout;
     private Toast mToast;
+    private GestureDetectorCompat mDetector;
+    private int weekIndex = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(mSwipeRefreshLayout == null) {
-            mSwipeRefreshLayout = findViewById(R.id.refreshLayout);
-            mSwipeRefreshLayout.setOnRefreshListener(() -> {
-                // This method performs the actual data-refresh operation.
-                // The method calls setRefreshing(false) when it's finished.
-                mExecutor.execute(() -> {
-                    refresh();
-                    runOnUiThread(() -> mSwipeRefreshLayout.setRefreshing(false));
-                });
-            });
-        }
         final Intent intent = getIntent();
         if (null != intent) {
             final Bundle extras = intent.getExtras();
@@ -59,9 +53,13 @@ public class MainActivity extends AppCompatActivity {
                 getSupportActionBar().setSubtitle (extras.getString(Constants.Preferences.PREF_NAME));
             }
         }
+        // Instantiate the gesture detector with the
+        // application context and an implementation of
+        // GestureDetector.OnGestureListener
+        mDetector = new GestureDetectorCompat(this,this);
 
         mExecutor.execute(() -> {
-            getSupportFragmentManager().beginTransaction().add(R.id.refreshLayout, mCoursesFragment).commit();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, mCoursesFragment, "planning").commit();
             requestPlanning(false);
         });
     }
@@ -72,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mPlanning));
         }
         else{
-            String[] response = mAurion.getCalendarAsXML(PreferenceUtils.getSessionId(),0,0);
+            String[] response = mAurion.getCalendarAsXML(PreferenceUtils.getSessionId(), weekIndex);
             String xml;
             if(response[0] == "success") {
                 xml = response[1];
@@ -139,9 +137,9 @@ public class MainActivity extends AppCompatActivity {
         }
         else if( id == R.id.actionRefresh) {
             mExecutor.execute(() -> {
-                runOnUiThread(() -> mSwipeRefreshLayout.setRefreshing(true));
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
                 refresh();
-                runOnUiThread(() -> mSwipeRefreshLayout.setRefreshing(false));
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
             });
             return true;
         }
@@ -158,5 +156,62 @@ public class MainActivity extends AppCompatActivity {
         if(mToast != null) mToast.cancel();
         mToast = Toast.makeText(context, text, duration);
         mToast.show();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        if (this.mDetector.onTouchEvent(event)) {
+            return true;
+        }
+        return super.onTouchEvent(event);
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return true;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return true;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return true;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        // To the left
+        if(velocityX > 3000) {
+            Log.d("FLING", "To the left !");
+            weekIndex--;
+            mExecutor.execute(() -> {
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
+                requestPlanning(true);
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
+            });
+        }
+        else if(velocityX < -3000) {
+            Log.d("FLING", "To the right !");
+            weekIndex++;
+            mExecutor.execute(() -> {
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
+                requestPlanning(true);
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
+            });
+        }
+        return true;
     }
 }

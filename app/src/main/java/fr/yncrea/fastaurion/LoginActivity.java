@@ -47,17 +47,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         canClick = true;
-        /*OkHttpClient client = new OkHttpClient.Builder()
-                .followRedirects(false)
-                .followSslRedirects(false)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .client(client)
-                .baseUrl("https://aurion.yncrea.fr")
-                .build();
-
-        this.aurionService = retrofit.create(AurionService.class);*/
     }
 
     @Override

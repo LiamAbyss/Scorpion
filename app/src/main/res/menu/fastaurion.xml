@@ -3,6 +3,10 @@
     tools:context="worldline.ssm.rd.ux.wltwitter.part1.WLTwitterActivity" >
 
     <item
+        android:id="@+id/actionRefresh"
+        android:showAsAction="never"
+        android:title="@string/action_refresh"/>
+    <item
         android:id="@+id/actionLogout"
         android:orderInCategory="100"
         android:showAsAction="never"

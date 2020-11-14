@@ -54,7 +54,6 @@ public class CoursesAdapter extends BaseAdapter{
         }
 
         final Course course = (Course) getItem(position);
-        Log.d("TAG", course.title);
         holder.title.setText(course.title);
         holder.course_type.setText(course.course_type);
 

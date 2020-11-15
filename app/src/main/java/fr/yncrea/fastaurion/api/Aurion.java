@@ -165,8 +165,9 @@ public class Aurion {
 
         long start = (Calendar.getInstance().getTime().getTime() - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
                 + weekIndex * 7 * 24 * 60 * 60 * 1000;
-        long end = (6*24*60*60*1000 + Calendar.getInstance().getTime().getTime() - 1 - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
-                + weekIndex * 7 * 24 * 60 * 60 * 1000;
+        long end = start + (6*24*60*60*1000);
+        //long end = (6*24*60*60*1000 + Calendar.getInstance().getTime().getTime() - 1 - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
+          //      + weekIndex * 7 * 24 * 60 * 60 * 1000;
 
         String defaultFields = "form=form&form%3AlargeurDivCenter=613&form%3Adate_input="
                 + df.format(Calendar.getInstance().getTime()).replace("/", "%2F")

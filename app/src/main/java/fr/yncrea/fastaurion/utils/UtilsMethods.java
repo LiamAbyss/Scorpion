@@ -46,10 +46,10 @@ public class UtilsMethods {
     public static List<Course> JSONArrayToCourseList(JSONArray coursesJSON) throws JSONException {
         if(coursesJSON == null) return new ArrayList<>();
         JSONObject currentCourse;
-        Course course = new Course();
         List<Course> planning = new ArrayList<>();
 
         for(int i = 0; i < coursesJSON.length(); i++){
+            Course course = new Course();
             currentCourse = coursesJSON.getJSONObject(i);
             course.title = currentCourse.getString("title");
             course.start = currentCourse.getString("start");

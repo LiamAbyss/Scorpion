@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "fr.yncrea.fastaurion"
+        applicationId "fr.yncrea.scorpion"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
@@ -20,7 +20,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             applicationVariants.all { variant ->
                 variant.outputs.all { output ->
-                    def project = "Aurion"
+                    def project = "Scorpion"
                     def SEP = "_"
                     def date = new Date();
                     def formattedDate = date.format('ddMMyy_HHmm')

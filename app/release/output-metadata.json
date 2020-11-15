@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "fr.yncrea.fastaurion",
+  "applicationId": "fr.yncrea.scorpion",
   "variantName": "processReleaseResources",
   "elements": [
     {
@@ -12,7 +12,7 @@
       "filters": [],
       "versionCode": 1,
       "versionName": "1.0",
-      "outputFile": "Aurion_151120_1316.apk"
+      "outputFile": "Scorpion_151120_1335.apk"
     }
   ]
 }

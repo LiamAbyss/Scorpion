@@ -1,14 +1,12 @@
-package fr.yncrea.fastaurion;
+package fr.yncrea.scorpion;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -23,14 +21,12 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import fr.yncrea.fastaurion.api.Aurion;
-import fr.yncrea.fastaurion.ui.fragments.coursesFragment;
-import fr.yncrea.fastaurion.utils.Constants;
-import fr.yncrea.fastaurion.utils.Course;
-import fr.yncrea.fastaurion.utils.PreferenceUtils;
-import fr.yncrea.fastaurion.utils.UtilsMethods;
-import okhttp3.OkHttpClient;
-import retrofit2.Retrofit;
+import fr.yncrea.scorpion.api.Aurion;
+import fr.yncrea.scorpion.ui.fragments.coursesFragment;
+import fr.yncrea.scorpion.utils.Constants;
+import fr.yncrea.scorpion.utils.Course;
+import fr.yncrea.scorpion.utils.PreferenceUtils;
+import fr.yncrea.scorpion.utils.UtilsMethods;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
     private Executor mExecutor = Executors.newSingleThreadExecutor();
@@ -80,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 return;
             }
             else {
-                runOnUiThread(() -> showToast(FastAurionApplication.getContext(), response[0], Toast.LENGTH_LONG));
+                runOnUiThread(() -> showToast(ScorpionApplication.getContext(), response[0], Toast.LENGTH_LONG));
                 if(mPlanning.size() != 0){
                     runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mPlanning));
                 }
@@ -104,10 +100,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             return true;
         }
         if(sessionID[0].contains("connection")){
-            runOnUiThread(()-> showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
+            runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
         }
         else {
-            runOnUiThread(() -> showToast(FastAurionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
+            runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
         }
         return false;
     }
@@ -122,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.fastaurion, menu);
+        getMenuInflater().inflate(R.menu.scorpion, menu);
         return true;
     }
 

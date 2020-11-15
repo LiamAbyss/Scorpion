@@ -1,6 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="worldline.ssm.rd.ux.wltwitter.part1.WLTwitterActivity" >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/actionRefresh"

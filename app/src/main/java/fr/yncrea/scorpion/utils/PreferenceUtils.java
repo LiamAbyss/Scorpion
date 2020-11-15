@@ -1,4 +1,4 @@
-package fr.yncrea.fastaurion.utils;
+package fr.yncrea.scorpion.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.yncrea.fastaurion.FastAurionApplication;
+import fr.yncrea.scorpion.ScorpionApplication;
 
 public class PreferenceUtils {
 
@@ -16,7 +16,7 @@ public class PreferenceUtils {
 	}
 	
 	private static SharedPreferences getSharedPreferences(){
-		return FastAurionApplication.getContext().getSharedPreferences(Constants.Preferences.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
+		return ScorpionApplication.getContext().getSharedPreferences(Constants.Preferences.SHARED_PREFERENCES_FILE_NAME, Context.MODE_PRIVATE);
 	}
 
 	public static String getLogin(){

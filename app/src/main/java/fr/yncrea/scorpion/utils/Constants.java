@@ -1,6 +1,4 @@
-package fr.yncrea.fastaurion.utils;
-
-import java.util.List;
+package fr.yncrea.scorpion.utils;
 
 public class Constants {
 

@@ -1,9 +1,9 @@
-package fr.yncrea.fastaurion;
+package fr.yncrea.scorpion;
 
 import android.app.Application;
 import android.content.Context;
 
-public class FastAurionApplication extends Application {
+public class ScorpionApplication extends Application {
 
 	private static Context sContext;
 

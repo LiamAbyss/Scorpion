@@ -1,4 +1,4 @@
-package fr.yncrea.fastaurion.api;
+package fr.yncrea.scorpion.api;
 
 import java.util.HashMap;
 

@@ -1,4 +1,4 @@
-package fr.yncrea.fastaurion;
+package fr.yncrea.scorpion;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,9 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import fr.yncrea.fastaurion.api.Aurion;
-import fr.yncrea.fastaurion.api.AurionService;
-import fr.yncrea.fastaurion.utils.*;
+import fr.yncrea.scorpion.api.Aurion;
+import fr.yncrea.scorpion.api.AurionService;
+import fr.yncrea.scorpion.utils.*;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -75,11 +75,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPasswordEditText.setEnabled(false);
 
         executor.execute(() -> {
-            runOnUiThread(()-> showToast(FastAurionApplication.getContext(), "Logging in...", Toast.LENGTH_SHORT));
+            runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Logging in...", Toast.LENGTH_SHORT));
             String[] sessionID = aurion.connect(username, password);
             if(sessionID[0].equals("success")){
                 PreferenceUtils.setSessionId(sessionID[1]);
-                runOnUiThread(()-> showToast(FastAurionApplication.getContext(), "Retrieving data...", Toast.LENGTH_LONG));
+                runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Retrieving data...", Toast.LENGTH_LONG));
                 String[] name = aurion.getName(sessionID[1]);
                 if(name[0].equals("success")){
                     PreferenceUtils.setName(name[1]);
@@ -94,10 +94,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 else {
                     if(name[0].contains("connection")) {
-                        runOnUiThread(() -> showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
+                        runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
                     }
                     else {
-                        runOnUiThread(() -> showToast(FastAurionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
+                        runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
                     }
                     runOnUiThread(() -> {
                         mLoginEditText.setEnabled(true);
@@ -112,10 +112,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mPasswordEditText.setEnabled(true);
             });
             if(sessionID[0].contains("connection")){
-                runOnUiThread(()-> showToast(FastAurionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
+                runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
             }
             else {
-                runOnUiThread(() -> showToast(FastAurionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
+                runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
             }
             canClick = true;
         });

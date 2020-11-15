@@ -1,10 +1,6 @@
-package fr.yncrea.fastaurion.utils;
+package fr.yncrea.scorpion.utils;
 
 import com.google.gson.annotations.SerializedName;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Course {
     public String getTitle() {

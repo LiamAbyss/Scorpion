@@ -1,6 +1,4 @@
-package fr.yncrea.fastaurion.utils;
-
-import android.util.Log;
+package fr.yncrea.scorpion.utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;

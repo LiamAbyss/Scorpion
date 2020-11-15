@@ -1,4 +1,4 @@
-package fr.yncrea.fastaurion.adapters;
+package fr.yncrea.scorpion.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import fr.yncrea.fastaurion.FastAurionApplication;
-import fr.yncrea.fastaurion.R;
-import fr.yncrea.fastaurion.utils.Course;
+import fr.yncrea.scorpion.ScorpionApplication;
+import fr.yncrea.scorpion.R;
+import fr.yncrea.scorpion.utils.Course;
 public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesViewHolder>{
 
     private List<Course> mCourses;
@@ -23,7 +23,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
 
     @Override
     public CoursesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(FastAurionApplication.getContext()).inflate(R.layout.course_listitem, parent, false);
+        final View view = LayoutInflater.from(ScorpionApplication.getContext()).inflate(R.layout.course_listitem, parent, false);
         return new CoursesViewHolder(view);
     }
 

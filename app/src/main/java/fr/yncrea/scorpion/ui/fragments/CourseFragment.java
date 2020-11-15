@@ -1,15 +1,14 @@
-package fr.yncrea.fastaurion.ui.fragments;
+package fr.yncrea.scorpion.ui.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import fr.yncrea.fastaurion.R;
+import fr.yncrea.scorpion.R;
 
 
 public class CourseFragment extends Fragment {

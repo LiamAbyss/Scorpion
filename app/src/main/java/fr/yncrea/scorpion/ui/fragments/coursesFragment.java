@@ -1,15 +1,10 @@
-package fr.yncrea.fastaurion.ui.fragments;
+package fr.yncrea.scorpion.ui.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,18 +15,16 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import fr.yncrea.fastaurion.MainActivity;
-import fr.yncrea.fastaurion.R;
-import fr.yncrea.fastaurion.adapters.CoursesAdapter;
-import fr.yncrea.fastaurion.utils.Course;
+import fr.yncrea.scorpion.MainActivity;
+import fr.yncrea.scorpion.R;
+import fr.yncrea.scorpion.adapters.CoursesAdapter;
+import fr.yncrea.scorpion.utils.Course;
 
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
-import fr.yncrea.fastaurion.FastAurionApplication;
+import fr.yncrea.scorpion.ScorpionApplication;
 
 public class coursesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -57,7 +50,7 @@ public class coursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_courses_list, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.coursesRecyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(FastAurionApplication.getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));
         mRecyclerView.setOnTouchListener((v, event) -> {
             mRecyclerView.onTouchEvent(event);
             if(event != null)
@@ -73,7 +66,7 @@ public class coursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if(null != planning){
             final CoursesAdapter adapter = new CoursesAdapter(planning);
             mRecyclerView.setHasFixedSize(false);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(FastAurionApplication.getContext()));
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));
             mRecyclerView.setAdapter(adapter);
         }
     }

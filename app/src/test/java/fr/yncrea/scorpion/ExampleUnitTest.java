@@ -1,4 +1,4 @@
-package fr.yncrea.fastaurion;
+package fr.yncrea.scorpion;
 
 import org.junit.Test;
 

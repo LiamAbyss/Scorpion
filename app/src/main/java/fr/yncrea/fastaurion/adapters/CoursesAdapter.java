@@ -1,75 +1,62 @@
 package fr.yncrea.fastaurion.adapters;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import fr.yncrea.fastaurion.FastAurionApplication;
 import fr.yncrea.fastaurion.R;
 import fr.yncrea.fastaurion.utils.Course;
-public class CoursesAdapter extends BaseAdapter{
-
+public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesViewHolder>{
 
     private List<Course> mCourses;
-    private final LayoutInflater m_inflater;
 
-
-    public CoursesAdapter(List<Course> mCourses) {
-        this.mCourses = mCourses;
-        this.m_inflater = LayoutInflater.from(FastAurionApplication.getContext());
+    public CoursesAdapter(List<Course> courses) {
+        mCourses = courses;
     }
 
     @Override
-    public int getCount() {
-        return null != mCourses ? mCourses.size() : 0;
+    public CoursesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(FastAurionApplication.getContext()).inflate(R.layout.course_listitem, parent, false);
+        return new CoursesViewHolder(view);
     }
 
     @Override
-    public Object getItem(int position) {
-        return null != mCourses ? mCourses.get(position) : null;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if(null == convertView) {
-            convertView =  m_inflater.inflate(R.layout.course_listitem, null);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
+    public void onBindViewHolder(CoursesViewHolder holder, int position) {
+        if(holder.getTitleTextView() != null){
+            holder.getTitleTextView().setText(mCourses.get(position).getTitle());
+            holder.getCourseTypeTextView().setText(mCourses.get(position).getCourseType());
         }
-        else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        final Course course = (Course) getItem(position);
-        holder.title.setText(course.title);
-        holder.course_type.setText(course.course_type);
-
-        return convertView;
     }
 
+    @Override
+    public int getItemCount() {
+        return mCourses.size();
+    }
 
+    public static class CoursesViewHolder extends RecyclerView.ViewHolder{
 
-    private class ViewHolder{
+        public final TextView title;
+        public final TextView courseType;
 
-        public TextView title;
-        public TextView course_type;
+        public CoursesViewHolder(final View view) {
+            super(view);
+            this.title = (TextView) view.findViewById(R.id.courseTitleTextView);
+            this.courseType = (TextView) view.findViewById(R.id.courseTypeTextView);
+        }
 
-        public ViewHolder(View view) {
-            title = (TextView) view.findViewById(R.id.courseTitleTextView);
-            course_type = (TextView) view.findViewById(R.id.courseTypeTextView);
+        public TextView getTitleTextView() {
+            return title;
+        }
+
+        public TextView getCourseTypeTextView() {
+            return courseType;
         }
     }
 }

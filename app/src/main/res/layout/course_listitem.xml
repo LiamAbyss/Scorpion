@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/grey_round_corners_background">
 
 
@@ -14,6 +15,7 @@
         android:layout_marginStart="@dimen/course_list_item_left_padding"
         android:layout_marginTop="@dimen/course_list_item_top_padding"
         android:text="TextView"
+        android:textColor="@color/colorContrast"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,6 +27,7 @@
         android:layout_marginTop="@dimen/course_list_item_top_padding"
         android:layout_marginBottom="@dimen/login_item_bottom_padding"
         android:text="TextView"
+        android:textColor="@color/colorContrast"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />

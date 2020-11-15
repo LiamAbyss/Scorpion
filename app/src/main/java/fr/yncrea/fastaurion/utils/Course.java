@@ -7,6 +7,38 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Course {
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getEnd() {
+        return end;
+    }
+
+    public void setEnd(String end) {
+        this.end = end;
+    }
+
+    public String getCourseType() {
+        return course_type;
+    }
+
+    public void setCourse_type(String course_type) {
+        this.course_type = course_type;
+    }
+
     @SerializedName("title")
     public String title;
 

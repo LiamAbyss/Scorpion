@@ -24,14 +24,21 @@ import fr.yncrea.fastaurion.MainActivity;
 import fr.yncrea.fastaurion.R;
 import fr.yncrea.fastaurion.adapters.CoursesAdapter;
 import fr.yncrea.fastaurion.utils.Course;
-import fr.yncrea.fastaurion.utils.PreferenceUtils;
 
-public class coursesFragment extends Fragment implements AdapterView.OnItemClickListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private ListView mListView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+import fr.yncrea.fastaurion.FastAurionApplication;
+
+public class coursesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+
+    private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private MainActivity parent;
-    private Executor mExecutor = Executors.newSingleThreadExecutor();
 
     public coursesFragment() {
         // Required empty public constructor
@@ -49,16 +56,26 @@ public class coursesFragment extends Fragment implements AdapterView.OnItemClick
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_courses_list, container, false);
-        mListView = (ListView) rootView.findViewById(R.id.coursesListview);
-
-        mListView.setOnItemClickListener(this);
-        mListView.setOnTouchListener((v, event) -> {
-            mListView.onTouchEvent(event);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.coursesRecyclerView);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(FastAurionApplication.getContext()));
+        mRecyclerView.setOnTouchListener((v, event) -> {
+            mRecyclerView.onTouchEvent(event);
             if(event != null)
                 parent.onTouchEvent(event);
             return true;
         });
         return rootView;
+    }
+
+
+
+    public void onCoursesRetrieved(List<Course> planning) {
+        if(null != planning){
+            final CoursesAdapter adapter = new CoursesAdapter(planning);
+            mRecyclerView.setHasFixedSize(false);
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(FastAurionApplication.getContext()));
+            mRecyclerView.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -71,28 +88,17 @@ public class coursesFragment extends Fragment implements AdapterView.OnItemClick
         parent = (MainActivity)getActivity();
     }
 
-    public void onCoursesRetrieved(List<Course> planning) {
-        if(null != planning){
-            final CoursesAdapter adapter = new CoursesAdapter(planning);
-            mListView.setAdapter(adapter);
-        }
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // Do nothing for now, may show details of clicked course later
-    }
-
     @Override
     public void onRefresh() {
         mExecutor.execute(() -> {
             parent.refresh();
-            mSwipeRefreshLayout.setRefreshing(false);
+            parent.runOnUiThread(()->mSwipeRefreshLayout.setRefreshing(false));
         });
     }
 
     public void setRefreshing(boolean bool) {
-        mSwipeRefreshLayout.setRefreshing(bool);
+        parent.runOnUiThread(()->mSwipeRefreshLayout.setRefreshing(bool));
     }
+
 }
+

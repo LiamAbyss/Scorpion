@@ -50,6 +50,7 @@ public class UtilsMethods {
         JSONObject currentCourse;
         List<Course> planning = new ArrayList<>();
 
+        String lastDay = "";
         for(int i = 0; i < coursesJSON.length(); i++){
             Course course = new Course();
             currentCourse = coursesJSON.getJSONObject(i);
@@ -63,6 +64,12 @@ public class UtilsMethods {
                 Date startDate = dateFormat.parse(course.start);
                 dateFormat.applyPattern("EEEE");
                 course.day = dateFormat.format(startDate);
+                if(course.day.equals(lastDay)) {
+                    course.day = "";
+                }
+                else {
+                    lastDay = course.day;
+                }
             }
             catch (ParseException e){
                 e.printStackTrace();

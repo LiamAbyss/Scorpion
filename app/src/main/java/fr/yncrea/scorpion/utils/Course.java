@@ -62,7 +62,7 @@ public class Course {
     public String course_type;
 
     public String toString(){
-        return title + ";" + start + ";" + end + ";" + course_type + ";" + day;
+        return title + ";" + start + ";" + end + ";" + course_type + "; " + day;
     }
 
     public static Course fromString(String course) throws ParseException {

@@ -21,5 +21,6 @@
     <dimen name="course_list_item_bottom_padding">15dp</dimen>
     <dimen name="course_list_item_right_padding">15dp</dimen>
     <dimen name="course_list_item_left_padding">15dp</dimen>
+    <dimen name="course_padding">10dp</dimen>
 
 </resources>

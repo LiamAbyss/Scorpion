@@ -3,6 +3,7 @@ package fr.yncrea.scorpion;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.room.Room;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,25 +18,31 @@ import android.widget.Toast;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import fr.yncrea.scorpion.api.Aurion;
-import fr.yncrea.scorpion.ui.fragments.coursesFragment;
+import fr.yncrea.scorpion.database.ScorpionDatabase;
+import fr.yncrea.scorpion.model.Planning;
+import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
 import fr.yncrea.scorpion.utils.Constants;
 import fr.yncrea.scorpion.utils.Course;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import fr.yncrea.scorpion.utils.UtilsMethods;
+import okhttp3.internal.Util;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
     private Executor mExecutor = Executors.newSingleThreadExecutor();
     private Aurion mAurion = new Aurion();
-    private List<Course> mPlanning;
-    private coursesFragment mCoursesFragment = new coursesFragment();
+    private List<Course> mCourses;
+    private CoursesFragment mCoursesFragment = new CoursesFragment();
     private Toast mToast;
     private GestureDetectorCompat mDetector;
-    private int weekIndex = 0;
+    private ScorpionDatabase db;
+    private int weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
 
 
     @Override
@@ -55,17 +62,24 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mDetector = new GestureDetectorCompat(this,this);
 
         mExecutor.execute(() -> {
+            db = Room.databaseBuilder(getApplicationContext(), ScorpionDatabase.class, "Scorpion.db").build();
             getSupportFragmentManager().beginTransaction().add(R.id.container, mCoursesFragment, "planning").commit();
             requestPlanning(false);
         });
     }
 
     public void requestPlanning(boolean forceRequest) {
-        mPlanning = PreferenceUtils.getPlanning();
-        if(mPlanning.size() != 0 && forceRequest == false){
-            runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mPlanning));
+        Planning planning = db.aurionPlanningDao().getPlanningById(weekIndex);
+        if(planning != null) {
+            mCourses = UtilsMethods.planningFromString(planning.toString());
+        } else {
+            mCourses = new ArrayList<>();
+        }
+        if(mCourses.size() != 0 && forceRequest == false){
+            runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mCourses));
         }
         else{
+            Planning toInsert = new Planning();
             String[] response = mAurion.getCalendarAsXML(PreferenceUtils.getSessionId(), weekIndex);
             String xml;
             if(response[0] == "success") {
@@ -77,16 +91,23 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
             else {
                 runOnUiThread(() -> showToast(ScorpionApplication.getContext(), response[0], Toast.LENGTH_LONG));
-                if(mPlanning.size() != 0){
-                    runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mPlanning));
+                if(mCourses.size() != 0){
+                    runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mCourses));
                 }
                 return;
             }
             JSONArray planningJSON = UtilsMethods.XMLToJSONArray(xml);
             try {
-                mPlanning = UtilsMethods.JSONArrayToCourseList(planningJSON);
-                PreferenceUtils.setPlanning(mPlanning);
-                runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mPlanning));
+                mCourses = UtilsMethods.JSONArrayToCourseList(planningJSON);
+                toInsert.id = weekIndex;
+                toInsert.planningString = UtilsMethods.planningToString(mCourses);
+                if(planning == null) {
+                    db.aurionPlanningDao().insertPlanning(toInsert);
+                }
+                else {
+                    db.aurionPlanningDao().updatePlanning(toInsert);
+                }
+                runOnUiThread(()-> mCoursesFragment.onCoursesRetrieved(mCourses));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -196,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             weekIndex--;
             mExecutor.execute(() -> {
                 runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
-                requestPlanning(true);
+                requestPlanning(false);
                 runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
             });
         }
@@ -205,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             weekIndex++;
             mExecutor.execute(() -> {
                 runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
-                requestPlanning(true);
+                requestPlanning(false);
                 runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
             });
         }

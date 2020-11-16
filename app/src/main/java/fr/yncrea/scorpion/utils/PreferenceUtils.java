@@ -49,34 +49,6 @@ public class PreferenceUtils {
 		prefs.edit().putString(Constants.Preferences.PREF_PASSWORD, password).apply();
 	}
 
-	public static void setPlanning(List<Course> planning){
-		final SharedPreferences prefs = getSharedPreferences();
-		StringBuilder planningString = new StringBuilder();
-		for(Course c : planning){
-			planningString.append(c.toString()).append(";END_OF_SCORPION_LINE;");
-		}
-		prefs.edit().putString(Constants.Preferences.PREF_PLANNING, planningString.toString()).apply();
-	}
-
-	public static List<Course> getPlanning() {
-		final SharedPreferences prefs = getSharedPreferences();
-		String planningString =  prefs.getString(Constants.Preferences.PREF_PLANNING, null);
-		if(null == planningString || planningString.length() == 0){
-			return new ArrayList<>();
-		}
-		String[] coursesString = planningString.split(";END_OF_SCORPION_LINE;");
-		List<Course> courses = new ArrayList<>();
-		for(String course : coursesString){
-			try {
-				courses.add(Course.fromString(course));
-			}
-			catch (ParseException e){
-				e.printStackTrace();
-			}
-		}
-		return courses;
-	}
-
 	public static String getName(){
 		final SharedPreferences prefs = getSharedPreferences();
 		return prefs.getString(Constants.Preferences.PREF_NAME, null);

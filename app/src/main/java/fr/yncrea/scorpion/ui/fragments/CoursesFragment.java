@@ -26,14 +26,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import fr.yncrea.scorpion.ScorpionApplication;
 
-public class coursesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private MainActivity parent;
 
-    public coursesFragment() {
+    public CoursesFragment() {
         // Required empty public constructor
     }
 

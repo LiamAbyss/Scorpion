@@ -1,13 +1,8 @@
 package fr.yncrea.scorpion.utils;
 
-import android.icu.util.ULocale;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class Course {
     public String getTitle() {
@@ -46,10 +41,10 @@ public class Course {
     public String title;
 
     @SerializedName("day")
-    public String day;
+    public String date;
 
-    public String getDay() {
-        return day;
+    public String getDate() {
+        return date;
     }
 
     @SerializedName("start")
@@ -62,7 +57,7 @@ public class Course {
     public String course_type;
 
     public String toString(){
-        return title + ";" + start + ";" + end + ";" + course_type + "; " + day;
+        return title + ";" + start + ";" + end + ";" + course_type + ";\u200B" + date;
     }
 
     public static Course fromString(String course) throws ParseException {
@@ -73,7 +68,7 @@ public class Course {
         newCourse.start = splitString[1];
         newCourse.end = splitString[2];
         newCourse.course_type = splitString[3];
-        newCourse.day = splitString[4];
+        newCourse.date = splitString[4];
         return newCourse;
     }
 

@@ -62,13 +62,13 @@ public class UtilsMethods {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ", Locale.FRANCE);
             try{
                 Date startDate = dateFormat.parse(course.start);
-                dateFormat.applyPattern("EEEE");
-                course.day = dateFormat.format(startDate);
-                if(course.day.equals(lastDay)) {
-                    course.day = "";
+                dateFormat.applyPattern("EEEE dd MMMM");
+                course.date = dateFormat.format(startDate);
+                if(course.date.equals(lastDay)) {
+                    course.date = "";
                 }
                 else {
-                    lastDay = course.day;
+                    lastDay = course.date;
                 }
             }
             catch (ParseException e){
@@ -77,5 +77,30 @@ public class UtilsMethods {
             planning.add(course);
         }
         return planning;
+    }
+
+    public static List<Course> planningFromString(String planningString) {
+        if(null == planningString || planningString.length() == 0){
+            return new ArrayList<>();
+        }
+        String[] coursesString = planningString.split(";END_OF_SCORPION_LINE;");
+        List<Course> courses = new ArrayList<>();
+        for(String course : coursesString){
+            try {
+                courses.add(Course.fromString(course));
+            }
+            catch (ParseException e){
+                e.printStackTrace();
+            }
+        }
+        return courses;
+    }
+
+    public static String planningToString(List<Course> planning) {
+        StringBuilder planningString = new StringBuilder();
+        for(Course c : planning){
+            planningString.append(c.toString()).append(";END_OF_SCORPION_LINE;");
+        }
+        return planningString.toString();
     }
 }

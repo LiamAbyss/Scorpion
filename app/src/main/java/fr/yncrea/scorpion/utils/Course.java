@@ -54,7 +54,7 @@ public class Course {
     public static Course fromString(String course){
         Course newCourse = new Course();
         String[] splitString = course.split(";");
-        if(splitString.length == 0) return null;
+        if(splitString.length < 4) return null;
         newCourse.title = splitString[0];
         newCourse.start = splitString[1];
         newCourse.end = splitString[2];

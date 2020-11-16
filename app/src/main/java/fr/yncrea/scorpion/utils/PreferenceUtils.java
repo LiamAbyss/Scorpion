@@ -52,7 +52,7 @@ public class PreferenceUtils {
 		final SharedPreferences prefs = getSharedPreferences();
 		StringBuilder planningString = new StringBuilder();
 		for(Course c : planning){
-			planningString.append(c.toString()).append("#");
+			planningString.append(c.toString()).append(";END_OF_SCORPION_LINE;");
 		}
 		prefs.edit().putString(Constants.Preferences.PREF_PLANNING, planningString.toString()).apply();
 	}
@@ -63,7 +63,7 @@ public class PreferenceUtils {
 		if(null == planningString || planningString.length() == 0){
 			return new ArrayList<>();
 		}
-		String[] coursesString = planningString.split("#");
+		String[] coursesString = planningString.split(";END_OF_SCORPION_LINE;");
 		List<Course> courses = new ArrayList<>();
 		for(String course : coursesString){
 			courses.add(Course.fromString(course));

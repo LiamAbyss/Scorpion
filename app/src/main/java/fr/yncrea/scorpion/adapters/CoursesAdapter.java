@@ -29,7 +29,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
 
     @Override
     public void onBindViewHolder(CoursesViewHolder holder, int position) {
-        if(holder.getTitleTextView() != null){
+        if(mCourses.get(position) != null){
             holder.getTitleTextView().setText(mCourses.get(position).getTitle());
             holder.getCourseTypeTextView().setText(mCourses.get(position).getCourseType());
         }

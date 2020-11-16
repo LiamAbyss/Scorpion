@@ -154,14 +154,15 @@ public class Aurion {
         String viewState = "";
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
 
-        long start = (Calendar.getInstance().getTime().getTime() - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
-                + weekIndex * 7 * 24 * 60 * 60 * 1000;
+        long now = Calendar.getInstance().getTimeInMillis();
+        long offset = (long)weekIndex * 7 * 24 * 60 * 60 * 1000;
+        long start = (now - now % (7*24*60*60*1000) + 4 * 24 * 60 * 60 * 1000) + offset;
         long end = start + (6*24*60*60*1000);
         //long end = (6*24*60*60*1000 + Calendar.getInstance().getTime().getTime() - 1 - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
           //      + weekIndex * 7 * 24 * 60 * 60 * 1000;
 
         String defaultFields = "form=form&form%3AlargeurDivCenter=613&form%3Adate_input="
-                + df.format(Calendar.getInstance().getTime()).replace("/", "%2F")
+                + df.format(now).replace("/", "%2F")
                 + "&form%3Aweek=" + Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) + "-" + Calendar.getInstance().get(Calendar.YEAR)
                 + "&form%3Aj_idt132_view=agendaWeek&form%3AoffsetFuseauNavigateur=-3600000&form%3Aonglets_activeIndex=0&form%3Aonglets_scrollState=0&form%3Aj_idt258_focus=&form%3Aj_idt258_input=44323&form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=0";
         HashMap<String, String> fields = new HashMap<String, String>();

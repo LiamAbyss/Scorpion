@@ -190,6 +190,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         // To the left
+        if(Math.abs(velocityY) > 3000) return false;
         if(velocityX > 3000) {
             Log.d("FLING", "To the left !");
             weekIndex--;

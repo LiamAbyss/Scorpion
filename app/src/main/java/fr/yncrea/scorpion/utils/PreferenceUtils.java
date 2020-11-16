@@ -3,6 +3,7 @@ package fr.yncrea.scorpion.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class PreferenceUtils {
 		prefs.edit().putString(Constants.Preferences.PREF_PLANNING, planningString.toString()).apply();
 	}
 
-	public static List<Course> getPlanning(){
+	public static List<Course> getPlanning() {
 		final SharedPreferences prefs = getSharedPreferences();
 		String planningString =  prefs.getString(Constants.Preferences.PREF_PLANNING, null);
 		if(null == planningString || planningString.length() == 0){
@@ -66,7 +67,12 @@ public class PreferenceUtils {
 		String[] coursesString = planningString.split(";END_OF_SCORPION_LINE;");
 		List<Course> courses = new ArrayList<>();
 		for(String course : coursesString){
-			courses.add(Course.fromString(course));
+			try {
+				courses.add(Course.fromString(course));
+			}
+			catch (ParseException e){
+				e.printStackTrace();
+			}
 		}
 		return courses;
 	}

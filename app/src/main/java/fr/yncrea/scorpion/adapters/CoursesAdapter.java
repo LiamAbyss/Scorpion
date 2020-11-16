@@ -1,5 +1,6 @@
 package fr.yncrea.scorpion.adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import fr.yncrea.scorpion.utils.Course;
 public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesViewHolder>{
 
     private List<Course> mCourses;
+    private String[] days;
 
     public CoursesAdapter(List<Course> courses) {
         mCourses = courses;
@@ -30,8 +32,16 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
     @Override
     public void onBindViewHolder(CoursesViewHolder holder, int position) {
         if(mCourses.get(position) != null){
-            holder.getTitleTextView().setText(mCourses.get(position).getTitle());
-            holder.getCourseTypeTextView().setText(mCourses.get(position).getCourseType());
+            Log.d("TAG", " " + position + " " + mCourses.get(position).getDay());
+            if (position == 0 || days[position] != null ){
+                holder.day.setText(mCourses.get(position).getDay().toUpperCase());
+                days[position] = mCourses.get(position).getDay();
+            }
+            else{
+                holder.day.setText("");
+            }
+            holder.title.setText(mCourses.get(position).getTitle());
+            holder.courseType.setText(mCourses.get(position).getCourseType());
         }
     }
 
@@ -42,22 +52,17 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
 
     public static class CoursesViewHolder extends RecyclerView.ViewHolder{
 
+        public final TextView day;
         public final TextView title;
         public final TextView courseType;
 
         public CoursesViewHolder(final View view) {
             super(view);
-            this.title = (TextView) view.findViewById(R.id.courseTitleTextView);
-            this.courseType = (TextView) view.findViewById(R.id.courseTypeTextView);
+            title = (TextView) view.findViewById(R.id.courseTitleTextView);
+            courseType = (TextView) view.findViewById(R.id.courseTypeTextView);
+            day = (TextView) view.findViewById(R.id.dayTextView);
         }
 
-        public TextView getTitleTextView() {
-            return title;
-        }
-
-        public TextView getCourseTypeTextView() {
-            return courseType;
-        }
     }
 }
 

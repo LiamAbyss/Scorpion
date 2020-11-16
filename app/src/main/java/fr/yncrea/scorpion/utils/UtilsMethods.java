@@ -4,8 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
 
@@ -53,6 +57,16 @@ public class UtilsMethods {
             course.start = currentCourse.getString("start");
             course.end = currentCourse.getString("end");
             course.course_type = currentCourse.getString("className");
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ", Locale.FRANCE);
+            try{
+                Date startDate = dateFormat.parse(course.start);
+                dateFormat.applyPattern("EEEE");
+                course.day = dateFormat.format(startDate);
+            }
+            catch (ParseException e){
+                e.printStackTrace();
+            }
             planning.add(course);
         }
         return planning;

@@ -65,7 +65,7 @@ public class UtilsMethods {
                 dateFormat.applyPattern("EEEE dd MMMM");
                 course.date = dateFormat.format(startDate);
                 if(course.date.equals(lastDay)) {
-                    course.date = "";
+                    course.date = "\u200B";
                 }
                 else {
                     lastDay = course.date;

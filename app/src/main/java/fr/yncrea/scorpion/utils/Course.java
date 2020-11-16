@@ -57,7 +57,7 @@ public class Course {
     public String course_type;
 
     public String toString(){
-        return title + ";" + start + ";" + end + ";" + course_type + ";\u200B" + date;
+        return title + ";" + start + ";" + end + ";" + course_type + ";" + date;
     }
 
     public static Course fromString(String course) throws ParseException {

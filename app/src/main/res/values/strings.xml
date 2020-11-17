@@ -11,5 +11,9 @@
     <!-- MENU -->
     <string name="action_logout">Logout</string>
     <string name="action_refresh">Refresh</string>
+    <string name="holidays">Vacances</string>
+    <string name="todayButton">Aujourd\'hui</string>
+    <string name="toTheLeft"><![CDATA[<]]></string>
+    <string name="toTheRight"><![CDATA[>]]></string>
 
 </resources>

@@ -85,7 +85,6 @@ public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onRefresh() {
         mExecutor.execute(() -> {
             parent.refresh();
-            parent.runOnUiThread(()->mSwipeRefreshLayout.setRefreshing(false));
         });
     }
 
@@ -93,5 +92,8 @@ public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
         parent.runOnUiThread(()->mSwipeRefreshLayout.setRefreshing(bool));
     }
 
+    public boolean isRefreshing() {
+        return mSwipeRefreshLayout.isRefreshing();
+    }
 }
 

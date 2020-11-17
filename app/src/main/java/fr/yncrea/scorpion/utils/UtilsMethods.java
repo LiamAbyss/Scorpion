@@ -49,7 +49,15 @@ public class UtilsMethods {
         if(coursesJSON == null) return new ArrayList<>();
         JSONObject currentCourse;
         List<Course> planning = new ArrayList<>();
-
+        if(coursesJSON.length() == 0) {
+            Course course = new Course();
+            course.title = "\u200B";
+            course.start = "\u200B";
+            course.end = "\u200B";
+            course.course_type = "\u200B";
+            course.date = "\u200B";
+            planning.add(course);
+        }
         String lastDay = "";
         for(int i = 0; i < coursesJSON.length(); i++){
             Course course = new Course();

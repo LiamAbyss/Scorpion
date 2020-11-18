@@ -15,5 +15,6 @@
     <string name="todayButton">Aujourd\'hui</string>
     <string name="toTheLeft"><![CDATA[<]]></string>
     <string name="toTheRight"><![CDATA[>]]></string>
+    <string name="action_reset">Reset database</string>
 
 </resources>

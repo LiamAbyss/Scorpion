@@ -41,10 +41,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private Aurion mAurion = new Aurion();
     private List<Course> mCourses;
     private CoursesFragment mCoursesFragment = new CoursesFragment();
+    private CoursesFragment mOtherCoursesFragment = new CoursesFragment();
+    private boolean isOtherFragment = false;
+    private int animationType = 0;
     private Toast mToast;
     private GestureDetectorCompat mDetector;
     private ScorpionDatabase db;
     private int weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+    private int lastWeekShown;
     private int refreshLayer = 0;
     private List<Integer> mRequested = new ArrayList<>();
 
@@ -73,12 +77,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             requestPlanning(weekIndex, false);
             refreshLayer--;
             if(refreshLayer == 0) runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
-        });
-        mExecutorFling.execute(() -> {
-            mExecutor.execute(() -> {
+            //mExecutor.execute(() -> {
                 requestPlanning(weekIndex + 1, false);
                 requestPlanning(weekIndex - 1, false);
-            });
+            //);
         });
 
         findViewById(R.id.toTheLeftButton).setOnClickListener(new View.OnClickListener() {
@@ -98,8 +100,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         findViewById(R.id.todaybutton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR) - 1;
-                toTheRight();
+                mExecutorFling.execute(() -> {
+                    weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+                    if(lastWeekShown < weekIndex) animationType = 1;
+                    else animationType = -1;
+                    showWeek(weekIndex);
+                });
             }
         });
     }
@@ -136,6 +142,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 return;
             }
             JSONArray planningJSON = UtilsMethods.XMLToJSONArray(xml);
+            if(planningJSON == null) {
+                runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Request failed...Retrying...", Toast.LENGTH_LONG));
+                requestPlanning(index, forceRequest);
+                return;
+            }
             try {
                 tmpCourses = UtilsMethods.JSONArrayToCourseList(planningJSON);
                 toInsert.id = index;
@@ -158,10 +169,41 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     public void showWeek(int index) {
         Planning planning = db.aurionPlanningDao().getPlanningById(index);
+        int enterAnim;
+        int exitAnim;
+        if(animationType == 1) {
+            enterAnim = R.anim.slide_in_from_right;
+            exitAnim = R.anim.slide_out_from_right;
+        }
+        else {
+            enterAnim = R.anim.slide_in_from_left;
+            exitAnim = R.anim.slide_out_from_left;
+        }
         if(planning != null) {
             mCourses = UtilsMethods.planningFromString(planning.toString());
-            runOnUiThread(() -> mCoursesFragment.onCoursesRetrieved(mCourses));
+            if(lastWeekShown == index) {
+                runOnUiThread(() -> getCurrentCoursesFragment().onCoursesRetrieved(mCourses));
+            }
+            else if(isOtherFragment) {
+                mCoursesFragment = new CoursesFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(enterAnim, exitAnim)
+                        .replace(R.id.container, mCoursesFragment, "planning")
+                        .commit();
+                runOnUiThread(() -> mCoursesFragment.onCoursesRetrieved(mCourses));
+                isOtherFragment = false;
+            }
+            else {
+                mOtherCoursesFragment = new CoursesFragment();
+                getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(enterAnim, exitAnim)
+                        .replace(R.id.container, mOtherCoursesFragment, "planning")
+                        .commit();
+                runOnUiThread(() -> mOtherCoursesFragment.onCoursesRetrieved(mCourses));
+                isOtherFragment = true;
+            }
         }
+        lastWeekShown = index;
     }
 
     public boolean connect() {
@@ -183,11 +225,23 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         //Refresh the planning
         if(refreshLayer > 4) return;
         Log.d("REFRESH", "Refreshing...");
-        runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
+        if(isOtherFragment) {
+            runOnUiThread(() -> mOtherCoursesFragment.setRefreshing(true));
+        }
+        else {
+            runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
+        }
         refreshLayer++;
         requestPlanning(weekIndex, true);
         refreshLayer--;
-        if(refreshLayer == 0) runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
+        if(refreshLayer == 0) {
+            if(isOtherFragment) {
+                runOnUiThread(() -> mOtherCoursesFragment.setRefreshing(false));
+            }
+            else {
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
+            }
+        }
         Log.d("REFRESH", "Finish refreshing...");
     }
 
@@ -209,6 +263,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
         else if( id == R.id.actionRefresh) {
             mExecutorFling.execute(() -> {
+                refresh();
+            });
+            return true;
+        }
+        else if( id == R.id.actionReset) {
+            mExecutorFling.execute(() -> {
+                db.clearAllTables();
+                weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
                 refresh();
             });
             return true;
@@ -263,35 +325,37 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     public void toTheRight() {
         weekIndex++;
+        animationType = 1;
         mExecutorFling.execute(() -> {
-            runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
+            runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(true));
             refreshLayer++;
             requestPlanning(weekIndex, false);
             refreshLayer--;
-            if(refreshLayer == 0) runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
-        });
-        mExecutorFling.execute(() -> {
-            mExecutor.execute(() -> {
+            if(refreshLayer == 0) {
+                runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(false));
+            }
+            //mExecutor.execute(() -> {
                 requestPlanning(weekIndex + 1, false);
                 requestPlanning(weekIndex - 1, false);
-            });
+            //});
         });
     }
 
     public void toTheLeft() {
+        animationType = -1;
         weekIndex--;
         mExecutorFling.execute(() -> {
-            runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
+            runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(true));
             refreshLayer++;
             requestPlanning(weekIndex, false);
             refreshLayer--;
-            if(refreshLayer == 0) runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
-        });
-        mExecutorFling.execute(() -> {
-            mExecutor.execute(() -> {
+            if(refreshLayer == 0) {
+                    runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(false));
+            }
+            //mExecutor.execute(() -> {
                 requestPlanning(weekIndex + 1, false);
                 requestPlanning(weekIndex - 1, false);
-            });
+            //});
         });
     }
 
@@ -301,12 +365,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         if(Math.abs(velocityY) > 3000 || refreshLayer > 4) return false;
         if(velocityX > 3000) {
             Log.d("FLING", "To the left !");
-            toTheRight();
+            toTheLeft();
         }
         else if(velocityX < -3000) {
             Log.d("FLING", "To the right !");
-            toTheLeft();
+            toTheRight();
         }
         return true;
+    }
+
+    public CoursesFragment getCurrentCoursesFragment() {
+        if(isOtherFragment) return mOtherCoursesFragment;
+        else return mCoursesFragment;
     }
 }

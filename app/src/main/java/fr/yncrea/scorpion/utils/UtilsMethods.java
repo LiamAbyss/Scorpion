@@ -1,5 +1,7 @@
 package fr.yncrea.scorpion.utils;
 
+import android.widget.Toast;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Locale;
 
 import fr.arnaudguyon.xmltojsonlib.XmlToJson;
+import fr.yncrea.scorpion.ScorpionApplication;
 
 public class UtilsMethods {
 

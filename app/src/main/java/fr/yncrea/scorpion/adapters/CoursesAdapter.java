@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import fr.yncrea.scorpion.ScorpionApplication;
@@ -31,14 +33,27 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
     @Override
     public void onBindViewHolder(CoursesViewHolder holder, int position) {
         if(mCourses.get(position) != null){
-            if(mCourses.get(position).getDate().equals("\u200B")) {
+            if(mCourses.get(position).getTitle().equals("\u200B")) {
                 holder.day.setVisibility(View.GONE);
                 holder.padding.setVisibility(View.VISIBLE);
+                holder.holiday.setVisibility(View.VISIBLE);
+                holder.courseType.setVisibility(View.GONE);
+                holder.title.setVisibility(View.GONE);
+            }
+            else if(mCourses.get(position).getDate().equals("\u200B")) {
+                holder.day.setVisibility(View.GONE);
+                holder.padding.setVisibility(View.VISIBLE);
+                holder.holiday.setVisibility(View.GONE);
+                holder.courseType.setVisibility(View.VISIBLE);
+                holder.title.setVisibility(View.VISIBLE);
             }
             else {
                 holder.day.setText(mCourses.get(position).getDate().toUpperCase());
                 holder.padding.setVisibility(View.GONE);
                 holder.day.setVisibility(View.VISIBLE);
+                holder.holiday.setVisibility(View.GONE);
+                holder.courseType.setVisibility(View.VISIBLE);
+                holder.title.setVisibility(View.VISIBLE);
             }
             holder.title.setText(mCourses.get(position).getTitle());
             holder.courseType.setText(mCourses.get(position).getCourseType());
@@ -56,6 +71,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
         public final TextView title;
         public final TextView courseType;
         public final Space padding;
+        public final TextView holiday;
 
         public CoursesViewHolder(final View view) {
             super(view);
@@ -63,6 +79,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
             courseType = (TextView) view.findViewById(R.id.courseTypeTextView);
             day = (TextView) view.findViewById(R.id.dayTextView);
             padding = (Space) view.findViewById(R.id.paddingSpace);
+            holiday = (TextView) view.findViewById(R.id.holidayTextView);
         }
 
     }

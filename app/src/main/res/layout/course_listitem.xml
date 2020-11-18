@@ -4,37 +4,55 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/grey_background"
+    android:clipToPadding="false"
+    android:paddingLeft="@dimen/list_padding"
+    android:paddingRight="@dimen/list_padding">
+
+    <TextView
+        android:id="@+id/holidayTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/course_list_item_top_padding"
+        android:background="@drawable/white_round_corners_background"
+        android:elevation="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:text="@string/holidays"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dayConstraintLayout" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/dayConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
         android:background="@drawable/white_background"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout">
+        android:clipToPadding="true"
+        android:elevation="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="10dp">
 
         <TextView
             android:id="@+id/dayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
             android:text="TextView"
             android:textColor="@color/colorContrast"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <Space
-            android:id="@+id/paddingSpace"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/course_padding"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -42,8 +60,14 @@
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/grey_round_corners_background"
-        app:layout_constraintBottom_toBottomOf="parent">
+
+        android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
+        android:background="@drawable/white_round_corners_background"
+        android:clipToPadding="false"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dayConstraintLayout"
+        tools:layout_editor_absoluteX="10dp">
 
 
         <TextView
@@ -63,23 +87,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_list_item_left_padding"
             android:layout_marginTop="@dimen/course_list_item_top_padding"
-            android:layout_marginBottom="@dimen/login_item_bottom_padding"
+            android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
             android:text="TextView"
             android:textColor="@color/colorContrast"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />
-
-        <TextView
-            android:id="@+id/holidayTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/holidays"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

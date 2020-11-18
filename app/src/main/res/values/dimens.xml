@@ -17,11 +17,14 @@
     <dimen name="login_item_left_padding">10dp</dimen>
 
     <!-- LIST ITEM -->
-    <dimen name="course_list_item_top_padding">15dp</dimen>
+    <dimen name="course_list_item_top_padding">30dp</dimen>
     <dimen name="course_list_item_bottom_padding">15dp</dimen>
     <dimen name="course_list_item_right_padding">15dp</dimen>
     <dimen name="course_list_item_left_padding">15dp</dimen>
     <dimen name="course_padding">10dp</dimen>
     <dimen name="list_padding">10dp</dimen>
+    
+    <!-- BUTTONS -->
+    <dimen name="navigation_button_width">30dp</dimen>
 
 </resources>

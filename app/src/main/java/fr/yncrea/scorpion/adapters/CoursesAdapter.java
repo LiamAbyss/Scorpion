@@ -7,6 +7,7 @@ import android.widget.Space;
 import android.widget.TextView;
 
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.w3c.dom.Text;
@@ -35,21 +36,20 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
         if(mCourses.get(position) != null){
             if(mCourses.get(position).getTitle().equals("\u200B")) {
                 holder.day.setVisibility(View.GONE);
-                holder.padding.setVisibility(View.VISIBLE);
                 holder.holiday.setVisibility(View.VISIBLE);
                 holder.courseType.setVisibility(View.GONE);
                 holder.title.setVisibility(View.GONE);
+                holder.dayConstraintLayout.setVisibility(View.GONE);
             }
             else if(mCourses.get(position).getDate().equals("\u200B")) {
                 holder.day.setVisibility(View.GONE);
-                holder.padding.setVisibility(View.VISIBLE);
                 holder.holiday.setVisibility(View.GONE);
                 holder.courseType.setVisibility(View.VISIBLE);
                 holder.title.setVisibility(View.VISIBLE);
+                holder.dayConstraintLayout.setVisibility(View.GONE);
             }
             else {
                 holder.day.setText(mCourses.get(position).getDate().toUpperCase());
-                holder.padding.setVisibility(View.GONE);
                 holder.day.setVisibility(View.VISIBLE);
                 holder.holiday.setVisibility(View.GONE);
                 holder.courseType.setVisibility(View.VISIBLE);
@@ -70,16 +70,16 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
         public final TextView day;
         public final TextView title;
         public final TextView courseType;
-        public final Space padding;
         public final TextView holiday;
+        public final ConstraintLayout dayConstraintLayout;
 
         public CoursesViewHolder(final View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.courseTitleTextView);
             courseType = (TextView) view.findViewById(R.id.courseTypeTextView);
             day = (TextView) view.findViewById(R.id.dayTextView);
-            padding = (Space) view.findViewById(R.id.paddingSpace);
             holiday = (TextView) view.findViewById(R.id.holidayTextView);
+            dayConstraintLayout = (ConstraintLayout) view.findViewById(R.id.dayConstraintLayout);
         }
 
     }

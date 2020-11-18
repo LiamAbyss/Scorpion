@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="#FFFFFF"
+    android:elevation="0dp">
 
 
     <FrameLayout
@@ -16,6 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        android:background="@drawable/grey_background"
         app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
@@ -25,41 +27,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:elevation="5dp">
 
-        <Button
+        <ImageButton
             android:id="@+id/toTheLeftButton"
-            android:layout_width="wrap_content"
+            android:layout_width="84dp"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/list_padding"
+            android:background="@drawable/button"
+            android:padding="@dimen/navigation_button_width"
+            android:src="@drawable/ic_west_black_24dp"
             android:text="@string/toTheLeft"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:layout_constraintBottom_toBottomOf="@+id/todaybutton"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/todaybutton" />
 
         <Button
             android:id="@+id/todaybutton"
-            android:layout_width="wrap_content"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:text="@string/todayButton"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:background="@drawable/button"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/toTheRightButton"
+            app:layout_constraintStart_toEndOf="@+id/toTheLeftButton"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <Button
+        <ImageButton
             android:id="@+id/toTheRightButton"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:layout_marginEnd="@dimen/list_padding"
-            android:text="@string/toTheRight"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/button"
+            android:elevation="10dp"
+            android:padding="@dimen/navigation_button_width"
+            android:src="@drawable/ic_east_black_24dp"
+            app:layout_constraintBottom_toBottomOf="@+id/todaybutton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/todaybutton" />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

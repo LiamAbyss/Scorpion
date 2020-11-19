@@ -26,9 +26,9 @@
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:elevation="5dp">
+        android:background="@color/white"
+        android:elevation="5dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageButton
             android:id="@+id/toTheLeftButton"
@@ -48,12 +48,15 @@
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/button_separator"
+            android:layout_marginEnd="@dimen/button_separator"
+            android:background="@drawable/button"
+            android:elevation="10dp"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/todayButton"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:background="@drawable/button"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/toTheRightButton"
@@ -66,7 +69,6 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:background="@drawable/button"
-            android:elevation="10dp"
             android:padding="@dimen/navigation_button_width"
             android:src="@drawable/ic_east_black_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/todaybutton"

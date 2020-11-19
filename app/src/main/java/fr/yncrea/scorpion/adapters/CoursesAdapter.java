@@ -54,6 +54,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
                 holder.holiday.setVisibility(View.GONE);
                 holder.courseType.setVisibility(View.VISIBLE);
                 holder.title.setVisibility(View.VISIBLE);
+                holder.dayConstraintLayout.setVisibility(View.VISIBLE);
             }
             holder.title.setText(mCourses.get(position).getTitle());
             holder.courseType.setText(mCourses.get(position).getCourseType());

@@ -26,5 +26,6 @@
     
     <!-- BUTTONS -->
     <dimen name="navigation_button_width">30dp</dimen>
+    <dimen name="button_separator">1dp</dimen>
 
 </resources>

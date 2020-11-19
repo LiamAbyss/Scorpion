@@ -308,9 +308,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     public void toTheRight() {
-        weekIndex++;
-        animationType = 1;
         mExecutorFling.execute(() -> {
+            weekIndex++;
+            animationType = 1;
             runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(true));
             requestPlanning(weekIndex, false, true);
             runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(false));
@@ -322,9 +322,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     public void toTheLeft() {
-        animationType = -1;
-        weekIndex--;
         mExecutorFling.execute(() -> {
+            animationType = -1;
+            weekIndex--;
             runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(true));
             requestPlanning(weekIndex, false, true);
             runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(false));

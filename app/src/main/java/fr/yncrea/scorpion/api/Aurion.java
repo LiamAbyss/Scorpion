@@ -156,7 +156,7 @@ public class Aurion {
 
         long now = Calendar.getInstance().getTimeInMillis();
         long offset = (long)(weekIndex - Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)) * 7 * 24 * 60 * 60 * 1000;
-        long start = (now - now % (7*24*60*60*1000) + 4 * 24 * 60 * 60 * 1000) + offset;
+        long start = (now - (now + 3 * 24 * 60 * 60 * 1000) % (7*24*60*60*1000)) + offset;
         long end = start + (6*24*60*60*1000);
         //long end = (6*24*60*60*1000 + Calendar.getInstance().getTime().getTime() - 1 - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
           //      + weekIndex * 7 * 24 * 60 * 60 * 1000;

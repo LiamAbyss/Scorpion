@@ -107,9 +107,9 @@ public class Aurion {
      * Element 0 is either "success" or an error message
      * If element 0 is "success", element 1 is the viewState requested, otherwise it is an empty String
      */
-    public String[] getPlanningViewState(String connCookie){
+    public String[] getPlanningData(String connCookie){
         Response<ResponseBody> res = null;
-        final String[] viewState = {"", ""};
+        final String[] data = {"", "", ""};
         Call<ResponseBody> requestName = aurionService.getPlanningPageHtml(connCookie);
 
         try {
@@ -120,26 +120,32 @@ public class Aurion {
                     body = res.body().string();
                     String from = "id=\"j_id1:javax.faces.ViewState:0\" value=\"";
                     String to = "\" autocomplete=\"off\" />\n</form></div></body>";
-                    viewState[0] = "success";
-                    int a = body.indexOf(from);
-                    int b = body.indexOf(to);
-                    viewState[1] = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
+                    data[0] = "success";
+                    data[1] = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
+
+                    from = "<div id=\"form:j_idt";
+                    to = "\" class=\"schedule\">";
+                    if(body.indexOf(to) != -1 && body.indexOf(from) != -1)
+                    {
+                        String tmpSubstring = body.substring(body.indexOf(to) - 50, body.indexOf(to) + to.length());
+                        data[2] = tmpSubstring.substring(tmpSubstring.indexOf(from) + from.length(), tmpSubstring.indexOf(to));
+                    }
                     Log.d("LOGIN", "ViewState parsing success");
                 } catch (IOException e) {
-                    viewState[0] = "Error while parsing";
-                    Log.d("LOGIN", viewState[0]);
+                    data[0] = "Error while parsing";
+                    Log.d("LOGIN", data[0]);
                     e.printStackTrace();
                 }
             }
             else{
-                viewState[0] = "authentication failed";
+                data[0] = "authentication failed";
             }
         }
         catch(IOException e) {
             e.printStackTrace();
-            viewState[0] = "server couldn't be reached : check your connection";
+            data[0] = "server couldn't be reached : check your connection";
         }
-        return viewState;
+        return data;
     }
 
     /**
@@ -151,7 +157,7 @@ public class Aurion {
     public String[] getCalendarAsXML(String connCookie, int weekIndex){
         Response<ResponseBody> res = null;
         final String[] calendar = {"", ""};
-        String viewState = "";
+        String[] data;
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
 
         long now = Calendar.getInstance().getTimeInMillis();
@@ -161,10 +167,10 @@ public class Aurion {
         //long end = (6*24*60*60*1000 + Calendar.getInstance().getTime().getTime() - 1 - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
           //      + weekIndex * 7 * 24 * 60 * 60 * 1000;
 
-        String defaultFields = "form=form&form%3AlargeurDivCenter=613&form%3Adate_input="
-                + df.format(now).replace("/", "%2F")
+        String defaultFields = "form=form"
+                + "&form%3Adate_input=" + df.format(now).replace("/", "%2F")
                 + "&form%3Aweek=" + weekIndex + "-" + Calendar.getInstance().get(Calendar.YEAR)
-                + "&form%3Aj_idt132_view=agendaWeek&form%3AoffsetFuseauNavigateur=-3600000&form%3Aonglets_activeIndex=0&form%3Aonglets_scrollState=0&form%3Aj_idt258_focus=&form%3Aj_idt258_input=44323&form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=0";
+                + "&form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=0";
         HashMap<String, String> fields = new HashMap<String, String>();
         String[] fieldsArray = defaultFields.split("&");
         for (int i = 0; i < fieldsArray.length; i++) {
@@ -172,17 +178,23 @@ public class Aurion {
             if(keyVal.length == 2)
                 fields.put(keyVal[0], keyVal[1]);
         }
-        viewState = getPlanningViewState(connCookie)[1];
-        Call<ResponseBody> request = aurionService.calendarRequest(connCookie, viewState, fields);
+        data = getPlanningData(connCookie);
+        Call<ResponseBody> request = aurionService.calendarRequest(connCookie, data[1], fields);
 
         try {
             res = request.execute();
             if(res.code() == 302){
-                viewState = getPlanningViewState(connCookie)[1];
-                defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt132&javax.faces.partial.execute=form%3Aj_idt132&javax.faces.partial.render=form%3Aj_idt132&form%3Aj_idt132=form%3Aj_idt132"
-                        + "&form%3Aj_idt132_start=" + start
-                        + "&form%3Aj_idt132_end=" + end
-                        + "&form=form&form%3AlargeurDivCenter=&form%3Adate_input=02%2F11%2F2020&form%3Aweek=45-2020&form%3Aj_idt132_view=agendaWeek&form%3AoffsetFuseauNavigateur=-3600000&form%3Aonglets_activeIndex=0&form%3Aonglets_scrollState=0&form%3Aj_idt258_focus=&form%3Aj_idt258_input=44323";
+                data = getPlanningData(connCookie);
+                defaultFields = "javax.faces.partial.ajax=true"
+                        + "&javax.faces.source=form%3Aj_idt" + data[2]
+                        + "&javax.faces.partial.execute=form%3Aj_idt" + data[2]
+                        + "&javax.faces.partial.render=form%3Aj_idt" + data[2]
+                        + "&form%3Aj_idt" + data[2] + "=form%3Aj_idt" + data[2]
+                        + "&form%3Aj_idt" + data[2] + "_start=" + start
+                        + "&form%3Aj_idt" + data[2] + "_end=" + end
+                        + "&form=form"
+                        + "&form%3Adate_input=" + df.format(start).replace("/", "%2F")
+                        + "&form%3Aweek=" + weekIndex + "-" + Calendar.getInstance().get(Calendar.YEAR);
                 fields.clear();
                 fieldsArray = defaultFields.split("&");
                 for (int i = 0; i < fieldsArray.length; i++) {
@@ -190,7 +202,7 @@ public class Aurion {
                     if(keyVal.length == 2)
                         fields.put(keyVal[0], keyVal[1]);
                 }
-                request = aurionService.calendarRequest(connCookie, viewState, fields);
+                request = aurionService.calendarRequest(connCookie, data[1], fields);
 
                 String body = null;
                 res = request.execute();

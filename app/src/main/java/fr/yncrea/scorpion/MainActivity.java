@@ -1,13 +1,19 @@
 package fr.yncrea.scorpion;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
 import androidx.room.Room;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -16,17 +22,24 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 
 import fr.yncrea.scorpion.api.Aurion;
+import fr.yncrea.scorpion.api.GithubService;
 import fr.yncrea.scorpion.database.ScorpionDatabase;
 import fr.yncrea.scorpion.model.Planning;
 import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
@@ -34,10 +47,15 @@ import fr.yncrea.scorpion.utils.Constants;
 import fr.yncrea.scorpion.utils.Course;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import fr.yncrea.scorpion.utils.UtilsMethods;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
     private Executor mExecutorFling = Executors.newSingleThreadExecutor();
+    private Executor mExecutorGit = Executors.newSingleThreadExecutor();
     private Aurion mAurion = new Aurion();
+    private GithubService mGithubService;
     private List<Course> mCourses;
     private CoursesFragment mCoursesFragment = new CoursesFragment();
     private CoursesFragment mOtherCoursesFragment = new CoursesFragment();
@@ -48,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private ScorpionDatabase db;
     private int weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
     private int lastWeekShown;
+    private Timer updater;
+    private AlertDialog confirmWindow;
 
 
     @Override
@@ -58,7 +78,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         if (null != intent) {
             final Bundle extras = intent.getExtras();
             if ((null != extras) && (extras.containsKey(Constants.Login.EXTRA_LOGIN))) {
-                getSupportActionBar().setSubtitle (extras.getString(Constants.Preferences.PREF_NAME));
+                getSupportActionBar().setSubtitle(extras.getString(Constants.Preferences.PREF_NAME));
+                getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
             }
         }
         // Instantiate the gesture detector with the
@@ -99,6 +120,54 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 });
             }
         });
+
+        mGithubService = new Retrofit.Builder()
+            .baseUrl("https://api.github.com")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build().create(GithubService.class);
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(confirmWindow == null || !confirmWindow.isShowing()) requestUpdate();
+            }
+        }, 0, 300000);
+    }
+
+    public void requestUpdate() {
+        mExecutorGit.execute(() -> {
+            try {
+                Response<JsonArray> releases = mGithubService.getReleases().execute();
+                String latestVersion = releases.body().get(0).getAsJsonObject().get("tag_name").getAsString();
+                if(!latestVersion.equals(getString(R.string.app_version))) {
+                    String latestVersionDesc = releases.body().get(0).getAsJsonObject().get("body").getAsString();
+                    //String latestVersionLink = releases.body().get(0).getAsJsonObject().get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
+                    runOnUiThread(() -> {
+                        confirmWindow = new AlertDialog.Builder(this)
+                                .setTitle("Update available !")
+                                .setMessage("A new version of Scorpion is available !\n\n"
+                                        + "Version : " + latestVersion + "\n\n"
+                                        + "Description : " + latestVersionDesc)
+                                .setPositiveButton("Update now", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        try {
+                                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
+                                            startActivity(myIntent);
+                                        }
+                                        catch(ActivityNotFoundException e) {
+                                            //runOnUiThread(() -> showToast(this, "No application can handle this request." + " Please install a web browser",  Toast.LENGTH_LONG));
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                })
+                                .setNegativeButton("Maybe later", null).show();
+                    });
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    });
     }
 
     public void requestPlanning(int index, boolean forceRequest, boolean mustDraw) {
@@ -258,6 +327,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 refresh();
             });
             return true;
+        }
+        else if( id == R.id.actionGoToReleases) {
+            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
+            startActivity(myIntent);
         }
         return super.onOptionsItemSelected(item);
     }

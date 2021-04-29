@@ -26,7 +26,7 @@ public class Aurion {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)
-                .baseUrl("https://aurion.yncrea.fr")
+                .baseUrl("https://aurion.junia.com")
                 .build();
 
         this.aurionService = retrofit.create(AurionService.class);

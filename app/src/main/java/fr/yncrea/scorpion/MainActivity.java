@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                 .setTitle("Update available !")
                                 .setMessage("A new version of Scorpion is available !\n\n"
                                         + "Version : " + latestVersion + "\n\n"
-                                        + "Description : " + latestVersionDesc)
+                                        + "Description : \n" + latestVersionDesc)
                                 .setPositiveButton("Update now", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

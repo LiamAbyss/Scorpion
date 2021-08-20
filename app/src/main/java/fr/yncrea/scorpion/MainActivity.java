@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private Timer updater;
     private AlertDialog confirmWindow;
 
+    private boolean isRetrying = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,8 +202,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             }
             JSONArray planningJSON = UtilsMethods.XMLToJSONArray(xml);
             if(planningJSON == null) {
-                runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Request failed...Retrying...", Toast.LENGTH_LONG));
-                requestPlanning(index, forceRequest, mustDraw);
+                if(!isRetrying)
+                {
+                    isRetrying = true;
+                    runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Request failed...Retrying...", Toast.LENGTH_LONG));
+                    requestPlanning(index, forceRequest, mustDraw);
+                }
+                else
+                {
+                    isRetrying = false;
+                    runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "There is a problem with Aurion. Please, consider reporting it.", Toast.LENGTH_LONG));
+                }
                 return;
             }
             try {

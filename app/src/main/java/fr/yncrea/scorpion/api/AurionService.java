@@ -23,6 +23,10 @@ public interface AurionService {
     Call<ResponseBody> getPlanningPageHtml(@Header("Cookie") String cookie);
 
     @FormUrlEncoded
+    @POST("/faces/MainMenuPage.xhtml")
+    Call<ResponseBody> postMainMenuPageHtml(@Header("Cookie") String cookie, @Field("javax.faces.ViewState") String viewState, @FieldMap(encoded = true) HashMap<String, String> otherFields);
+
+    @FormUrlEncoded
     @POST("/faces/Planning.xhtml")
     Call<ResponseBody> calendarRequest(@Header("Cookie") String cookie, @Field("javax.faces.ViewState") String viewState, @FieldMap(encoded = true) HashMap<String, String> otherFields);
 }

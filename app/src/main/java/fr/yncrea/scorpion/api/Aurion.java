@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import fr.yncrea.scorpion.utils.PreferenceUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -51,6 +52,7 @@ public class Aurion {
                 Log.d("LOGIN", "Login success");
                 sessionID[0] = "success";
                 sessionID[1] = cookies.substring(cookies.indexOf("JSESSIONID"), cookies.indexOf(";", cookies.indexOf("JSESSIONID")));
+                PreferenceUtils.setSessionId(sessionID[1]);
             }
             else{
                 sessionID[0] = "authentication failed";
@@ -72,7 +74,7 @@ public class Aurion {
      */
     public String[] getName(String connCookie){
         Response<ResponseBody> res = null;
-        final String[] name = {"", ""};
+        final String[] name = {"", "", ""};
         Call<ResponseBody> requestName = aurionService.getHomePageHtml(connCookie);
 
         try {
@@ -83,6 +85,11 @@ public class Aurion {
                     body = res.body().string();
                     name[0] = "success";
                     name[1] = body.substring(body.indexOf("<h3>") + 4, body.indexOf("</h3>"));
+
+                    String from = "id=\"j_id1:javax.faces.ViewState:0\" value=\"";
+                    String to = "\" autocomplete=\"off\" />\n</form></div></body>";
+                    name[2] = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
+
                     Log.d("LOGIN", "Name parsing success");
                 } catch (IOException e) {
                     name[0] = "Error while parsing";
@@ -130,6 +137,7 @@ public class Aurion {
                         String tmpSubstring = body.substring(body.indexOf(to) - 50, body.indexOf(to) + to.length());
                         data[2] = tmpSubstring.substring(tmpSubstring.indexOf(from) + from.length(), tmpSubstring.indexOf(to));
                     }
+                    //data[2]="117";
                     Log.d("LOGIN", "ViewState parsing success");
                 } catch (IOException e) {
                     data[0] = "Error while parsing";
@@ -165,7 +173,7 @@ public class Aurion {
         long start = (now - (now + 3 * 24 * 60 * 60 * 1000) % (7*24*60*60*1000)) + offset;
         long end = start + (6*24*60*60*1000);
         //long end = (6*24*60*60*1000 + Calendar.getInstance().getTime().getTime() - 1 - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
-          //      + weekIndex * 7 * 24 * 60 * 60 * 1000;
+        //      + weekIndex * 7 * 24 * 60 * 60 * 1000;
 
         String defaultFields = "form=form"
                 + "&form%3Adate_input=" + df.format(now).replace("/", "%2F")
@@ -178,9 +186,23 @@ public class Aurion {
             if(keyVal.length == 2)
                 fields.put(keyVal[0], keyVal[1]);
         }
-        data = getPlanningData(connCookie);
-        Call<ResponseBody> request = aurionService.calendarRequest(connCookie, data[1], fields);
+        /*connect(PreferenceUtils.getLogin(), PreferenceUtils.getPassword());
+        connCookie = PreferenceUtils.getSessionId();*/
 
+        //accueil
+        data = getName(connCookie);
+
+        //postState
+        defaultFields = "form=form&form%3AlargeurDivCenter=835&form%3Asauvegarde=&form%3Aj_idt772_focus=&form%3Aj_idt772_input=44323&form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=2";
+        fields.clear();
+        fieldsArray = defaultFields.split("&");
+        for (int i = 0; i < fieldsArray.length; i++) {
+            String[] keyVal = fieldsArray[i].split("=");
+            if(keyVal.length == 2)
+                fields.put(keyVal[0], keyVal[1]);
+            else fields.put(keyVal[0], "");
+        }
+        Call<ResponseBody> request = aurionService.postMainMenuPageHtml(connCookie, data[2], fields);
         try {
             res = request.execute();
             if(res.code() == 302){
@@ -220,6 +242,7 @@ public class Aurion {
             e.printStackTrace();
             calendar[0] = "server couldn't be reached : check your connection";
         }
+
         return calendar;
     }
 }

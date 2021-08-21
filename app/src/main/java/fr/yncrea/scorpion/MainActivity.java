@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if(!isRetrying)
                 {
                     isRetrying = true;
+                    connect();
                     runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Request failed...Retrying...", Toast.LENGTH_LONG));
                     requestPlanning(index, forceRequest, mustDraw);
                 }

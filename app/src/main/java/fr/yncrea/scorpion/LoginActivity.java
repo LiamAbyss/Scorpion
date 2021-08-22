@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private Intent getHomeIntent(String userName, String name)
     {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, /*MainActivity.class*/GradesActivity.class);
         final Bundle extras = new Bundle();
         extras.putString(Constants.Login.EXTRA_LOGIN, userName);
         extras.putString(Constants.Preferences.PREF_NAME, name);

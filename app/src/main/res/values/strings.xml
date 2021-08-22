@@ -19,4 +19,7 @@
     <string name="action_reset">Reset database</string>
     <string name="action_go_to_releases">Go to releases</string>
 
+    <!-- GRADES -->
+    <string name="empty_grade">/</string>
+
 </resources>

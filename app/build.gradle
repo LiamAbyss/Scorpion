@@ -51,4 +51,6 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:$room_version"
     implementation 'com.github.smart-fun:XmlToJson:1.4.5'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation "android.arch.navigation:navigation-fragment:1.0.0-alpha02"
+    implementation "android.arch.navigation:navigation-ui:1.0.0-alpha02"
 }

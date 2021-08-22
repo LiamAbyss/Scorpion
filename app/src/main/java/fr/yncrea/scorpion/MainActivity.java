@@ -75,6 +75,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        UtilsMethods.parseGrades("");
+
         final Intent intent = getIntent();
         if (null != intent) {
             final Bundle extras = intent.getExtras();

@@ -8,7 +8,7 @@ import java.util.Locale;
 
 public class Grade {
 
-    public Grade(String _date, String _code, String _libelle, Float _note, String _reason, String _appreciation, String _teachers){
+    public Grade(String _date, String _code, String _libelle, String _note, String _reason, String _appreciation, String _teachers){
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
         try {
             date = df.parse(_date);
@@ -29,7 +29,7 @@ public class Grade {
 
     public String libelle;
 
-    public Float note;
+    public String note;
 
     public String reasonForAbsence;
 

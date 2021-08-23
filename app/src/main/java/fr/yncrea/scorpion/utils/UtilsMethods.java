@@ -137,13 +137,14 @@ public class UtilsMethods {
     public static Grade parseGrade(String s) {
         //s = "<tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even CursorInitial\" role=\"row\"><td role=\"gridcell\">11/10/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_ANGLAIS_EVAL</td><td role=\"gridcell\">Evaluation CIR3 Anglais S1</td><td role=\"gridcell\">18.15</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\">LITTON Evelyne</td>";
         String from = "<tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even CursorInitial\" role=\"row\">";
+
         s = s.substring(s.indexOf(from) + from.length()).replaceAll(" style=\\\"\\\"", "");
         String[] data = s.split("</td>");
         from = "<td role=\"gridcell\">";
         for(int i = 0; i < 7; i++) {
             data[i] = data[i].substring(data[i].indexOf(from) + from.length());
         }
-        return new Grade(data[0], data[1], data[2], Float.parseFloat(data[3]), data[4], data[5], data[6]);
+        return new Grade(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
     }
     public static List<Grade> sortGradesByDate(List<Grade> grades) {
         return sortGradesByDate(grades, false);

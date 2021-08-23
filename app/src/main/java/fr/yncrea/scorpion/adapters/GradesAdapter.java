@@ -47,7 +47,7 @@ public class GradesAdapter extends RecyclerView.Adapter<GradesAdapter.GradesView
             holder.date.setText(df.format(currentGrade.date));
             holder.code.setText(currentGrade.code.isEmpty() ? "/" : currentGrade.code);
             holder.libelle.setText(currentGrade.libelle.isEmpty() ? "/" : currentGrade.libelle);
-            holder.note.setText(currentGrade.note.toString());
+            holder.note.setText(currentGrade.note);
             holder.appreciation.setText(currentGrade.appreciation.isEmpty() ? "/" : currentGrade.appreciation);
             holder.reason.setText(currentGrade.reasonForAbsence.isEmpty() ? "/" : currentGrade.reasonForAbsence);
             holder.teachers.setText(currentGrade.teachers.isEmpty() ? "/" : currentGrade.teachers);

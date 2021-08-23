@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private ScorpionDatabase db;
     private int weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
     private int lastWeekShown;
-    private Timer updater;
+    private Timer mUpdater;
     private AlertDialog confirmWindow;
 
     private int retryingState = 0;
@@ -76,16 +76,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        UtilsMethods.parseGrades("");
+        getSupportActionBar().setSubtitle(PreferenceUtils.getName());
+        getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
 
-        final Intent intent = getIntent();
-        if (null != intent) {
-            final Bundle extras = intent.getExtras();
-            if ((null != extras) && (extras.containsKey(Constants.Login.EXTRA_LOGIN))) {
-                getSupportActionBar().setSubtitle(extras.getString(Constants.Preferences.PREF_NAME));
-                getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
-            }
-        }
         // Instantiate the gesture detector with the
         // application context and an implementation of
         // GestureDetector.OnGestureListener
@@ -130,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             .addConverterFactory(GsonConverterFactory.create())
             .build().create(GithubService.class);
 
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        mUpdater = new Timer();
+        mUpdater.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if(confirmWindow == null || !confirmWindow.isShowing()) requestUpdate();
@@ -142,6 +136,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mExecutorGit.execute(() -> {
             try {
                 Response<JsonArray> releases = mGithubService.getReleases().execute();
+                if(releases.body() == null) return;
                 String latestVersion = releases.body().get(0).getAsJsonObject().get("tag_name").getAsString();
                 if(!latestVersion.equals(getString(R.string.app_version))) {
                     String latestVersionDesc = releases.body().get(0).getAsJsonObject().get("body").getAsString();
@@ -328,7 +323,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         int id = item.getItemId();
-        if( id == R.id.actionLogout) {
+        if(id == R.id.actionsGoToGrades) {
+            mUpdater.cancel();
+            mExecutorFling.execute(() -> startActivity(getGradesIntent()));
+            return true;
+        }
+        else if( id == R.id.actionLogout) {
             PreferenceUtils.setLogin(null);
             finish();
             return true;
@@ -445,5 +445,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     public CoursesFragment getCurrentCoursesFragment() {
         if(isOtherFragment) return mOtherCoursesFragment;
         else return mCoursesFragment;
+    }
+
+    private Intent getGradesIntent()
+    {
+        Intent intent = new Intent(this, GradesActivity.class);
+        return intent;
     }
 }

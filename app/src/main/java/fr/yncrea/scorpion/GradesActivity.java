@@ -25,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -44,6 +45,7 @@ import fr.yncrea.scorpion.utils.Course;
 import fr.yncrea.scorpion.utils.Grade;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import fr.yncrea.scorpion.utils.UtilsMethods;
+import okhttp3.internal.Util;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -57,7 +59,7 @@ public class GradesActivity extends AppCompatActivity {
     private GradesFragment mGradesFragment = new GradesFragment();
     private Toast mToast;
     private ScorpionDatabase db;
-    private Timer mTimer;
+    private Timer mUpdater;
     private AlertDialog confirmWindow;
 
     @Override
@@ -65,16 +67,8 @@ public class GradesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grades);
 
-        UtilsMethods.parseGrades("");
-
-        final Intent intent = getIntent();
-        if (null != intent) {
-            final Bundle extras = intent.getExtras();
-            if ((null != extras) && (extras.containsKey(Constants.Login.EXTRA_LOGIN))) {
-                getSupportActionBar().setSubtitle(extras.getString(Constants.Preferences.PREF_NAME));
-                getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
-            }
-        }
+        getSupportActionBar().setSubtitle(PreferenceUtils.getName());
+        getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
 
         /*mExecutorFling.execute(() -> {
             db = Room.databaseBuilder(getApplicationContext(), ScorpionDatabase.class, "Scorpion.db").build();
@@ -83,15 +77,14 @@ public class GradesActivity extends AppCompatActivity {
             requestPlanning(weekIndex, false, true);
             runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
         });*/
-        mGrades.add(new Grade("date", "code", "libelle", 18f, "reason", "appreciation", "teachers"));
-        mGrades.add(new Grade("date", "code", "libelle", 18f, "reason", "appreciation", "teachers"));
-        mGrades.add(new Grade("date", "code", "libelle", 18f, "reason", "appreciation", "teachers"));
-        mGrades.add(new Grade("date", "code", "libelle", 18f, "reason", "appreciation", "teachers"));
-        mGrades.add(new Grade("date", "code", "libelle", 18f, "reason", "appreciation", "teachers"));
-        mGrades.add(new Grade("date", "code", "libelle", 18f, "reason", "appreciation", "teachers"));
-        mGrades.add(new Grade("date", "code", "libelle", 18f, "reason", "appreciation", "teachers"));
-        mGrades.add(new Grade("date", "code", "libelle", 18f, "reason", "appreciation", "teachers"));
+
         mExecutor.execute(() -> {
+            mGradesFragment = new GradesFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.gradesContainer, mGradesFragment, "grades")
+                    .commit();
+            runOnUiThread(() -> mGradesFragment.onGradesRetrieved(mGrades));
+
             showGrades();
         });
 
@@ -100,7 +93,8 @@ public class GradesActivity extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build().create(GithubService.class);
 
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        mUpdater = new Timer();
+        mUpdater.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 if(confirmWindow == null || !confirmWindow.isShowing()) requestUpdate();
@@ -112,6 +106,7 @@ public class GradesActivity extends AppCompatActivity {
         mExecutorGit.execute(() -> {
             try {
                 Response<JsonArray> releases = mGithubService.getReleases().execute();
+                if(releases.body() == null) return;
                 String latestVersion = releases.body().get(0).getAsJsonObject().get("tag_name").getAsString();
                 if(!latestVersion.equals(getString(R.string.app_version))) {
                     String latestVersionDesc = releases.body().get(0).getAsJsonObject().get("body").getAsString();
@@ -144,10 +139,40 @@ public class GradesActivity extends AppCompatActivity {
         });
     }
 
+    public void requestGrades(){
+        requestGrades(true);
+    }
+
+    public void requestGrades(boolean forceRequest){
+        requestGrades(forceRequest, 0);
+    }
+
+    public void requestGrades(boolean forceRequest, int retryingState){
+        runOnUiThread(() -> mGradesFragment.setRefreshing(true));
+        String[] res = mAurion.getGrades();
+        if(res[0] == "success"){
+            mGrades = UtilsMethods.parseGrades(res[1]);
+        }
+        else if(res[0] == "authentication failed" && retryingState == 0 && connect()){
+            requestGrades(forceRequest, retryingState + 1);
+            return;
+        }
+        else{
+            runOnUiThread(() -> showToast(ScorpionApplication.getContext(), res[0], Toast.LENGTH_LONG));
+            return;
+        }
+        runOnUiThread(() -> mGradesFragment.setRefreshing(false));
+    }
+
     public void showGrades(){
+
+        requestGrades();
+
+        mGrades = UtilsMethods.sortGradesByDate(mGrades, true);
+
         mGradesFragment = new GradesFragment();
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.gradesContainer, mGradesFragment, "grades")
+                .replace(R.id.gradesContainer, mGradesFragment, "grades")
                 .commit();
         runOnUiThread(() -> mGradesFragment.onGradesRetrieved(mGrades));
     }
@@ -170,22 +195,9 @@ public class GradesActivity extends AppCompatActivity {
     public void refresh() {
         //Refresh the planning
         Log.d("REFRESH", "Refreshing...");
-        mGradesFragment.setRefreshing(false);
-        /*if(isOtherFragment) {
-            runOnUiThread(() -> mOtherCoursesFragment.setRefreshing(true));
-        }
-        else {
-            runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
-        }
-
-        //DO REQUEST
-
-        if(isOtherFragment) {
-            runOnUiThread(() -> mOtherCoursesFragment.setRefreshing(false));
-        }
-        else {
-            runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
-        }*/
+        runOnUiThread(() -> mGradesFragment.setRefreshing(true));
+        showGrades();
+        runOnUiThread(() -> mGradesFragment.setRefreshing(false));
         Log.d("REFRESH", "Finish refreshing...");
     }
 
@@ -200,5 +212,45 @@ public class GradesActivity extends AppCompatActivity {
         if(mToast != null) mToast.cancel();
         mToast = Toast.makeText(context, text, duration);
         mToast.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.grades_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+        if(id == R.id.actionGoToPlanning) {
+            mUpdater.cancel();
+            mExecutor.execute(() -> startActivity(getPlanningIntent()));
+            return true;
+        }
+        else if( id == R.id.actionLogout) {
+            PreferenceUtils.setLogin(null);
+            finish();
+            return true;
+        }
+        else if( id == R.id.actionRefresh) {
+            mExecutor.execute(() -> {
+                refresh();
+            });
+            return true;
+        }
+        else if( id == R.id.actionGoToReleases) {
+            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
+            startActivity(myIntent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private Intent getPlanningIntent()
+    {
+        Intent intent = new Intent(this, MainActivity.class);
+        return intent;
     }
 }

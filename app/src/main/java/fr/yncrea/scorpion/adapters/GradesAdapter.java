@@ -1,5 +1,6 @@
 package fr.yncrea.scorpion.adapters;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.StringRes;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -39,7 +42,15 @@ public class GradesAdapter extends RecyclerView.Adapter<GradesAdapter.GradesView
     @Override
     public void onBindViewHolder(GradesAdapter.GradesViewHolder holder, int position) {
         if(mGrades.get(position) != null){
+            DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
             Grade currentGrade = mGrades.get(position);
+            holder.date.setText(df.format(currentGrade.date));
+            holder.code.setText(currentGrade.code.isEmpty() ? "/" : currentGrade.code);
+            holder.libelle.setText(currentGrade.libelle.isEmpty() ? "/" : currentGrade.libelle);
+            holder.note.setText(currentGrade.note.toString());
+            holder.appreciation.setText(currentGrade.appreciation.isEmpty() ? "/" : currentGrade.appreciation);
+            holder.reason.setText(currentGrade.reasonForAbsence.isEmpty() ? "/" : currentGrade.reasonForAbsence);
+            holder.teachers.setText(currentGrade.teachers.isEmpty() ? "/" : currentGrade.teachers);
         }
     }
 

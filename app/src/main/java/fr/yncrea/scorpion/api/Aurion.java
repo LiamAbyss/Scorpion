@@ -7,8 +7,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
+import fr.yncrea.scorpion.utils.Grade;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -175,19 +177,9 @@ public class Aurion {
         //long end = (6*24*60*60*1000 + Calendar.getInstance().getTime().getTime() - 1 - 3*24*60*60*1000 - Calendar.getInstance().getTime().getTime() % (604_800_000))
         //      + weekIndex * 7 * 24 * 60 * 60 * 1000;
 
-        String defaultFields = "form=form"
-                + "&form%3Adate_input=" + df.format(now).replace("/", "%2F")
-                + "&form%3Aweek=" + weekIndex + "-" + Calendar.getInstance().get(Calendar.YEAR)
-                + "&form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=0";
+        String defaultFields;
         HashMap<String, String> fields = new HashMap<String, String>();
-        String[] fieldsArray = defaultFields.split("&");
-        for (int i = 0; i < fieldsArray.length; i++) {
-            String[] keyVal = fieldsArray[i].split("=");
-            if(keyVal.length == 2)
-                fields.put(keyVal[0], keyVal[1]);
-        }
-        /*connect(PreferenceUtils.getLogin(), PreferenceUtils.getPassword());
-        connCookie = PreferenceUtils.getSessionId();*/
+        String[] fieldsArray;
 
         //accueil
         data = getName(connCookie);
@@ -202,7 +194,7 @@ public class Aurion {
                 fields.put(keyVal[0], keyVal[1]);
             else fields.put(keyVal[0], "");
         }
-        Call<ResponseBody> request = aurionService.postMainMenuPageHtml(connCookie, data[2], fields);
+        Call<ResponseBody> request = aurionService.postMainMenuPage(connCookie, data[2], fields);
         try {
             res = request.execute();
             if(res.code() == 302){
@@ -224,7 +216,7 @@ public class Aurion {
                     if(keyVal.length == 2)
                         fields.put(keyVal[0], keyVal[1]);
                 }
-                request = aurionService.calendarRequest(connCookie, data[1], fields);
+                request = aurionService.postPlanningPage(connCookie, data[1], fields);
 
                 String body = null;
                 res = request.execute();
@@ -240,9 +232,76 @@ public class Aurion {
         }
         catch(IOException e) {
             e.printStackTrace();
-            calendar[0] = "server couldn't be reached : check your connection";
+            calendar[0] = "Server couldn't be reached : check your connection";
         }
 
         return calendar;
+    }
+
+    public String[] getGrades(){
+        String cookie = PreferenceUtils.getSessionId();
+
+        Response<ResponseBody> res = null;
+
+        String[] data;
+        final String[] grades = {"", ""};
+
+        //accueil
+        data = getName(cookie);
+
+        //postState
+        String defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt52&" +
+                "javax.faces.partial.execute=form%3Aj_idt52&javax.faces.partial.render=form%3Asidebar&" +
+                "form%3Aj_idt52=form%3Aj_idt52&webscolaapp.Sidebar.ID_SUBMENU=submenu_44413&form=form&" +
+                "form%3AlargeurDivCenter=1219&form%3Asauvegarde=&form%3Aj_idt772_focus=&form%3Aj_idt772_input=44323";
+        HashMap<String, String> fields = new HashMap<String, String>();
+        String[] fieldsArray = defaultFields.split("&");
+        for (int i = 0; i < fieldsArray.length; i++) {
+            String[] keyVal = fieldsArray[i].split("=");
+            if(keyVal.length == 2)
+                fields.put(keyVal[0], keyVal[1]);
+            else fields.put(keyVal[0], "");
+        }
+
+        Call<ResponseBody> request = aurionService.postMainMenuPage(cookie, data[2], fields);
+        try {
+            res = request.execute();
+            if(res.isSuccessful()){
+                defaultFields = "form=form&form%3AlargeurDivCenter=1219&form%3Asauvegarde=&" +
+                        "form%3Aj_idt772_focus=&form%3Aj_idt772_input=44323&" +
+                        "form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=3_0";
+                fields.clear();
+                fieldsArray = defaultFields.split("&");
+                for (int i = 0; i < fieldsArray.length; i++) {
+                    String[] keyVal = fieldsArray[i].split("=");
+                    if(keyVal.length == 2)
+                        fields.put(keyVal[0], keyVal[1]);
+                    else fields.put(keyVal[0], "");
+                }
+                request = aurionService.postMainMenuPage(cookie, data[2], fields);
+
+                res = request.execute();
+                if(res.code() == 302){
+                    String body = null;
+                    request = aurionService.getGradesHtml(cookie);
+                    res = request.execute();
+                    if(res.isSuccessful()){
+                        body = res.body().string();
+                        grades[0] = "success";
+                        grades[1] = body;
+                    }
+                }
+
+            }
+            else{
+                grades[0] = "authentication failed";
+            }
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+            grades[0] = "Server couldn't be reached : check your connection";
+        }
+
+        return grades;
     }
 }

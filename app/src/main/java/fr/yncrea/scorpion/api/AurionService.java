@@ -8,6 +8,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.HEAD;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
@@ -24,9 +25,15 @@ public interface AurionService {
 
     @FormUrlEncoded
     @POST("/faces/MainMenuPage.xhtml")
-    Call<ResponseBody> postMainMenuPageHtml(@Header("Cookie") String cookie, @Field("javax.faces.ViewState") String viewState, @FieldMap(encoded = true) HashMap<String, String> otherFields);
+    Call<ResponseBody> postMainMenuPage(@Header("Cookie") String cookie, @Field("javax.faces.ViewState") String viewState, @FieldMap(encoded = true) HashMap<String, String> otherFields);
 
     @FormUrlEncoded
     @POST("/faces/Planning.xhtml")
-    Call<ResponseBody> calendarRequest(@Header("Cookie") String cookie, @Field("javax.faces.ViewState") String viewState, @FieldMap(encoded = true) HashMap<String, String> otherFields);
+    Call<ResponseBody> postPlanningPage(@Header("Cookie") String cookie, @Field("javax.faces.ViewState") String viewState, @FieldMap(encoded = true) HashMap<String, String> otherFields);
+
+    @GET("/faces/LearnerNotationListPage.xhtml")
+    Call<ResponseBody> getGradesHtml(@Header("Cookie") String cookie);
+
+    @GET("/faces/MesAbsences.xhtml")
+    Call<ResponseBody> getAbsencesHtml(@Header("Cookie") String cookie);
 }

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Scorpion</string>
-    <string name="app_version">v0.3.2.3-beta</string>
+    <string name="app_version">v0.4.0-beta</string>
 
     <!-- LOGIN -->
     <string name="loginHint">Your login</string>
@@ -10,14 +10,16 @@
     <string name="error_no_password">Empty password !</string>
 
     <!-- MENU -->
-    <string name="action_logout">Logout</string>
-    <string name="action_refresh">Refresh</string>
+    <string name="action_logout">Se déconnecter</string>
+    <string name="action_refresh">Actualiser</string>
     <string name="holidays">Vacances</string>
     <string name="todayButton">Aujourd\'hui</string>
     <string name="toTheLeft"><![CDATA[<]]></string>
     <string name="toTheRight"><![CDATA[>]]></string>
-    <string name="action_reset">Reset database</string>
-    <string name="action_go_to_releases">Go to releases</string>
+    <string name="action_reset">Effacer la base de données</string>
+    <string name="action_go_to_releases">Aller aux releases</string>
+    <string name="action_go_to_grades">Notes</string>
+    <string name="action_go_to_planning">Planning</string>
 
     <!-- GRADES -->
     <string name="empty_grade">/</string>

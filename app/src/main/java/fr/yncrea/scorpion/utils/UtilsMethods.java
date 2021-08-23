@@ -9,6 +9,8 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -116,7 +118,7 @@ public class UtilsMethods {
     }
 
     public static List<Grade> parseGrades(String s){
-        s = "</tbody><tbody id=\"form:dataTableFavori_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even CursorInitial\" role=\"row\"><td role=\"gridcell\">11/10/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_ANGLAIS_EVAL</td><td role=\"gridcell\">Evaluation CIR3 Anglais S1</td><td role=\"gridcell\">18.15</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\">LITTON Evelyne</td></tr><tr data-ri=\"1\" class=\"ui-widget-content ui-datatable-odd CursorInitial\" role=\"row\"><td role=\"gridcell\">15/10/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_APM_EVAL</td><td role=\"gridcell\">Evaluation Ateliers Préparatoires Mathématiques</td><td role=\"gridcell\">16.30</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\">CHENEVERT Gabriel</td></tr><tr data-ri=\"2\" class=\"ui-widget-content ui-datatable-even CursorInitial\" role=\"row\"><td role=\"gridcell\">01/10/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_COMMUNICATION_PROJET</td><td role=\"gridcell\">Evaluation CIR3 Projet Communication</td><td role=\"gridcell\">16.80</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\"></td></tr><tr data-ri=\"3\" class=\"ui-widget-content ui-datatable-odd CursorInitial\" role=\"row\"><td role=\"gridcell\">12/11/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_ELEC_DS</td><td role=\"gridcell\">Devoir Surveillé Electronique</td><td role=\"gridcell\">16.00</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\">STEFANELLI Bruno</td></tr></tbody>";
+        //s = "</tbody><tbody id=\"form:dataTableFavori_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even CursorInitial\" role=\"row\"><td role=\"gridcell\">11/10/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_ANGLAIS_EVAL</td><td role=\"gridcell\">Evaluation CIR3 Anglais S1</td><td role=\"gridcell\">18.15</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\">LITTON Evelyne</td></tr><tr data-ri=\"1\" class=\"ui-widget-content ui-datatable-odd CursorInitial\" role=\"row\"><td role=\"gridcell\">15/10/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_APM_EVAL</td><td role=\"gridcell\">Evaluation Ateliers Préparatoires Mathématiques</td><td role=\"gridcell\">16.30</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\">CHENEVERT Gabriel</td></tr><tr data-ri=\"2\" class=\"ui-widget-content ui-datatable-even CursorInitial\" role=\"row\"><td role=\"gridcell\">01/10/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_COMMUNICATION_PROJET</td><td role=\"gridcell\">Evaluation CIR3 Projet Communication</td><td role=\"gridcell\">16.80</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\"></td></tr><tr data-ri=\"3\" class=\"ui-widget-content ui-datatable-odd CursorInitial\" role=\"row\"><td role=\"gridcell\">12/11/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_ELEC_DS</td><td role=\"gridcell\">Devoir Surveillé Electronique</td><td role=\"gridcell\">16.00</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\">STEFANELLI Bruno</td></tr></tbody>";
         String from = "<tbody id=\"form:dataTableFavori_data\" class=\"ui-datatable-data ui-widget-content\">";
         String to = "</tbody>";
 
@@ -129,18 +131,27 @@ public class UtilsMethods {
         for(int i = 0; i < data.length; i++){
             grades.add(parseGrade(data[i]));
         }
-        return new ArrayList<Grade>();
+        return grades;
     }
 
-    public static Grade parseGrade(String s){
+    public static Grade parseGrade(String s) {
         //s = "<tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even CursorInitial\" role=\"row\"><td role=\"gridcell\">11/10/2019</td><td role=\"gridcell\" style=\"\">1920_ISEN_CIR3_S1_ANGLAIS_EVAL</td><td role=\"gridcell\">Evaluation CIR3 Anglais S1</td><td role=\"gridcell\">18.15</td><td role=\"gridcell\"></td><td role=\"gridcell\"></td><td role=\"gridcell\">LITTON Evelyne</td>";
         String from = "<tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even CursorInitial\" role=\"row\">";
         s = s.substring(s.indexOf(from) + from.length()).replaceAll(" style=\\\"\\\"", "");
         String[] data = s.split("</td>");
         from = "<td role=\"gridcell\">";
-        for(int i = 0; i < 7; i++){
+        for(int i = 0; i < 7; i++) {
             data[i] = data[i].substring(data[i].indexOf(from) + from.length());
         }
         return new Grade(data[0], data[1], data[2], Float.parseFloat(data[3]), data[4], data[5], data[6]);
+    }
+    public static List<Grade> sortGradesByDate(List<Grade> grades) {
+        return sortGradesByDate(grades, false);
+    }
+    public static List<Grade> sortGradesByDate(List<Grade> grades, boolean reversed) {
+        Collections.sort(grades, (o1, o2) -> o1.date.compareTo(o2.date));
+        if(reversed)
+            Collections.reverse(grades);
+        return grades;
     }
 }

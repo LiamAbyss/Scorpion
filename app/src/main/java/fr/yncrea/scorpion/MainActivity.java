@@ -325,12 +325,18 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         int id = item.getItemId();
         if(id == R.id.actionsGoToGrades) {
             mUpdater.cancel();
-            mExecutorFling.execute(() -> startActivity(getGradesIntent()));
+            mExecutorFling.execute(() -> {
+                startActivity(getGradesIntent());
+                finish();
+            });
             return true;
         }
         else if( id == R.id.actionLogout) {
-            PreferenceUtils.setLogin(null);
-            finish();
+            mExecutorFling.execute(() -> {
+                PreferenceUtils.setPassword(null);
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            });
             return true;
         }
         else if( id == R.id.actionRefresh) {
@@ -352,6 +358,15 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             startActivity(myIntent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mExecutorFling.execute(() -> {
+            runOnUiThread(() -> super.onBackPressed());
+            /*startActivity(new Intent(this, LoginActivity.class));
+            finish();*/
+        });
     }
 
     private void showToast(Context context, int resId, int duration){

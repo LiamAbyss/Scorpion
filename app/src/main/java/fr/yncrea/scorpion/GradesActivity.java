@@ -227,11 +227,15 @@ public class GradesActivity extends AppCompatActivity {
         int id = item.getItemId();
         if(id == R.id.actionGoToPlanning) {
             mUpdater.cancel();
-            mExecutor.execute(() -> startActivity(getPlanningIntent()));
+            mExecutor.execute(() -> {
+                startActivity(getPlanningIntent());
+                finish();
+            });
             return true;
         }
         else if( id == R.id.actionLogout) {
-            PreferenceUtils.setLogin(null);
+            PreferenceUtils.setPassword(null);
+            startActivity(new Intent(this, LoginActivity.class));
             finish();
             return true;
         }
@@ -246,6 +250,15 @@ public class GradesActivity extends AppCompatActivity {
             startActivity(myIntent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mExecutor.execute(() -> {
+            //runOnUiThread(() -> super.onBackPressed());
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        });
     }
 
     private Intent getPlanningIntent()

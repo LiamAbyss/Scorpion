@@ -36,11 +36,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         final String username = PreferenceUtils.getLogin();
         final String password = PreferenceUtils.getPassword();
+        mLoginEditText.setText(username);
+        mPasswordEditText.setText(password);
         if(!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
-            mLoginEditText.setText(username);
-            mPasswordEditText.setText(password);
-            if(!PreferenceUtils.getSessionId().equals("")){
+            if(PreferenceUtils.getSessionId() != null && !PreferenceUtils.getSessionId().equals("")){
                 startActivity(getHomeIntent(PreferenceUtils.getSessionId(), PreferenceUtils.getName()));
+                finish();
             }
             else{
                 connect(username, password);
@@ -91,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     });
                     canClick = true;
                     startActivity(getHomeIntent(sessionID[1], name[1]));
+                    finish();
                 }
                 else {
                     if(name[0].contains("connection")) {

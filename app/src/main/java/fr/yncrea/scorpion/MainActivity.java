@@ -1,9 +1,11 @@
 package fr.yncrea.scorpion;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.room.Room;
 
 import android.content.ActivityNotFoundException;
@@ -12,17 +14,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonArray;
 
 import org.json.JSONArray;
@@ -36,14 +37,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.locks.Lock;
 
 import fr.yncrea.scorpion.api.Aurion;
 import fr.yncrea.scorpion.api.GithubService;
 import fr.yncrea.scorpion.database.ScorpionDatabase;
 import fr.yncrea.scorpion.model.Planning;
 import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
-import fr.yncrea.scorpion.utils.Constants;
 import fr.yncrea.scorpion.utils.Course;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import fr.yncrea.scorpion.utils.UtilsMethods;
@@ -51,7 +50,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener {
+public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, NavigationView.OnNavigationItemSelectedListener {
     private Executor mExecutorFling = Executors.newSingleThreadExecutor();
     private Executor mExecutorGit = Executors.newSingleThreadExecutor();
     private Aurion mAurion = new Aurion();
@@ -71,13 +70,46 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     private int retryingState = 0;
 
+    public DrawerLayout drawerLayout;
+    public ActionBarDrawerToggle actionBarDrawerToggle;
+    public int clickedItem;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setSubtitle(PreferenceUtils.getName());
-        getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
+        //getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
+
+        // drawer layout instance to toggle the menu icon to open
+        // drawer and back button to close drawer
+        drawerLayout = findViewById(R.id.planning_drawer_layout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.nav_open, R.string.nav_close){
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+                if(clickedItem == R.id.nav_grades) {
+                    mExecutorFling.execute(() -> {
+                        startActivity(getGradesIntent());
+                        overridePendingTransition(0, 0);
+                        finish();
+                    });
+                }
+            }
+        };
+
+        // pass the Open and Close toggle for the drawer layout listener
+        // to toggle the button
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        // to make the Navigation drawer icon always appear on the action bar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        NavigationView navigationView = findViewById(R.id.planning_navigationView);
+        navigationView.setNavigationItemSelectedListener(this);
 
         // Instantiate the gesture detector with the
         // application context and an implementation of
@@ -315,31 +347,20 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.scorpion, menu);
+        getMenuInflater().inflate(R.menu.planning_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
         int id = item.getItemId();
-        if(id == R.id.actionsGoToGrades) {
-            mUpdater.cancel();
-            mExecutorFling.execute(() -> {
-                startActivity(getGradesIntent());
-                finish();
-            });
-            return true;
-        }
-        else if( id == R.id.actionLogout) {
-            mExecutorFling.execute(() -> {
-                PreferenceUtils.setPassword(null);
-                startActivity(new Intent(this, LoginActivity.class));
-                finish();
-            });
-            return true;
-        }
-        else if( id == R.id.actionRefresh) {
+
+        if( id == R.id.actionRefresh) {
             mExecutorFling.execute(() -> {
                 refresh();
             });
@@ -353,11 +374,32 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             });
             return true;
         }
-        else if( id == R.id.actionGoToReleases) {
-            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
-            startActivity(myIntent);
-        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        clickedItem = id;
+        if(id == R.id.nav_grades) {
+            mUpdater.cancel();
+        }
+        else if(id == R.id.nav_releases) {
+            mExecutorFling.execute(() -> {
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
+                startActivity(myIntent);
+            });
+        }
+        else if( id == R.id.nav_logout) {
+            mExecutorFling.execute(() -> {
+                mUpdater.cancel();
+                PreferenceUtils.setPassword(null);
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            });
+        }
+        drawerLayout.closeDrawer(Gravity.LEFT);
+        return true;
     }
 
     @Override
@@ -467,4 +509,5 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         Intent intent = new Intent(this, GradesActivity.class);
         return intent;
     }
+
 }

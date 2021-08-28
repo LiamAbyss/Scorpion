@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Scorpion</string>
-    <string name="app_version">v0.4.0.1-beta</string>
+    <string name="app_version">v0.4.1-beta</string>
 
     <!-- LOGIN -->
     <string name="loginHint">Your login</string>
@@ -23,5 +23,9 @@
 
     <!-- GRADES -->
     <string name="empty_grade">/</string>
+    <string name="nav_open">Ouvrir</string>
+    <string name="nav_close">Fermer</string>
+    <string name="header_title">Header title</string>
+    <string name="header_text">Header text</string>
 
 </resources>

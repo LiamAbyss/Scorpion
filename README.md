@@ -3,12 +3,12 @@
     <img src="https://img.shields.io/github/repo-size/liamabyss/scorpion" alt="Size-badge"/>
     <a href="https://choosealicense.com/licenses/mit/"><img src="https://img.shields.io/github/license/liamabyss/scorpion" alt="License"/></a>
     <img alt="Downloads" src="https://img.shields.io/github/downloads/liamabyss/scorpion/total">
-    <img alt="Downloads" src="https://img.shields.io/github/downloads/liamabyss/scorpion/latest/total">
+    <!--<img alt="Downloads" src="https://img.shields.io/github/downloads/liamabyss/scorpion/latest/total">-->
 </div>
 
 # Présentation
 
-Les étudiants de **Junia** utilisent la plateforme web **Aurion**, un progiciel développé par [**Auriga**](https://www.auriga.fr/) pour accéder à leurs plannings, notes, absences et autres informations. Dans son utilisation quotidienne, **Aurion** est peu ergonomique sur plusieurs aspects :
+Les étudiants de **Junia** utilisent la plateforme web **Aurion**, un progiciel développé par [**Auriga**](https://www.auriga.fr/), pour accéder à leurs plannings, notes, absences et autres informations. Dans son utilisation quotidienne, **Aurion** est peu ergonomique sur plusieurs aspects :
 
 - Nécessité de se reconnecter régulièrement
 - Chargements longs et intempestifs

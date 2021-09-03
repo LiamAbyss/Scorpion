@@ -105,11 +105,11 @@
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Motif d'absence"
+            android:text="Coefficient"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/gradeReasonTextView"
+            app:layout_constraintBottom_toBottomOf="@+id/gradeCoeffTextView"
             app:layout_constraintStart_toStartOf="@+id/textView4"
-            app:layout_constraintTop_toTopOf="@+id/gradeReasonTextView" />
+            app:layout_constraintTop_toTopOf="@+id/gradeCoeffTextView" />
 
         <FrameLayout
             android:id="@+id/frameLayout5"
@@ -117,7 +117,7 @@
             android:layout_height="@dimen/button_separator"
             android:layout_marginTop="@dimen/button_separator"
             android:background="@color/colorContrast"
-            app:layout_constraintTop_toBottomOf="@+id/gradeReasonTextView"
+            app:layout_constraintTop_toBottomOf="@+id/gradeCoeffTextView"
             tools:layout_editor_absoluteX="159dp">
 
         </FrameLayout>
@@ -133,34 +133,13 @@
             app:layout_constraintTop_toTopOf="@+id/gradeAppreciationTextView" />
 
         <FrameLayout
-            android:id="@+id/frameLayout6"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/button_separator"
-            android:layout_marginTop="@dimen/button_separator"
-            android:background="@color/colorContrast"
-            app:layout_constraintTop_toBottomOf="@+id/gradeAppreciationTextView"
-            tools:layout_editor_absoluteX="128dp">
-
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Intervenants"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/gradeTeachersTextView"
-            app:layout_constraintStart_toStartOf="@+id/textView6"
-            app:layout_constraintTop_toTopOf="@+id/gradeTeachersTextView" />
-
-        <FrameLayout
             android:id="@+id/frameLayout7"
             android:layout_width="@dimen/button_separator"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/list_padding"
             android:background="@color/colorContrast"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintStart_toEndOf="@+id/textView6"
             app:layout_constraintTop_toTopOf="parent"
             tools:visibility="visible">
 
@@ -205,7 +184,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView4" />
 
         <TextView
-            android:id="@+id/gradeReasonTextView"
+            android:id="@+id/gradeCoeffTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_separator"
@@ -219,22 +198,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_separator"
-            android:text="@string/empty_grade"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/gradeReasonTextView"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout5" />
-
-        <TextView
-            android:id="@+id/gradeTeachersTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/button_separator"
             android:layout_marginBottom="@dimen/button_separator"
             android:text="@string/empty_grade"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/gradeAppreciationTextView"
-            app:layout_constraintTop_toBottomOf="@+id/frameLayout6" />
+            app:layout_constraintStart_toStartOf="@+id/gradeCoeffTextView"
+            app:layout_constraintTop_toBottomOf="@+id/frameLayout5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

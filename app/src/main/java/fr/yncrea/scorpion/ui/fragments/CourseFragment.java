@@ -14,7 +14,7 @@ import fr.yncrea.scorpion.R;
 public class CourseFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM_TITLE = "paramTitle";
+    /*private static final String ARG_PARAM_TITLE = "paramTitle";
     private static final String ARG_PARAM_START = "paramStart";
     private static final String ARG_PARAM_END = "paramEnd";
     private static final String ARG_PARAM_COURSETYPE = "paramCourseType";
@@ -26,7 +26,7 @@ public class CourseFragment extends Fragment {
 
     public CourseFragment() {
         // Required empty public constructor
-    }
+    }*/
 
     /**
      * Use this factory method to create a new instance of
@@ -39,7 +39,7 @@ public class CourseFragment extends Fragment {
      * @return A new instance of fragment TweetFragment.
      */
 
-    public static CourseFragment newInstance(String title, String start, String end, String courseType) {
+    /*public static CourseFragment newInstance(String title, String start, String end, String courseType) {
         CourseFragment fragment = new CourseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -48,9 +48,9 @@ public class CourseFragment extends Fragment {
         args.putString(ARG_PARAM_COURSETYPE, courseType);
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -59,9 +59,9 @@ public class CourseFragment extends Fragment {
             mEnd = getArguments().getString(ARG_PARAM_END);
             mCourseType = getArguments().getString(ARG_PARAM_COURSETYPE);
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.course_listitem,container,false);
@@ -69,5 +69,6 @@ public class CourseFragment extends Fragment {
         ((TextView) view.findViewById(R.id.courseTypeTextView)).setText(mCourseType);
 
         return view;
-    }
+    }*/
+
 }

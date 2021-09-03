@@ -63,6 +63,7 @@ public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCoursesRetrieved(List<Course> planning) {
         if(null != planning){
             final CoursesAdapter adapter = new CoursesAdapter(planning);
+            adapter.addContext(parent);
             mRecyclerView.setHasFixedSize(false);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));
             mRecyclerView.setAdapter(adapter);

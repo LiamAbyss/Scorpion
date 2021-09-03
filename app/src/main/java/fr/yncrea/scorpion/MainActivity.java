@@ -82,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         getSupportActionBar().setSubtitle(PreferenceUtils.getName());
         //getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
 
+        //UtilsMethods.parseCourseDetails("");
+
         // drawer layout instance to toggle the menu icon to open
         // drawer and back button to close drawer
         drawerLayout = findViewById(R.id.planning_drawer_layout);
@@ -325,6 +327,10 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return false;
     }
 
+    public void requestDetailsPlanning(Long id) {
+        mExecutorFling.execute(() -> mAurion.detailsPlanning(id));
+    }
+
     public void refresh() {
         //Refresh the planning
         Log.d("REFRESH", "Refreshing...");
@@ -411,13 +417,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         });
     }
 
-    private void showToast(Context context, int resId, int duration){
+    public void showToast(Context context, int resId, int duration){
         if(mToast != null) mToast.cancel();
         mToast = Toast.makeText(context, resId, duration);
         mToast.show();
     }
 
-    private void showToast(Context context, CharSequence text, int duration){
+    public void showToast(Context context, CharSequence text, int duration){
         if(mToast != null) mToast.cancel();
         mToast = Toast.makeText(context, text, duration);
         mToast.show();

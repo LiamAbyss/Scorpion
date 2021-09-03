@@ -13,7 +13,7 @@ import fr.yncrea.scorpion.R;
 public class GradeFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String PARAM_DATE = "paramDate";
+    /*private static final String PARAM_DATE = "paramDate";
     private static final String PARAM_CODE = "paramCode";
     private static final String PARAM_LIBELLE = "paramLibelle";
     private static final String PARAM_NOTE = "paramNote";
@@ -74,5 +74,5 @@ public class GradeFragment extends Fragment {
         ((TextView) view.findViewById(R.id.gradeTeachersTextView)).setText(mTeachers);
 
         return view;
-    }
+    }*/
 }

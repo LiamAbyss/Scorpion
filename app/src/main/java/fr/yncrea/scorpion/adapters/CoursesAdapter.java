@@ -1,5 +1,6 @@
 package fr.yncrea.scorpion.adapters;
 
+import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -22,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import fr.yncrea.scorpion.GradesActivity;
+import fr.yncrea.scorpion.MainActivity;
 import fr.yncrea.scorpion.ScorpionApplication;
 import fr.yncrea.scorpion.R;
 import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
@@ -30,6 +34,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
 
     private List<Course> mCourses;
     private int mPosition;
+    private MainActivity parent;
 
     public CoursesAdapter(List<Course> courses) {
         mCourses = courses;
@@ -66,9 +71,19 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
         return new CoursesViewHolder(view);
     }
 
+    public void addContext(Context context) {
+        parent = (MainActivity) context;
+    }
+
     @Override
     public void onBindViewHolder(CoursesViewHolder holder, int position) {
         if(mCourses.get(position) != null){
+
+            /*ConstraintLayout clickableConstraintLayout = (ConstraintLayout) holder.mView.findViewById(R.id.clickable_constraintLayout);
+            clickableConstraintLayout.setOnClickListener((View v) -> {
+                parent.requestDetailsPlanning(mCourses.get(position).id);
+            });*/
+
             if(mCourses.get(position).getTitle().equals("\u200B")) {
                 holder.day.setVisibility(View.GONE);
                 holder.holiday.setVisibility(View.VISIBLE);
@@ -127,9 +142,11 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
         public final ConstraintLayout dayConstraintLayout;
         public final FrameLayout todayLayout1;
         public final FrameLayout todayLayout2;
+        public final View mView;
 
         public CoursesViewHolder(final View view) {
             super(view);
+            mView = view;
             title = (TextView) view.findViewById(R.id.courseTitleTextView);
             courseType = (TextView) view.findViewById(R.id.courseTypeTextView);
             day = (TextView) view.findViewById(R.id.dayTextView);

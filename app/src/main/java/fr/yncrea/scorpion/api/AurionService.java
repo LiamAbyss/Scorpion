@@ -31,8 +31,12 @@ public interface AurionService {
     @POST("/faces/Planning.xhtml")
     Call<ResponseBody> postPlanningPage(@Header("Cookie") String cookie, @Field("javax.faces.ViewState") String viewState, @FieldMap(encoded = true) HashMap<String, String> otherFields);
 
-    @GET("/faces/LearnerNotationListPage.xhtml")
+    @GET("/faces/ChoixIndividu.xhtml")
     Call<ResponseBody> getGradesHtml(@Header("Cookie") String cookie);
+
+    @FormUrlEncoded
+    @POST("/faces/ChoixIndividu.xhtml")
+    Call<ResponseBody> postGrades(@Header("Cookie") String cookie, @Field("javax.faces.ViewState") String viewState, @FieldMap(encoded = true) HashMap<String, String> otherFields);
 
     @GET("/faces/MesAbsences.xhtml")
     Call<ResponseBody> getAbsencesHtml(@Header("Cookie") String cookie);

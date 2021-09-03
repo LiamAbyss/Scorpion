@@ -29,7 +29,7 @@ public class Aurion {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(client)
-                .baseUrl("https://aurion.junia.com")
+                .baseUrl(/*"https://formation.ensta-bretagne.fr")*/"https://aurion.junia.com")
                 .build();
 
         this.aurionService = retrofit.create(AurionService.class);
@@ -76,7 +76,7 @@ public class Aurion {
      */
     public String[] getName(String connCookie){
         Response<ResponseBody> res = null;
-        final String[] name = {"", "", ""};
+        final String[] name = {"", "", "", ""};
         Call<ResponseBody> requestName = aurionService.getHomePageHtml(connCookie);
 
         try {
@@ -91,6 +91,12 @@ public class Aurion {
                     String from = "id=\"j_id1:javax.faces.ViewState:0\" value=\"";
                     String to = "\" autocomplete=\"off\" />\n</form></div></body>";
                     name[2] = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
+
+                    to = "Mon Planning";
+                    String tmpSubstring = body.substring(body.indexOf(to) - 300, body.indexOf(to));
+                    from = "form:sidebar_menuid':'";
+                    to = "'})";
+                    name[3] = tmpSubstring.substring(tmpSubstring.indexOf(from) + from.length(), tmpSubstring.indexOf(to));
 
                     Log.d("LOGIN", "Name parsing success");
                 } catch (IOException e) {
@@ -140,6 +146,7 @@ public class Aurion {
                         data[2] = tmpSubstring.substring(tmpSubstring.indexOf(from) + from.length(), tmpSubstring.indexOf(to));
                     }
                     //data[2]="117";
+
                     Log.d("LOGIN", "ViewState parsing success");
                 } catch (IOException e) {
                     data[0] = "Error while parsing";
@@ -185,7 +192,8 @@ public class Aurion {
         data = getName(connCookie);
 
         //postState
-        defaultFields = "form=form&form%3AlargeurDivCenter=835&form%3Asauvegarde=&form%3Aj_idt772_focus=&form%3Aj_idt772_input=44323&form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=2";
+        defaultFields = "form=form&form%3AlargeurDivCenter=835&form%3Asauvegarde=&form%3Aj_idt772_focus=&form%3Aj_idt772_input=44323&form%3Asidebar=form%3Asidebar&" +
+                "form%3Asidebar_menuid=" + data[3];
         fields.clear();
         fieldsArray = defaultFields.split("&");
         for (int i = 0; i < fieldsArray.length; i++) {
@@ -267,9 +275,18 @@ public class Aurion {
         try {
             res = request.execute();
             if(res.isSuccessful()){
+                String body = res.body().string();
+
+                String from = "";
+                String to = "Mes notes</span>";
+                String menuid = body.substring(body.indexOf(to) - 300, body.indexOf(to));
+                from = "form:sidebar_menuid':'";
+                to = "'})";
+                menuid = menuid.substring(menuid.indexOf(from) + from.length(), menuid.indexOf(to));
+
                 defaultFields = "form=form&form%3AlargeurDivCenter=1219&form%3Asauvegarde=&" +
                         "form%3Aj_idt772_focus=&form%3Aj_idt772_input=44323&" +
-                        "form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=3_0";
+                        "form%3Asidebar=form%3Asidebar&form%3Asidebar_menuid=" + menuid;
                 fields.clear();
                 fieldsArray = defaultFields.split("&");
                 for (int i = 0; i < fieldsArray.length; i++) {
@@ -282,13 +299,47 @@ public class Aurion {
 
                 res = request.execute();
                 if(res.code() == 302){
-                    String body = null;
+                    body = res.headers().toString();
                     request = aurionService.getGradesHtml(cookie);
                     res = request.execute();
                     if(res.isSuccessful()){
                         body = res.body().string();
-                        grades[0] = "success";
-                        grades[1] = body;
+
+                        from = "javax.faces.ViewState:0\" value=\"";
+                        to = "\" autocomplete=\"off\" />";
+
+                        data[2] = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
+                        int start = 0, rows = 10000;
+                        defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt181&" +
+                                "javax.faces.partial.execute=form%3Aj_idt181&javax.faces.partial.render=form%3Aj_idt181&" +
+                                "form%3Aj_idt181=form%3Aj_idt181&form%3Aj_idt181_pagination=true&" +
+                                "form%3Aj_idt181_first=" + start +
+                                "&form%3Aj_idt181_rows=" + rows +
+                                "&form%3Aj_idt181_skipChildren=true&form%3Aj_idt181_encodeFeature=true&" +
+                                "form=form&form%3AlargeurDivCenter=835&form%3AmessagesRubriqueInaccessible=&form%3Asearch-texte=&" +
+                                "form%3Asearch-texte-avancer=&form%3Ainput-expression-exacte=&form%3Ainput-un-des-mots=&" +
+                                "form%3Ainput-aucun-des-mots=&form%3Ainput-nombre-debut=&form%3Ainput-nombre-fin=&" +
+                                "form%3AcalendarDebut_input=&form%3AcalendarFin_input=&form%3Aj_idt181_reflowDD=0_0&" +
+                                "form%3Aj_idt181%3Aj_idt186%3Afilter=&form%3Aj_idt181%3Aj_idt188%3Afilter=&" +
+                                "form%3Aj_idt181%3Aj_idt190%3Afilter=&form%3Aj_idt181%3Aj_idt192%3Afilter=&" +
+                                "form%3Aj_idt181%3Aj_idt194%3Afilter=&form%3Aj_idt181%3Aj_idt196%3Afilter=&form%3Aj_idt254_focus=&" +
+                                "form%3Aj_idt254_input=44323";
+                        fields.clear();
+                        fieldsArray = defaultFields.split("&");
+                        for (int i = 0; i < fieldsArray.length; i++) {
+                            String[] keyVal = fieldsArray[i].split("=");
+                            if(keyVal.length == 2)
+                                fields.put(keyVal[0], keyVal[1]);
+                        }
+
+                        request = aurionService.postGrades(cookie, data[2], fields);
+                        res = request.execute();
+
+                        if(res.isSuccessful()) {
+                            body = res.body().string();
+                            grades[0] = "success";
+                            grades[1] = body;
+                        }
                     }
                 }
 
@@ -303,5 +354,54 @@ public class Aurion {
         }
 
         return grades;
+    }
+
+    public String[] detailsPlanning(Long id) {
+
+        String cookie = PreferenceUtils.getSessionId();
+
+        Response<ResponseBody> res = null;
+
+        String[] data;
+        final String[] details = {"", ""};
+
+        //accueil
+        data = getPlanningData(cookie);
+
+        //postState
+        String defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt117&" +
+                "javax.faces.partial.execute=form%3Aj_idt117&javax.faces.partial.render=form%3AmodaleDetail+form%3AconfirmerSuppression&" +
+                "javax.faces.behavior.event=eventSelect&javax.faces.partial.event=eventSelect&" +
+                "form%3Aj_idt117_selectedEventId=" + id + "&" +
+                "form=form&form%3AlargeurDivCenter=1219&form%3Adate_input=30%2F08%2F2021&form%3Aweek=35-2021&form%3Aj_idt117_view=agendaWeek&" +
+                "form%3AoffsetFuseauNavigateur=-7200000&form%3Aonglets_activeIndex=0&form%3Aonglets_scrollState=0&form%3Aj_idt236_focus=&" +
+                "form%3Aj_idt236_input=44323";
+        HashMap<String, String> fields = new HashMap<String, String>();
+        String[] fieldsArray = defaultFields.split("&");
+        for (int i = 0; i < fieldsArray.length; i++) {
+            String[] keyVal = fieldsArray[i].split("=");
+            if(keyVal.length == 2)
+                fields.put(keyVal[0], keyVal[1]);
+            else fields.put(keyVal[0], "");
+        }
+
+        Call<ResponseBody> request = aurionService.postPlanningPage(cookie, data[1], fields);
+        try {
+            res = request.execute();
+            if(res.isSuccessful()){
+                String body = res.body().string();
+                details[0] = "success";
+                details[1] = body;
+            }
+            else{
+                details[0] = "authentication failed";
+            }
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+            details[0] = "Server couldn't be reached : check your connection";
+        }
+
+        return details;
     }
 }

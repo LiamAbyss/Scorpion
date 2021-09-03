@@ -37,6 +37,8 @@ public class Course {
         this.course_type = course_type;
     }
 
+    public Long id;
+
     @SerializedName("title")
     public String title;
 
@@ -57,18 +59,27 @@ public class Course {
     public String course_type;
 
     public String toString(){
-        return title + ";" + start + ";" + end + ";" + course_type + ";" + date;
+        return id + ";" + title + ";" + start + ";" + end + ";" + course_type + ";" + date;
     }
 
     public static Course fromString(String course) throws ParseException {
         Course newCourse = new Course();
         String[] splitString = course.split(";");
-        if(splitString.length < 5) return null;
-        newCourse.title = splitString[0];
-        newCourse.start = splitString[1];
-        newCourse.end = splitString[2];
-        newCourse.course_type = splitString[3];
-        newCourse.date = splitString[4];
+        if(splitString.length < Course.class.getDeclaredFields().length) {
+            newCourse.title = splitString[0];
+            newCourse.start = splitString[1];
+            newCourse.end = splitString[2];
+            newCourse.course_type = splitString[3];
+            newCourse.date = splitString[4];
+        }
+        else {
+            newCourse.id = Long.parseLong(splitString[0]);
+            newCourse.title = splitString[1];
+            newCourse.start = splitString[2];
+            newCourse.end = splitString[3];
+            newCourse.course_type = splitString[4];
+            newCourse.date = splitString[5];
+        }
         return newCourse;
     }
 

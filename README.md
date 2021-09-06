@@ -3,8 +3,9 @@
     <img src="https://img.shields.io/github/repo-size/liamabyss/scorpion" alt="Size-badge"/>
     <a href="https://choosealicense.com/licenses/mit/"><img src="https://img.shields.io/github/license/liamabyss/scorpion" alt="License"/></a>
     <img alt="Downloads" src="https://img.shields.io/github/downloads/liamabyss/scorpion/total">
-    <!--<img alt="Downloads" src="https://img.shields.io/github/downloads/liamabyss/scorpion/latest/total">-->
+    <img alt="Downloads" src="https://img.shields.io/github/downloads-pre/liamabyss/scorpion/latest/total">
 </div>
+
 
 # Présentation
 

@@ -34,7 +34,7 @@ L'application se charge elle même de vérifier si elle est à jour : si elle ne
 
 [Releases GitHub](https://github.com/LiamAbyss/Scorpion/releases) -> **Assets** -> Télécharger **Scorpion_XXXXXX_XXXX.apk** et l'ouvrir
 
-[Page personnelle](https://liamabyss.github.io/scorpion/)
+[Page personnelle](https://liamabyss.github.io/Scorpion/)
 
 Votre navigateur vous demandera sans doute une autorisation pour installer l'application, vous pouvez retirer cette autorisation après l'installation, mais vous devrez alors lui redonner l'autorisation à chaque mise à jour.
 

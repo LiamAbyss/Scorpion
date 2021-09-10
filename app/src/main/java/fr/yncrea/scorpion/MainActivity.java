@@ -121,11 +121,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mExecutorFling.execute(() -> {
             db = Room.databaseBuilder(getApplicationContext(), ScorpionDatabase.class, "Scorpion.db").build();
             getSupportFragmentManager().beginTransaction().add(R.id.container, mCoursesFragment, "planning").commit();
-            if(PreferenceUtils.getMustReset() == true) {
+            if(!PreferenceUtils.getMustReset().equals(getString(R.string.must_reset_id))) {
                 db.clearAllTables();
                 weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
                 refresh();
-                PreferenceUtils.setMustReset(false);
+                PreferenceUtils.setMustReset(getString(R.string.must_reset_id));
             }
             else {
                 runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         try {
-                                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
+                                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
                                             startActivity(myIntent);
                                         }
                                         catch(ActivityNotFoundException e) {
@@ -400,7 +400,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
         else if(id == R.id.nav_releases) {
             mExecutorFling.execute(() -> {
-                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
                 startActivity(myIntent);
             });
         }

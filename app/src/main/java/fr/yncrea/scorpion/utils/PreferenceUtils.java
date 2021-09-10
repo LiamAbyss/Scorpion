@@ -60,23 +60,23 @@ public class PreferenceUtils {
 		prefs.edit().putString(Constants.Preferences.PREF_NAME, name).apply();
 	}
 
-	public static boolean getAcceptedEula(){
+	public static String getAcceptedEula(){
 		final SharedPreferences prefs = getSharedPreferences();
-		return prefs.getBoolean(Constants.Preferences.PREF_ACCEPTED_EULA, ScorpionApplication.getContext().getResources().getBoolean(R.bool.accepted_eula));
+		return prefs.getString(Constants.Preferences.PREF_ACCEPTED_EULA, "");
 	}
 
-	public static void setAcceptedEula(boolean val){
+	public static void setAcceptedEula(String val){
 		final SharedPreferences prefs = getSharedPreferences();
-		prefs.edit().putBoolean(Constants.Preferences.PREF_ACCEPTED_EULA, val).apply();
+		prefs.edit().putString(Constants.Preferences.PREF_ACCEPTED_EULA, val).apply();
 	}
 
-	public static boolean getMustReset(){
+	public static String getMustReset(){
 		final SharedPreferences prefs = getSharedPreferences();
-		return prefs.getBoolean(Constants.Preferences.PREF_MUST_RESET, ScorpionApplication.getContext().getResources().getBoolean(R.bool.must_reset));
+		return prefs.getString(Constants.Preferences.PREF_MUST_RESET, "");
 	}
 
-	public static void setMustReset(boolean val){
+	public static void setMustReset(String val){
 		final SharedPreferences prefs = getSharedPreferences();
-		prefs.edit().putBoolean(Constants.Preferences.PREF_MUST_RESET, val).apply();
+		prefs.edit().putString(Constants.Preferences.PREF_MUST_RESET, val).apply();
 	}
 }

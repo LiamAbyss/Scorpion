@@ -1,5 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <bool name="must_reset">false</bool>
-    <bool name="accepted_eula">false</bool>
 </resources>

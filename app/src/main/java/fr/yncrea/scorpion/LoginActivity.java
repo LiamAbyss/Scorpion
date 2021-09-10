@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mLoginEditText = (EditText) findViewById(R.id.loginEditText);
         mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
 
-        if(PreferenceUtils.getAcceptedEula() == false) {
+        if(!PreferenceUtils.getAcceptedEula().equals(getString(R.string.eula_id))) {
             PreferenceUtils.setPassword("");
             showEula();
         }
@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             dialog.setCancelable(false);
             dialog.setView(view);
             dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue", (dialogInterface, which) -> {
-                PreferenceUtils.setAcceptedEula(true);
+                PreferenceUtils.setAcceptedEula(getString(R.string.eula_id));
                 return;
             });
             dialog.show();

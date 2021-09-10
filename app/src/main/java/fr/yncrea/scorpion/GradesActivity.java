@@ -158,7 +158,7 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         try {
-                                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
+                                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
                                             startActivity(myIntent);
                                         }
                                         catch(ActivityNotFoundException e) {
@@ -287,7 +287,7 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
         }
         else if(id == R.id.nav_releases) {
             mExecutor.execute(() -> {
-                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/scorpion/"));
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
                 startActivity(myIntent);
             });
         }

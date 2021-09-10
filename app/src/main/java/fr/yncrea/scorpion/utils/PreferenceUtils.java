@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.yncrea.scorpion.R;
 import fr.yncrea.scorpion.ScorpionApplication;
 
 public class PreferenceUtils {
@@ -57,5 +58,25 @@ public class PreferenceUtils {
 	public static void setName(String name){
 		final SharedPreferences prefs = getSharedPreferences();
 		prefs.edit().putString(Constants.Preferences.PREF_NAME, name).apply();
+	}
+
+	public static boolean getAcceptedEula(){
+		final SharedPreferences prefs = getSharedPreferences();
+		return prefs.getBoolean(Constants.Preferences.PREF_ACCEPTED_EULA, ScorpionApplication.getContext().getResources().getBoolean(R.bool.accepted_eula));
+	}
+
+	public static void setAcceptedEula(boolean val){
+		final SharedPreferences prefs = getSharedPreferences();
+		prefs.edit().putBoolean(Constants.Preferences.PREF_ACCEPTED_EULA, val).apply();
+	}
+
+	public static boolean getMustReset(){
+		final SharedPreferences prefs = getSharedPreferences();
+		return prefs.getBoolean(Constants.Preferences.PREF_MUST_RESET, ScorpionApplication.getContext().getResources().getBoolean(R.bool.must_reset));
+	}
+
+	public static void setMustReset(boolean val){
+		final SharedPreferences prefs = getSharedPreferences();
+		prefs.edit().putBoolean(Constants.Preferences.PREF_MUST_RESET, val).apply();
 	}
 }

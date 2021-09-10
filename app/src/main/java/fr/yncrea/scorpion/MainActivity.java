@@ -121,9 +121,17 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         mExecutorFling.execute(() -> {
             db = Room.databaseBuilder(getApplicationContext(), ScorpionDatabase.class, "Scorpion.db").build();
             getSupportFragmentManager().beginTransaction().add(R.id.container, mCoursesFragment, "planning").commit();
-            runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
-            requestPlanning(weekIndex, false, true);
-            runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
+            if(PreferenceUtils.getMustReset() == true) {
+                db.clearAllTables();
+                weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+                refresh();
+                PreferenceUtils.setMustReset(false);
+            }
+            else {
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
+                requestPlanning(weekIndex, false, true);
+                runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
+            }
         });
 
         findViewById(R.id.toTheLeftButton).setOnClickListener(new View.OnClickListener() {

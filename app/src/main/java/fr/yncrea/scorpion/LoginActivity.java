@@ -1,15 +1,23 @@
 package fr.yncrea.scorpion;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -34,6 +42,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mLoginEditText = (EditText) findViewById(R.id.loginEditText);
         mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
 
+        if(PreferenceUtils.getAcceptedEula() == false) {
+            PreferenceUtils.setPassword("");
+            showEula();
+        }
+
         final String username = PreferenceUtils.getLogin();
         final String password = PreferenceUtils.getPassword();
         mLoginEditText.setText(username);
@@ -48,6 +61,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         canClick = true;
+    }
+
+    public void showEula() {
+        runOnUiThread(() -> {
+            AlertDialog dialog = new AlertDialog.Builder(this).create();
+
+            View view = getLayoutInflater().inflate(R.layout.eula, null);
+            CheckBox checkBox = (CheckBox) view.findViewById(R.id.eulaCheckBox);
+
+            checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+                if(isChecked) {
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
+                }
+                else {
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+                }
+            });
+
+            ScrollView scrollView = (ScrollView) view.findViewById(R.id.eulaScrollView);
+            DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
+            int dpHeight = (int) (displayMetrics.heightPixels / displayMetrics.density);
+            scrollView.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, (int)(displayMetrics.heightPixels * 0.5)));
+
+            dialog.setCancelable(false);
+            dialog.setView(view);
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue", (dialogInterface, which) -> {
+                PreferenceUtils.setAcceptedEula(true);
+                return;
+            });
+            dialog.show();
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
+        });
     }
 
     @Override
@@ -127,7 +172,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     {
         Intent intent = new Intent(this, MainActivity.class);
         final Bundle extras = new Bundle();
-        extras.putString(Constants.Login.EXTRA_LOGIN, userName);
+        extras.putString(Constants.Preferences.PREF_LOGIN, userName);
         extras.putString(Constants.Preferences.PREF_NAME, name);
         intent.putExtras(extras);
         return intent;

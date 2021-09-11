@@ -61,7 +61,7 @@ public class GradesFragment  extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     public void onGradesRetrieved(List<Grade> grades) {
-        if(null != grades){
+        if(null != grades && mRecyclerView != null){
             final GradesAdapter adapter = new GradesAdapter(grades);
             mRecyclerView.setHasFixedSize(false);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));

@@ -1,3 +1,6 @@
+# keystore
+*.jks
+
 *.iml
 .gradle
 /local.properties

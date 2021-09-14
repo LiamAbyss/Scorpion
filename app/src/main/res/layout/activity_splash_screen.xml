@@ -26,6 +26,7 @@
         android:layout_marginTop="@dimen/splash_padding"
         android:layout_marginEnd="@dimen/splash_padding"
         android:layout_marginBottom="@dimen/splash_padding"
+        android:tintMode="multiply"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             public void run() {
                 if(confirmWindow == null || !confirmWindow.isShowing()) requestUpdate();
             }
-        }, 0, 300000);
+        }, 0, 43200000);
     }
 
     public void requestUpdate() {

@@ -136,7 +136,7 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
             public void run() {
                 if(confirmWindow == null || !confirmWindow.isShowing()) requestUpdate();
             }
-        }, 0, 300000);
+        }, 0, 43200000);
     }
 
     public void requestUpdate() {
@@ -322,6 +322,7 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
     public void onBackPressed() {
         mExecutor.execute(() -> {
             //runOnUiThread(() -> super.onBackPressed());
+            mUpdater.cancel();
             startActivity(new Intent(this, MainActivity.class));
             finish();
         });

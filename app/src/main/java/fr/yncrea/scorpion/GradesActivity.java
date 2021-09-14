@@ -291,6 +291,21 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
                 startActivity(myIntent);
             });
         }
+        else if(id == R.id.nav_feedback) {
+            mExecutor.execute(() -> {
+                Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/LiamAbyss/Scorpion/issues/new/choose"));
+                startActivity(myIntent);
+            });
+        }
+        else if(id == R.id.nav_mail) {
+            mExecutor.execute(() -> {
+                String[] email_address = new String[] {getString(R.string.scorpion_email_address)};
+                Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.scorpion_email_address), null));
+                intent.putExtra(Intent.EXTRA_EMAIL, email_address);
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject_question) + " : " + PreferenceUtils.getName());
+                startActivity(Intent.createChooser(intent, "Send Email"));
+            });
+        }
         else if( id == R.id.nav_logout) {
             mExecutor.execute(() -> {
                 mUpdater.cancel();

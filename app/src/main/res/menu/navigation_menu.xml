@@ -24,6 +24,14 @@
             android:id="@+id/nav_releases"
             android:icon="@drawable/ic_svg_path_1_"
             android:title="@string/action_go_to_releases" />
+        <item
+            android:id="@+id/nav_feedback"
+            android:icon="@drawable/ic_bullhorn_48"
+            android:title="@string/action_go_to_feedback" />
+        <item
+            android:id="@+id/nav_mail"
+            android:icon="@drawable/ic_outline_send_48"
+            android:title="@string/action_go_to_mail" />
     </group>
 
 </menu>

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Scorpion</string>
-    <string name="app_version">v0.4.1.1-beta</string>
+    <string name="app_version">v0.4.2-beta</string>
 
     <!-- LOGIN -->
     <string name="loginHint">Your login</string>
@@ -20,6 +20,7 @@
     <string name="action_go_to_releases">Aller aux releases</string>
     <string name="action_go_to_grades">Notes</string>
     <string name="action_go_to_planning">Planning</string>
+    <string name="action_go_to_feedback">Faire un signalement</string>
 
     <!-- GRADES -->
     <string name="empty_grade">/</string>
@@ -51,4 +52,7 @@ SOFTWARE.</string>
 
     <string name="must_reset_id">vyU4fo0U1aK6kVCBQ5uQ</string>
     <string name="eula_id">bgH2mOKrOvTgdEpqSY0M</string>
+    <string name="action_go_to_mail">Envoyer un mail</string>
+    <string name="scorpion_email_address">scorpion.fast-android@outlook.com</string>
+    <string name="email_subject_question">Feedback</string>
 </resources>

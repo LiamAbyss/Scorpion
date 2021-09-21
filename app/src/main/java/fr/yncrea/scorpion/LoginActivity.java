@@ -1,14 +1,12 @@
 package fr.yncrea.scorpion;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ScrollView;
@@ -25,6 +23,7 @@ import java.util.concurrent.Executors;
 import fr.yncrea.scorpion.api.Aurion;
 import fr.yncrea.scorpion.api.AurionService;
 import fr.yncrea.scorpion.utils.*;
+import fr.yncrea.scorpion.utils.security.EncryptionUtils;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     private Executor executor = Executors.newSingleThreadExecutor();
@@ -49,6 +48,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         final String username = PreferenceUtils.getLogin();
         final String password = PreferenceUtils.getPassword();
+
         mLoginEditText.setText(username);
         mPasswordEditText.setText(password);
         if(!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {

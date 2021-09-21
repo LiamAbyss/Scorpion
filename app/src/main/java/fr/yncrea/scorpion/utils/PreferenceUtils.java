@@ -2,13 +2,26 @@ package fr.yncrea.scorpion.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.security.keystore.KeyGenParameterSpec;
+import android.security.keystore.KeyProperties;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.RequiresApi;
 
-import fr.yncrea.scorpion.R;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
+import java.util.Base64;
+
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.spec.GCMParameterSpec;
+
 import fr.yncrea.scorpion.ScorpionApplication;
+import fr.yncrea.scorpion.utils.security.EncryptionUtils;
 
 public class PreferenceUtils {
 
@@ -23,12 +36,14 @@ public class PreferenceUtils {
 
 	public static String getLogin(){
 		final SharedPreferences prefs = getSharedPreferences();
-		return prefs.getString(Constants.Preferences.PREF_LOGIN, null);
+		final String login = EncryptionUtils.decrypt(prefs.getString(Constants.Preferences.PREF_LOGIN, null));
+		return login;
 	}
 
 	public static void setLogin(String login){
 		final SharedPreferences prefs = getSharedPreferences();
-		prefs.edit().putString(Constants.Preferences.PREF_LOGIN, login).apply();
+		final String encodedLogin = EncryptionUtils.encrypt(login);
+		prefs.edit().putString(Constants.Preferences.PREF_LOGIN, encodedLogin).apply();
 	}
 	public static String getSessionId(){
 		final SharedPreferences prefs = getSharedPreferences();
@@ -42,12 +57,14 @@ public class PreferenceUtils {
 	
 	public static String getPassword(){
 		final SharedPreferences prefs = getSharedPreferences();
-		return prefs.getString(Constants.Preferences.PREF_PASSWORD, null);
+		final String password = EncryptionUtils.decrypt(prefs.getString(Constants.Preferences.PREF_PASSWORD, null));
+		return password;
 	}
 	
 	public static void setPassword(String password){
 		final SharedPreferences prefs = getSharedPreferences();
-		prefs.edit().putString(Constants.Preferences.PREF_PASSWORD, password).apply();
+		final String encodedPassword = EncryptionUtils.encrypt(password);
+		prefs.edit().putString(Constants.Preferences.PREF_PASSWORD, encodedPassword).apply();
 	}
 
 	public static String getName(){

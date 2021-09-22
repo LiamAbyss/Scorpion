@@ -96,4 +96,14 @@ public class PreferenceUtils {
 		final SharedPreferences prefs = getSharedPreferences();
 		prefs.edit().putString(Constants.Preferences.PREF_MUST_RESET, val).apply();
 	}
+	
+	public static Long getUpdateTime(){
+		final SharedPreferences prefs = getSharedPreferences();
+		return prefs.getLong(Constants.Preferences.PREF_UPDATE_TIME, 0L);
+	}
+
+	public static void setUpdateTime(Long time){
+		final SharedPreferences prefs = getSharedPreferences();
+		prefs.edit().putLong(Constants.Preferences.PREF_UPDATE_TIME, time).apply();
+	}
 }

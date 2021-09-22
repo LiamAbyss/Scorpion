@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
 
 import fr.yncrea.scorpion.api.Aurion;
 import fr.yncrea.scorpion.api.AurionService;
+import fr.yncrea.scorpion.model.AurionResponse;
 import fr.yncrea.scorpion.utils.*;
 import fr.yncrea.scorpion.utils.security.EncryptionUtils;
 
@@ -53,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mPasswordEditText.setText(password);
         if(!TextUtils.isEmpty(username) && !TextUtils.isEmpty(password)) {
             if(PreferenceUtils.getSessionId() != null && !PreferenceUtils.getSessionId().equals("")){
-                startActivity(getHomeIntent(PreferenceUtils.getSessionId(), PreferenceUtils.getName()));
+                startActivity(getHomeIntent());
                 finish();
             }
             else{
@@ -122,13 +123,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         executor.execute(() -> {
             runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Logging in...", Toast.LENGTH_SHORT));
-            String[] sessionID = aurion.connect(username, password);
-            if(sessionID[0].equals("success")){
-                PreferenceUtils.setSessionId(sessionID[1]);
+            AurionResponse sessionID = aurion.connect(username, password);
+            if(sessionID.status == AurionResponse.SUCCESS){
+                PreferenceUtils.setSessionId(sessionID.cookie);
                 runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Retrieving data...", Toast.LENGTH_LONG));
-                String[] name = aurion.getName(sessionID[1]);
-                if(name[0].equals("success")){
-                    PreferenceUtils.setName(name[1]);
+                AurionResponse name = aurion.getHomePage(sessionID.cookie);
+                if(name.status == AurionResponse.SUCCESS){
+                    PreferenceUtils.setName(name.name);
                     PreferenceUtils.setLogin(username);
                     PreferenceUtils.setPassword(password);
                     runOnUiThread(() -> {
@@ -136,17 +137,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         mPasswordEditText.setEnabled(true);
                     });
                     canClick = true;
-                    startActivity(getHomeIntent(sessionID[1], name[1]));
+                    startActivity(getHomeIntent());
                     finish();
                 }
                 else {
-                    if(name[0].contains("connection")) {
-                        runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
-                    }
-                    else {
-                        runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
-                    }
                     runOnUiThread(() -> {
+                        showToast(this, name.message, Toast.LENGTH_LONG);
                         mLoginEditText.setEnabled(true);
                         mPasswordEditText.setEnabled(true);
                     });
@@ -158,24 +154,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mLoginEditText.setEnabled(true);
                 mPasswordEditText.setEnabled(true);
             });
-            if(sessionID[0].contains("connection")){
-                runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
-            }
-            else {
-                runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
-            }
+            runOnUiThread(()-> showToast(this, sessionID.message, Toast.LENGTH_LONG));
             canClick = true;
         });
     }
 
-    private Intent getHomeIntent(String userName, String name)
+    private Intent getHomeIntent()
     {
-        Intent intent = new Intent(this, MainActivity.class);
-        final Bundle extras = new Bundle();
-        extras.putString(Constants.Preferences.PREF_LOGIN, userName);
-        extras.putString(Constants.Preferences.PREF_NAME, name);
-        intent.putExtras(extras);
-        return intent;
+        return new Intent(this, MainActivity.class);
     }
 
     private void showToast(Context context, int resId, int duration){

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/grey_background"
+    android:clipToPadding="false"
+    android:paddingLeft="@dimen/list_padding"
+    android:paddingRight="@dimen/list_padding">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dayConstraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
+        android:background="@drawable/white_background"
+        android:clipToPadding="true"
+        android:elevation="6dp"
+        app:layout_constraintBottom_toTopOf="@+id/courses_recyclerview"
+        app:layout_constraintEnd_toEndOf="@+id/courses_recyclerview"
+        app:layout_constraintStart_toStartOf="@+id/courses_recyclerview"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/dayTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:text="dayTextView"
+            android:textColor="@color/colorContrast"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <FrameLayout
+            android:id="@+id/todayLayout1"
+            android:layout_width="@dimen/course_padding"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="invisible">
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/todayLayout2"
+            android:layout_width="@dimen/course_padding"
+            android:layout_height="0dp"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="invisible">
+
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/courses_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fadeScrollbars="false"
+        android:isScrollContainer="false"
+        android:nestedScrollingEnabled="false"
+        app:fastScrollEnabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dayConstraintLayout"
+        tools:layout_editor_absoluteX="4dp"
+        tools:listitem="@layout/course_listitem" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

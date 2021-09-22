@@ -10,99 +10,30 @@
     android:paddingLeft="@dimen/list_padding"
     android:paddingRight="@dimen/list_padding">
 
-    <TextView
-        android:id="@+id/holidayTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/course_list_item_top_padding"
-        android:background="@drawable/white_round_corners_background"
-        android:elevation="10dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:text="@string/holidays"
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dayConstraintLayout" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/dayConstraintLayout"
+        android:id="@+id/courseConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
-        android:background="@drawable/white_background"
-        android:clipToPadding="true"
-        android:elevation="6dp"
-        app:layout_constraintBottom_toTopOf="@+id/clickable_constraintLayout"
-        app:layout_constraintEnd_toEndOf="@+id/clickable_constraintLayout"
-        app:layout_constraintStart_toStartOf="@+id/clickable_constraintLayout"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/dayTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:text="TextView"
-            android:textColor="@color/colorContrast"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <FrameLayout
-            android:id="@+id/todayLayout1"
-            android:layout_width="@dimen/course_padding"
-            android:layout_height="0dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="invisible">
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/todayLayout2"
-            android:layout_width="@dimen/course_padding"
-            android:layout_height="0dp"
-            android:background="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="invisible">
-
-        </FrameLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clickable_constraintLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
         android:background="@drawable/white_round_corners_background"
         android:clipToPadding="false"
         android:elevation="5dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dayConstraintLayout"
-        tools:layout_editor_absoluteX="10dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
 
         <TextView
             android:id="@+id/courseTitleTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_list_item_left_padding"
             android:layout_marginTop="@dimen/course_list_item_top_padding"
-            android:text="TextView"
+            android:text="courseTitleTextView"
             android:textColor="@color/colorContrast"
+            app:layout_constraintEnd_toStartOf="@+id/courseInfoImageView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -111,13 +42,71 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_list_item_left_padding"
-            android:layout_marginTop="@dimen/course_list_item_top_padding"
             android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
-            android:text="TextView"
+            android:text="courseTypeTextView"
             android:textColor="@color/colorContrast"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseDescriptionTextView" />
+
+        <TextView
+            android:id="@+id/courseDescriptionTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/course_list_item_left_padding"
+            android:layout_marginTop="@dimen/course_list_item_top_padding"
+            android:layout_marginEnd="@dimen/course_list_item_right_padding"
+            android:text="courseDescriptionTextView"
+            android:textColor="@color/colorContrast"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseTeacherTextView" />
+
+        <TextView
+            android:id="@+id/courseTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/course_list_item_left_padding"
+            android:text="courseTimeTextView"
+            android:textColor="@color/colorContrast"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseRoomTextView" />
+
+        <TextView
+            android:id="@+id/courseTeacherTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/course_list_item_left_padding"
+            android:text="courseTeacherTextView"
+            android:textColor="@color/colorContrast"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/courseTimeTextView" />
+
+        <TextView
+            android:id="@+id/courseRoomTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/course_list_item_left_padding"
+            android:layout_marginTop="@dimen/course_list_item_top_padding"
+            android:text="courseRoomTextView"
+            android:textColor="@color/colorContrast"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />
 
+        <ImageView
+            android:id="@+id/courseInfoImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:foreground="@drawable/ic_outline_info_36"
+            android:foregroundTint="@color/colorContrast"
+            android:scaleType="fitXY"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:src="@drawable/ic_outline_info_36"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/colorContrast" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

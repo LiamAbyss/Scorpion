@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Scorpion</string>
-    <string name="app_version">v0.4.3-beta</string>
+    <string name="app_version">v0.5.0-beta</string>
 
     <!-- LOGIN -->
     <string name="loginHint">Your login</string>
@@ -44,13 +44,29 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\n\nIN NO EVENT SHALL THE A
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</string>
-
     <string name="privacy_eula_title">III. Privacy Policy</string>
     <string name="privacy_eula_content">We do not collect any information as you use Scorpion.\n\nYour login, password, name, timetables, grades and any other information will only be stored locally on your smartphone.\n\nIt is your responsibility to ensure the security of this information. You can delete the data from the application at any time in the settings of your smartphone.
     </string>
     <string name="iAgree">I agree to the Terms an Conditions</string>
 
-    <string name="must_reset_id"></string>
+    <string name="long_date_template">dddd D mmmm YYYY</string>
+    <string name="until">Au</string>
+    <string name="hour_template">hh:mm</string>
+    <string name="at">à</string>
+    <string name="from">De</string>
+    <string name="status">Statut</string>
+    <string name="topic">Matière</string>
+    <string name="course_type">Type d\'enseignement</string>
+    <string name="description">Description</string>
+    <string name="isExam">Est une épreuve</string>
+    <string name="room">Salle</string>
+    <string name="course">Cours</string>
+    <string name="teachers">Intervenants</string>
+    <string name="students">Apprenants</string>
+    <string name="the">Le</string>
+    <string name="update_timeout">21600000</string>
+
+    <string name="must_reset_id">sgN3rGJabcwifX63IhbV</string>
     <string name="eula_id">bgH2mOKrOvTgdEpqSY0M</string>
     <string name="action_go_to_mail">Envoyer un mail</string>
     <string name="scorpion_email_address">scorpion.fast-android@outlook.com</string>

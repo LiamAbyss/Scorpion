@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 import fr.yncrea.scorpion.dao.ScorpionPlanningDao;
 import fr.yncrea.scorpion.model.Planning;
 
-@Database(entities = {Planning.class}, version = 1)
+@Database(entities = {Planning.class}, version = 1, exportSchema = false)
 public abstract class ScorpionDatabase extends RoomDatabase {
     public abstract ScorpionPlanningDao aurionPlanningDao();
 }

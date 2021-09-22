@@ -2,16 +2,23 @@ package fr.yncrea.scorpion.api;
 
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import fr.yncrea.scorpion.utils.Grade;
+import fr.yncrea.scorpion.model.AurionResponse;
+import fr.yncrea.scorpion.model.Course;
+import fr.yncrea.scorpion.model.CourseDetails;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
+import fr.yncrea.scorpion.utils.UtilsMethods;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -38,46 +45,44 @@ public class Aurion {
     /**
      * @param username
      * @param password
-     * @return A String array of size 2
-     * Element 0 is either "success" or an error message
-     * If element 0 is "success", element 1 is the connection cookie requested, otherwise it is an empty String
+     * @return AurionResponse
      */
-    public String[] connect(String username, String password){
+    public AurionResponse connect(String username, String password){
         Response<ResponseBody> res = null;
-        final String[] sessionID = {"", ""};
         Call<ResponseBody> request = aurionService.getSessionIdResponse(username, password);
+        AurionResponse aurionResponse = new AurionResponse();
 
         try {
             res = request.execute();
             String cookies = res.headers().get("Set-Cookie");
             if(res.code() == 302){
                 Log.d("LOGIN", "Login success");
-                sessionID[0] = "success";
-                sessionID[1] = cookies.substring(cookies.indexOf("JSESSIONID"), cookies.indexOf(";", cookies.indexOf("JSESSIONID")));
-                PreferenceUtils.setSessionId(sessionID[1]);
+                aurionResponse.status = AurionResponse.SUCCESS;
+                aurionResponse.cookie = cookies.substring(cookies.indexOf("JSESSIONID"), cookies.indexOf(";", cookies.indexOf("JSESSIONID")));
+                PreferenceUtils.setSessionId(aurionResponse.cookie);
             }
             else{
-                sessionID[0] = "authentication failed";
-                Log.d("LOGIN", sessionID[0]);
+                aurionResponse.status = AurionResponse.FAILURE;
+                aurionResponse.message = "Authentication failed";
+                Log.d("LOGIN", aurionResponse.message);
             }
         }
         catch(IOException e) {
             e.printStackTrace();
-            sessionID[0] = "server couldn't be reached : check your connection";
+            aurionResponse.status = AurionResponse.FAILURE;
+            aurionResponse.message = "Server couldn't be reached : check your connection";
         }
-        return sessionID;
+        return aurionResponse;
     }
 
     /**
      * @param connCookie
-     * @return A String array of size 2
-     * Element 0 is either "success" or an error message
-     * If element 0 is "success", element 1 is the name requested, otherwise it is an empty String
+     * @return AurionResponse
      */
-    public String[] getName(String connCookie){
+    public AurionResponse getHomePage(String connCookie){
         Response<ResponseBody> res = null;
-        final String[] name = {"", "", "", ""};
         Call<ResponseBody> requestName = aurionService.getHomePageHtml(connCookie);
+        AurionResponse aurionResponse = new AurionResponse();
 
         try {
             res = requestName.execute();
@@ -85,47 +90,48 @@ public class Aurion {
             if(res.isSuccessful()){
                 try {
                     body = res.body().string();
-                    name[0] = "success";
-                    name[1] = body.substring(body.indexOf("<h3>") + 4, body.indexOf("</h3>"));
+                    aurionResponse.status = AurionResponse.SUCCESS;
+                    aurionResponse.name = body.substring(body.indexOf("<h3>") + 4, body.indexOf("</h3>"));
 
                     String from = "id=\"j_id1:javax.faces.ViewState:0\" value=\"";
                     String to = "\" autocomplete=\"off\" />\n</form></div></body>";
-                    name[2] = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
+                    aurionResponse.viewState = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
 
                     to = "Mon Planning";
                     String tmpSubstring = body.substring(body.indexOf(to) - 300, body.indexOf(to));
                     from = "form:sidebar_menuid':'";
                     to = "'})";
-                    name[3] = tmpSubstring.substring(tmpSubstring.indexOf(from) + from.length(), tmpSubstring.indexOf(to));
+                    aurionResponse.schoolingMenuId = tmpSubstring.substring(tmpSubstring.indexOf(from) + from.length(), tmpSubstring.indexOf(to));
 
                     Log.d("LOGIN", "Name parsing success");
                 } catch (IOException e) {
-                    name[0] = "Error while parsing";
-                    Log.d("LOGIN", name[0]);
+                    aurionResponse.status = AurionResponse.FAILURE;
+                    aurionResponse.message = "Parsing failed";
+                    Log.d("LOGIN", aurionResponse.message);
                     e.printStackTrace();
                 }
             }
             else{
-                name[0] = "authentication failed";
+                aurionResponse.status = AurionResponse.FAILURE;
+                aurionResponse.message = "Authentication failed";
             }
         }
         catch(IOException e) {
             e.printStackTrace();
-            name[0] = "server couldn't be reached : check your connection";
+            aurionResponse.status = AurionResponse.FAILURE;
+            aurionResponse.message = "Server couldn't be reached : check your connection";
         }
-        return name;
+        return aurionResponse;
     }
 
     /**
      * @param connCookie
-     * @return A String array of size 2
-     * Element 0 is either "success" or an error message
-     * If element 0 is "success", element 1 is the viewState requested, otherwise it is an empty String
+     * @return AurionResponse
      */
-    public String[] getPlanningData(String connCookie){
+    public AurionResponse getPlanningData(String connCookie){
         Response<ResponseBody> res = null;
-        final String[] data = {"", "", ""};
         Call<ResponseBody> requestName = aurionService.getPlanningPageHtml(connCookie);
+        AurionResponse aurionResponse = new AurionResponse();
 
         try {
             res = requestName.execute();
@@ -133,48 +139,52 @@ public class Aurion {
             if(res.isSuccessful()){
                 try {
                     body = res.body().string();
+                    aurionResponse.status = AurionResponse.SUCCESS;
+
                     String from = "id=\"j_id1:javax.faces.ViewState:0\" value=\"";
                     String to = "\" autocomplete=\"off\" />\n</form></div></body>";
-                    data[0] = "success";
-                    data[1] = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
+                    aurionResponse.viewState = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
 
                     from = "<div id=\"form:j_idt";
                     to = "\" class=\"schedule\">";
                     if(body.indexOf(to) != -1 && body.indexOf(from) != -1)
                     {
                         String tmpSubstring = body.substring(body.indexOf(to) - 50, body.indexOf(to) + to.length());
-                        data[2] = tmpSubstring.substring(tmpSubstring.indexOf(from) + from.length(), tmpSubstring.indexOf(to));
+                        aurionResponse.formId = tmpSubstring.substring(tmpSubstring.indexOf(from) + from.length(), tmpSubstring.indexOf(to));
                     }
-                    //data[2]="117";
+                    else {
+                        aurionResponse.formId = "117";
+                    }
 
                     Log.d("LOGIN", "ViewState parsing success");
                 } catch (IOException e) {
-                    data[0] = "Error while parsing";
-                    Log.d("LOGIN", data[0]);
+                    aurionResponse.status = AurionResponse.FAILURE;
+                    aurionResponse.message = "Parsing failed";
+                    Log.d("LOGIN", aurionResponse.message);
                     e.printStackTrace();
                 }
             }
             else{
-                data[0] = "authentication failed";
+                aurionResponse.status = AurionResponse.FAILURE;
+                aurionResponse.message = "Authentication failed";
             }
         }
         catch(IOException e) {
             e.printStackTrace();
-            data[0] = "server couldn't be reached : check your connection";
+            aurionResponse.status = AurionResponse.FAILURE;
+            aurionResponse.message = "Server couldn't be reached : check your connection";
         }
-        return data;
+        return aurionResponse;
     }
 
     /**
      * @param connCookie
-     * @return A String array of size 2
-     * Element 0 is either "success" or an error message
-     * If element 0 is "success", element 1 is the name requested, otherwise it is an empty String
+     * @return AurionResponse
      */
-    public String[] getCalendarAsXML(String connCookie, int weekIndex){
+    public AurionResponse getCalendarAsXML(String connCookie, int weekIndex){
         Response<ResponseBody> res = null;
-        final String[] calendar = {"", ""};
-        String[] data;
+        AurionResponse aurionResponse = new AurionResponse();
+        AurionResponse data;
         DateFormat df = new SimpleDateFormat("dd/MM/yyyy", Locale.FRANCE);
 
         long now = Calendar.getInstance().getTimeInMillis();
@@ -189,11 +199,11 @@ public class Aurion {
         String[] fieldsArray;
 
         //accueil
-        data = getName(connCookie);
+        data = getHomePage(connCookie);
 
         //postState
         defaultFields = "form=form&form%3AlargeurDivCenter=835&form%3Asauvegarde=&form%3Aj_idt772_focus=&form%3Aj_idt772_input=44323&form%3Asidebar=form%3Asidebar&" +
-                "form%3Asidebar_menuid=" + data[3];
+                "form%3Asidebar_menuid=" + data.schoolingMenuId;
         fields.clear();
         fieldsArray = defaultFields.split("&");
         for (int i = 0; i < fieldsArray.length; i++) {
@@ -202,18 +212,19 @@ public class Aurion {
                 fields.put(keyVal[0], keyVal[1]);
             else fields.put(keyVal[0], "");
         }
-        Call<ResponseBody> request = aurionService.postMainMenuPage(connCookie, data[2], fields);
+
+        Call<ResponseBody> request = aurionService.postMainMenuPage(connCookie, data.viewState, fields);
         try {
             res = request.execute();
             if(res.code() == 302){
                 data = getPlanningData(connCookie);
                 defaultFields = "javax.faces.partial.ajax=true"
-                        + "&javax.faces.source=form%3Aj_idt" + data[2]
-                        + "&javax.faces.partial.execute=form%3Aj_idt" + data[2]
-                        + "&javax.faces.partial.render=form%3Aj_idt" + data[2]
-                        + "&form%3Aj_idt" + data[2] + "=form%3Aj_idt" + data[2]
-                        + "&form%3Aj_idt" + data[2] + "_start=" + start
-                        + "&form%3Aj_idt" + data[2] + "_end=" + end
+                        + "&javax.faces.source=form%3Aj_idt" + data.formId
+                        + "&javax.faces.partial.execute=form%3Aj_idt" + data.formId
+                        + "&javax.faces.partial.render=form%3Aj_idt" + data.formId
+                        + "&form%3Aj_idt" + data.formId + "=form%3Aj_idt" + data.formId
+                        + "&form%3Aj_idt" + data.formId + "_start=" + start
+                        + "&form%3Aj_idt" + data.formId + "_end=" + end
                         + "&form=form"
                         + "&form%3Adate_input=" + df.format(start).replace("/", "%2F")
                         + "&form%3Aweek=" + weekIndex + "-" + Calendar.getInstance().get(Calendar.YEAR);
@@ -224,38 +235,41 @@ public class Aurion {
                     if(keyVal.length == 2)
                         fields.put(keyVal[0], keyVal[1]);
                 }
-                request = aurionService.postPlanningPage(connCookie, data[1], fields);
+                request = aurionService.postPlanningPage(connCookie, data.viewState, fields);
 
                 String body = null;
                 res = request.execute();
                 if(res.isSuccessful()){
                     body = res.body().string();
-                    calendar[0] = "success";
-                    calendar[1] = body;
+                    aurionResponse.status = AurionResponse.SUCCESS;
+                    aurionResponse.body = body;
                 }
             }
             else{
-                calendar[0] = "authentication failed";
+                aurionResponse.status = AurionResponse.FAILURE;
+                aurionResponse.message = "Authentication failed";
             }
         }
         catch(IOException e) {
             e.printStackTrace();
-            calendar[0] = "Server couldn't be reached : check your connection";
+            aurionResponse.status = AurionResponse.FAILURE;
+            aurionResponse.message = "Server couldn't be reached : check your connection";
         }
 
-        return calendar;
+        return aurionResponse;
     }
 
-    public String[] getGrades(){
+    /**
+     * @return AurionResponse
+     */
+    public AurionResponse getGrades(){
         String cookie = PreferenceUtils.getSessionId();
-
+        AurionResponse aurionResponse = new AurionResponse();
+        AurionResponse data;
         Response<ResponseBody> res = null;
 
-        String[] data;
-        final String[] grades = {"", ""};
-
         //accueil
-        data = getName(cookie);
+        data = getHomePage(cookie);
 
         //postState
         String defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt52&" +
@@ -271,7 +285,7 @@ public class Aurion {
             else fields.put(keyVal[0], "");
         }
 
-        Call<ResponseBody> request = aurionService.postMainMenuPage(cookie, data[2], fields);
+        Call<ResponseBody> request = aurionService.postMainMenuPage(cookie, data.viewState, fields);
         try {
             res = request.execute();
             if(res.isSuccessful()){
@@ -295,11 +309,11 @@ public class Aurion {
                         fields.put(keyVal[0], keyVal[1]);
                     else fields.put(keyVal[0], "");
                 }
-                request = aurionService.postMainMenuPage(cookie, data[2], fields);
+                request = aurionService.postMainMenuPage(cookie, data.viewState, fields);
 
                 res = request.execute();
                 if(res.code() == 302){
-                    body = res.headers().toString();
+                    //body = res.headers().toString();
                     request = aurionService.getGradesHtml(cookie);
                     res = request.execute();
                     if(res.isSuccessful()){
@@ -308,7 +322,7 @@ public class Aurion {
                         from = "javax.faces.ViewState:0\" value=\"";
                         to = "\" autocomplete=\"off\" />";
 
-                        data[2] = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
+                        data.viewState = body.substring(body.indexOf(from) + from.length(), body.indexOf(to));
                         int start = 0, rows = 10000;
                         defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt181&" +
                                 "javax.faces.partial.execute=form%3Aj_idt181&javax.faces.partial.render=form%3Aj_idt181&" +
@@ -332,42 +346,57 @@ public class Aurion {
                                 fields.put(keyVal[0], keyVal[1]);
                         }
 
-                        request = aurionService.postGrades(cookie, data[2], fields);
+                        request = aurionService.postGrades(cookie, data.viewState, fields);
                         res = request.execute();
 
                         if(res.isSuccessful()) {
                             body = res.body().string();
-                            grades[0] = "success";
-                            grades[1] = body;
+                            aurionResponse.status = AurionResponse.SUCCESS;
+                            aurionResponse.body = body;
                         }
                     }
                 }
 
             }
             else{
-                grades[0] = "authentication failed";
+                aurionResponse.status = AurionResponse.FAILURE;
+                aurionResponse.message = "Authentication failed";
             }
         }
         catch(IOException e) {
             e.printStackTrace();
-            grades[0] = "Server couldn't be reached : check your connection";
+            aurionResponse.status = AurionResponse.FAILURE;
+            aurionResponse.message = "Server couldn't be reached : check your connection";
         }
 
-        return grades;
+        return aurionResponse;
     }
 
-    public String[] detailsPlanning(Long id) {
+    /**
+     * @param id The id of the course
+     * @return AurionResponse
+     */
+    public AurionResponse detailsPlanning(Long id) {
+        return detailsPlanning(id, null);
+    }
+
+    /**
+     * @param id The id of the course
+     * @param viewState
+     * @return AurionResponse
+     */
+    public AurionResponse detailsPlanning(Long id, String viewState) {
 
         String cookie = PreferenceUtils.getSessionId();
-
         Response<ResponseBody> res = null;
-
-        String[] data;
-        final String[] details = {"", ""};
+        AurionResponse aurionResponse = new AurionResponse();
+        AurionResponse data;
 
         //accueil
-        data = getPlanningData(cookie);
-
+        if(viewState == null) {
+            data = getPlanningData(cookie);
+            viewState = data.viewState;
+        }
         //postState
         String defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt117&" +
                 "javax.faces.partial.execute=form%3Aj_idt117&javax.faces.partial.render=form%3AmodaleDetail+form%3AconfirmerSuppression&" +
@@ -385,23 +414,76 @@ public class Aurion {
             else fields.put(keyVal[0], "");
         }
 
-        Call<ResponseBody> request = aurionService.postPlanningPage(cookie, data[1], fields);
+        Call<ResponseBody> request = aurionService.postPlanningPage(cookie, viewState, fields);
         try {
             res = request.execute();
             if(res.isSuccessful()){
                 String body = res.body().string();
-                details[0] = "success";
-                details[1] = body;
+                aurionResponse.status = AurionResponse.SUCCESS;
+                aurionResponse.body = body;
             }
             else{
-                details[0] = "authentication failed";
+                aurionResponse.status = AurionResponse.FAILURE;
+                aurionResponse.message = "Authentication failed";
             }
         }
         catch(IOException e) {
             e.printStackTrace();
-            details[0] = "Server couldn't be reached : check your connection";
+            aurionResponse.status = AurionResponse.FAILURE;
+            aurionResponse.message = "Server couldn't be reached : check your connection";
         }
 
-        return details;
+        return aurionResponse;
     }
+
+    public List<CourseDetails> getPlanning(int weekIndex) {
+        AurionResponse calendar = getCalendarAsXML(PreferenceUtils.getSessionId(), weekIndex);
+        List<Course> tmpCourses = new ArrayList<>();
+        List<CourseDetails> res = new ArrayList<>();
+
+        if(calendar.status == AurionResponse.SUCCESS) {
+            JSONArray planningJSON = UtilsMethods.XMLToJSONArray(calendar.body);
+            if(planningJSON == null) {
+                return null;
+            }
+
+            try {
+                tmpCourses = UtilsMethods.JSONArrayToCourseList(planningJSON);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if(tmpCourses.size() == 1 && tmpCourses.get(0).id == -1) {
+                res.add(new CourseDetails());
+            }
+            else {
+                String viewState = getPlanningData(PreferenceUtils.getSessionId()).viewState;
+
+                for (int i = 0; i < tmpCourses.size(); i++) {
+                    AurionResponse details = detailsPlanning(tmpCourses.get(i).id, viewState);
+
+                    if (details.status == AurionResponse.SUCCESS) {
+                        CourseDetails d = UtilsMethods.parseCourseDetails(details.body);
+                        if (d.longDate != "") {
+                            d.date = tmpCourses.get(i).date;
+                            d.id = tmpCourses.get(i).id;
+                            d.dateStart = tmpCourses.get(i).start;
+                            d.dateEnd = tmpCourses.get(i).end;
+                            res.add(d);
+                        }
+                    }
+                }
+            }
+
+            if(res.size() > 0) return res;
+        }
+        else {
+            if(connect(PreferenceUtils.getLogin(), PreferenceUtils.getPassword()).status
+                    == AurionResponse.SUCCESS) {
+                return getPlanning(weekIndex);
+            }
+        }
+        return null;
+    }
+
 }

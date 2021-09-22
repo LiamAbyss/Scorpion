@@ -1,8 +1,8 @@
 package fr.yncrea.scorpion;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,53 +17,39 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GestureDetectorCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.room.Room;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonArray;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import fr.yncrea.scorpion.api.Aurion;
 import fr.yncrea.scorpion.api.GithubService;
 import fr.yncrea.scorpion.database.ScorpionDatabase;
-import fr.yncrea.scorpion.model.Planning;
-import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
+import fr.yncrea.scorpion.model.AurionResponse;
+import fr.yncrea.scorpion.model.Grade;
 import fr.yncrea.scorpion.ui.fragments.GradesFragment;
-import fr.yncrea.scorpion.utils.Constants;
-import fr.yncrea.scorpion.utils.Course;
-import fr.yncrea.scorpion.utils.Grade;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import fr.yncrea.scorpion.utils.UtilsMethods;
-import okhttp3.internal.Util;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class GradesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-    private Executor mExecutorGit = Executors.newSingleThreadExecutor();
-    private Executor mExecutor = Executors.newSingleThreadExecutor();
-    private Aurion mAurion = new Aurion();
+    private final Executor mExecutorGit = Executors.newSingleThreadExecutor();
+    private final Executor mExecutor = Executors.newSingleThreadExecutor();
+    private final Aurion mAurion = new Aurion();
     private GithubService mGithubService;
-    private List<Grade> mGrades = new ArrayList<Grade>();
+    private List<Grade> mGrades = new ArrayList<>();
     private GradesFragment mGradesFragment = new GradesFragment();
     private Toast mToast;
     private ScorpionDatabase db;
-    private Timer mUpdater;
-    private AlertDialog confirmWindow;
 
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
@@ -115,6 +100,11 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
             runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
         });*/
 
+        mGithubService = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build().create(GithubService.class);
+
         mExecutor.execute(() -> {
             mGradesFragment = new GradesFragment();
             getSupportFragmentManager().beginTransaction()
@@ -124,23 +114,20 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
 
             showGrades();
         });
-
-        mGithubService = new Retrofit.Builder()
-                .baseUrl("https://api.github.com")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build().create(GithubService.class);
-
-        mUpdater = new Timer();
-        mUpdater.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if(confirmWindow == null || !confirmWindow.isShowing()) requestUpdate();
-            }
-        }, 0, 43200000);
     }
 
-    public void requestUpdate() {
+    public void tryRequestUpdate() {
         mExecutorGit.execute(() -> {
+            Long lastTime = PreferenceUtils.getUpdateTime();
+            long now = Calendar.getInstance().getTimeInMillis();
+
+            if(now < lastTime + Long.parseLong(getString(R.string.update_timeout))) {
+                return;
+            }
+            else {
+                PreferenceUtils.setUpdateTime(now);
+            }
+
             try {
                 Response<JsonArray> releases = mGithubService.getReleases().execute();
                 if(releases.body() == null) return;
@@ -148,27 +135,21 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
                 if(!latestVersion.equals(getString(R.string.app_version))) {
                     String latestVersionDesc = releases.body().get(0).getAsJsonObject().get("body").getAsString();
                     //String latestVersionLink = releases.body().get(0).getAsJsonObject().get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
-                    runOnUiThread(() -> {
-                        confirmWindow = new AlertDialog.Builder(this)
-                                .setTitle("Update available !")
-                                .setMessage("A new version of Scorpion is available !\n\n"
-                                        + "Version : " + latestVersion + "\n\n"
-                                        + "Description : \n" + latestVersionDesc)
-                                .setPositiveButton("Update now", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        try {
-                                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
-                                            startActivity(myIntent);
-                                        }
-                                        catch(ActivityNotFoundException e) {
-                                            //runOnUiThread(() -> showToast(this, "No application can handle this request." + " Please install a web browser",  Toast.LENGTH_LONG));
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("Maybe later", null).show();
-                    });
+                    runOnUiThread(() -> new AlertDialog.Builder(this)
+                            .setTitle("Update available !")
+                            .setMessage("A new version of Scorpion is available !\n\n"
+                                    + "Version : " + latestVersion + "\n\n"
+                                    + "Description : \n" + latestVersionDesc)
+                            .setPositiveButton("Update now", (dialog, which) -> {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    //runOnUiThread(() -> showToast(this, "No application can handle this request." + " Please install a web browser",  Toast.LENGTH_LONG));
+                                    e.printStackTrace();
+                                }
+                            })
+                            .setNegativeButton("Maybe later", null).show());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -185,17 +166,19 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
     }
 
     public void requestGrades(boolean forceRequest, int retryingState){
+        tryRequestUpdate();
+
         runOnUiThread(() -> mGradesFragment.setRefreshing(true));
-        String[] res = mAurion.getGrades();
-        if(res[0] == "success"){
-            mGrades = UtilsMethods.parseGrades(res[1]);
+        AurionResponse res = mAurion.getGrades();
+        if(res.status == AurionResponse.SUCCESS){
+            mGrades = UtilsMethods.parseGrades(res.body);
         }
-        else if(res[0] == "authentication failed" && retryingState == 0 && connect()){
+        else if(res.message.contains("Authentication") && retryingState == 0 && connect()){
             requestGrades(forceRequest, retryingState + 1);
             return;
         }
         else{
-            runOnUiThread(() -> showToast(ScorpionApplication.getContext(), res[0], Toast.LENGTH_LONG));
+            runOnUiThread(() -> showToast(this, res.message, Toast.LENGTH_LONG));
             return;
         }
         runOnUiThread(() -> mGradesFragment.setRefreshing(false));
@@ -215,16 +198,13 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
     }
 
     public boolean connect() {
-        String[] sessionID = mAurion.connect(PreferenceUtils.getLogin(), PreferenceUtils.getPassword());
-        if(sessionID[0].equals("success")){
-            PreferenceUtils.setSessionId(sessionID[1]);
+        AurionResponse sessionID = mAurion.connect(PreferenceUtils.getLogin(), PreferenceUtils.getPassword());
+        if(sessionID.status == AurionResponse.SUCCESS){
+            PreferenceUtils.setSessionId(sessionID.cookie);
             return true;
         }
-        if(sessionID[0].contains("connection")){
-            runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
-        }
         else {
-            runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
+            runOnUiThread(()-> showToast(this, sessionID.message, Toast.LENGTH_LONG));
         }
         return false;
     }
@@ -270,22 +250,19 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
         int id = item.getItemId();
 
         if( id == R.id.actionRefresh) {
-            mExecutor.execute(() -> {
-                refresh();
-            });
+            mExecutor.execute(this::refresh);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("RtlHardcoded")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         clickedItem = id;
-        if(id == R.id.nav_planning) {
-            mUpdater.cancel();
-        }
-        else if(id == R.id.nav_releases) {
+
+        if(id == R.id.nav_releases) {
             mExecutor.execute(() -> {
                 Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
                 startActivity(myIntent);
@@ -308,7 +285,6 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
         }
         else if( id == R.id.nav_logout) {
             mExecutor.execute(() -> {
-                mUpdater.cancel();
                 PreferenceUtils.setPassword(null);
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
@@ -330,8 +306,7 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
 
     private Intent getPlanningIntent()
     {
-        Intent intent = new Intent(this, MainActivity.class);
-        return intent;
+        return new Intent(this, MainActivity.class);
     }
 
 }

@@ -28,5 +28,6 @@
     <dimen name="navigation_button_width">30dp</dimen>
     <dimen name="button_separator">1dp</dimen>
     <dimen name="splash_padding">30dp</dimen>
+    <dimen name="course_detail_padding">20dp</dimen>
 
 </resources>

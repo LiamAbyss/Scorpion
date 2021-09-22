@@ -2,20 +2,15 @@ package fr.yncrea.scorpion.adapters;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.Space;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.w3c.dom.Text;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,29 +19,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import fr.yncrea.scorpion.GradesActivity;
 import fr.yncrea.scorpion.MainActivity;
-import fr.yncrea.scorpion.ScorpionApplication;
 import fr.yncrea.scorpion.R;
-import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
-import fr.yncrea.scorpion.utils.Course;
-public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesViewHolder>{
+import fr.yncrea.scorpion.ScorpionApplication;
+import fr.yncrea.scorpion.model.CourseDetails;
 
-    private List<Course> mCourses;
+public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
+
+    private List<CourseDetails> mCourses;
     private int mPosition;
     private MainActivity parent;
 
-    public CoursesAdapter(List<Course> courses) {
+    public CoursesAdapter(List<CourseDetails> courses) {
         mCourses = courses;
 
-        for(Course c : mCourses) {
-            if(c.getTitle().equals("\u200B") || c.getDate().equals("\u200b")) {
+        for(CourseDetails c : mCourses) {
+            if(c.course.equals("") || c.dateStart.equals("")) {
                 mPosition++;
                 continue;
             }
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ", Locale.FRANCE);
             try {
-                Date date = dateFormat.parse(c.getStart());
+                Date date = dateFormat.parse(c.dateStart);
                 dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
                 String first = dateFormat.format(Calendar.getInstance().getTime());
                 String second = dateFormat.format(date);
@@ -66,9 +60,29 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
     }
 
     @Override
-    public CoursesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(ScorpionApplication.getContext()).inflate(R.layout.course_listitem, parent, false);
+    public int getItemViewType(int mPosition) {
+        if(mCourses.get(mPosition) != null) {
+
+            CourseDetails currentCourse = mCourses.get(mPosition);
+            if (currentCourse.course.equals("Aucun enregistrement") && currentCourse.dateStart.equals("Aucun enregistrement")) {
+                return 0;
+            }
+            return 1;
+        }
+        return -1;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view;
+
+        if (viewType == 0) {
+            view = LayoutInflater.from(ScorpionApplication.getContext()).inflate(R.layout.holiday_listitem, parent, false);
+            return new HolidayViewHolder(view);
+        }
+        view = LayoutInflater.from(ScorpionApplication.getContext()).inflate(R.layout.course_listitem, parent, false);
         return new CoursesViewHolder(view);
+
     }
 
     public void addContext(Context context) {
@@ -76,55 +90,53 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
     }
 
     @Override
-    public void onBindViewHolder(CoursesViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder mHolder, int position) {
+
         if(mCourses.get(position) != null){
 
-            /*ConstraintLayout clickableConstraintLayout = (ConstraintLayout) holder.mView.findViewById(R.id.clickable_constraintLayout);
-            clickableConstraintLayout.setOnClickListener((View v) -> {
-                parent.requestDetailsPlanning(mCourses.get(position).id);
-            });*/
+            CourseDetails currentCourse = mCourses.get(position);
 
-            if(mCourses.get(position).getTitle().equals("\u200B")) {
-                holder.day.setVisibility(View.GONE);
-                holder.holiday.setVisibility(View.VISIBLE);
-                holder.courseType.setVisibility(View.GONE);
-                holder.title.setVisibility(View.GONE);
-                holder.dayConstraintLayout.setVisibility(View.GONE);
+            if(currentCourse.course.equals("Aucun enregistrement") && currentCourse.dateStart.equals("Aucun enregistrement")) {
+                HolidayViewHolder HolidayHolder = (HolidayViewHolder) mHolder;
+                return;
             }
-            else if(mCourses.get(position).getDate().equals("\u200B")) {
-                holder.day.setVisibility(View.GONE);
-                holder.holiday.setVisibility(View.GONE);
-                holder.courseType.setVisibility(View.VISIBLE);
-                holder.title.setVisibility(View.VISIBLE);
-                holder.dayConstraintLayout.setVisibility(View.GONE);
+
+            CoursesViewHolder holder = (CoursesViewHolder)mHolder;
+            holder.info.setOnClickListener((View v) -> {
+                parent.showDetails(mCourses.get(position).id);
+            });
+
+            if(TextUtils.equals(currentCourse.course, "\u200B") || TextUtils.equals(currentCourse.course, "Aucun enregistrement")) {
+                holder.title.setVisibility(View.GONE);
             }
             else {
-                holder.day.setText(mCourses.get(position).getDate().toUpperCase());
-                holder.day.setVisibility(View.VISIBLE);
-                holder.holiday.setVisibility(View.GONE);
-                holder.courseType.setVisibility(View.VISIBLE);
-                holder.title.setVisibility(View.VISIBLE);
-                holder.dayConstraintLayout.setVisibility(View.VISIBLE);
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ", Locale.FRANCE);
-                try {
-                    Date date = dateFormat.parse(mCourses.get(position).getStart());
-                    dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.FRANCE);
-                    String first = dateFormat.format(Calendar.getInstance().getTime());
-                    String second = dateFormat.format(date);
-                    if(TextUtils.equals(first, second)) {
-                        holder.todayLayout1.setVisibility(View.VISIBLE);
-                        holder.todayLayout2.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        holder.todayLayout1.setVisibility(View.INVISIBLE);
-                        holder.todayLayout2.setVisibility(View.INVISIBLE);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                holder.title.setText(currentCourse.course);
             }
-            holder.title.setText(mCourses.get(position).getTitle());
-            holder.courseType.setText(mCourses.get(position).getCourseType());
+
+            if(TextUtils.equals(currentCourse.description, "\u200B")) {
+                holder.description.setVisibility(View.GONE);
+            }
+            else {
+                holder.description.setText(currentCourse.description);
+            }
+
+            if(TextUtils.equals(currentCourse.room, "\u200B")) {
+                holder.room.setVisibility(View.GONE);
+            }
+            else {
+                holder.room.setText(currentCourse.room);
+            }
+
+            if(currentCourse.teachers.size() == 0 || TextUtils.equals(currentCourse.teachers.get(0).firstName, "\u200B")) {
+                holder.teacher.setVisibility(View.GONE);
+            }
+            else {
+                holder.teacher.setText(currentCourse.teachers.get(0).firstName + " " + currentCourse.teachers.get(0).lastName);
+            }
+
+            holder.time.setText(currentCourse.timeStart + " - " + currentCourse.timeEnd);
+
+            holder.courseType.setText(currentCourse.type);
         }
     }
 
@@ -133,27 +145,41 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.CoursesV
         return mCourses.size();
     }
 
+    public static class HolidayViewHolder extends RecyclerView.ViewHolder{
+        public final TextView holiday;
+
+        public HolidayViewHolder(final View view){
+            super(view);
+            holiday = (TextView) view.findViewById(R.id.holidayTextView);
+        }
+    }
+
+
     public static class CoursesViewHolder extends RecyclerView.ViewHolder{
 
-        public final TextView day;
         public final TextView title;
+        public final TextView description;
+        public final TextView time;
+        public final TextView room;
+        public final TextView teacher;
         public final TextView courseType;
-        public final TextView holiday;
         public final ConstraintLayout dayConstraintLayout;
-        public final FrameLayout todayLayout1;
-        public final FrameLayout todayLayout2;
+        public final ConstraintLayout courseConstraintLayout;
         public final View mView;
+        public final ImageView info;
 
         public CoursesViewHolder(final View view) {
             super(view);
             mView = view;
             title = (TextView) view.findViewById(R.id.courseTitleTextView);
+            description = (TextView) view.findViewById(R.id.courseDescriptionTextView);
+            time = (TextView) view.findViewById(R.id.courseTimeTextView);
+            room = (TextView) view.findViewById(R.id.courseRoomTextView);
+            teacher = (TextView) view.findViewById(R.id.courseTeacherTextView);
             courseType = (TextView) view.findViewById(R.id.courseTypeTextView);
-            day = (TextView) view.findViewById(R.id.dayTextView);
-            holiday = (TextView) view.findViewById(R.id.holidayTextView);
             dayConstraintLayout = (ConstraintLayout) view.findViewById(R.id.dayConstraintLayout);
-            todayLayout1 = (FrameLayout) view.findViewById(R.id.todayLayout1);
-            todayLayout2 = (FrameLayout) view.findViewById(R.id.todayLayout2);
+            courseConstraintLayout = (ConstraintLayout) view.findViewById(R.id.courseConstraintLayout);
+            info = (ImageView) view.findViewById(R.id.courseInfoImageView);
         }
 
     }

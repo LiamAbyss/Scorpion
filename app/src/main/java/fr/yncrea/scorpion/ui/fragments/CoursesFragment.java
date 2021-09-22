@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.List;
@@ -17,14 +18,12 @@ import java.util.concurrent.Executors;
 
 import fr.yncrea.scorpion.MainActivity;
 import fr.yncrea.scorpion.R;
-import fr.yncrea.scorpion.adapters.CoursesAdapter;
-import fr.yncrea.scorpion.utils.Course;
+import fr.yncrea.scorpion.adapters.DaysAdapter;
 
-
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import fr.yncrea.scorpion.ScorpionApplication;
+import fr.yncrea.scorpion.model.CourseDetails;
 
 public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
@@ -32,6 +31,7 @@ public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private MainActivity parent;
+    private final int spanCount = 1;
 
     public CoursesFragment() {
         // Required empty public constructor
@@ -50,7 +50,7 @@ public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_courses_list, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.coursesRecyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(ScorpionApplication.getContext(), spanCount));
         mRecyclerView.setOnTouchListener((v, event) -> {
             mRecyclerView.onTouchEvent(event);
             if(event != null)
@@ -60,17 +60,17 @@ public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return rootView;
     }
 
-    public void onCoursesRetrieved(List<Course> planning) {
+    public void onCoursesRetrieved(List<CourseDetails> planning) {
         if(null != planning){
-            final CoursesAdapter adapter = new CoursesAdapter(planning);
-            adapter.addContext(parent);
+            final DaysAdapter daysAdapter = new DaysAdapter(planning);
+            daysAdapter.addContext(parent);
+
             mRecyclerView.setHasFixedSize(false);
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));
-            mRecyclerView.setAdapter(adapter);
-            mRecyclerView.scrollToPosition(adapter.getPosition());
+            mRecyclerView.setLayoutManager(new GridLayoutManager(ScorpionApplication.getContext(), spanCount));
+            mRecyclerView.setAdapter(daysAdapter);
+            mRecyclerView.scrollToPosition(daysAdapter.getPosition());
         }
     }
-
 
 
     @Override

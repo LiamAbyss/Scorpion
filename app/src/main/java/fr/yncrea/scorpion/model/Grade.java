@@ -1,4 +1,4 @@
-package fr.yncrea.scorpion.utils;
+package fr.yncrea.scorpion.model;
 
 import java.text.DateFormat;
 import java.text.ParseException;

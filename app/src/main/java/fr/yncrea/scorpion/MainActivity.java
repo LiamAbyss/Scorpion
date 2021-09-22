@@ -1,16 +1,8 @@
 package fr.yncrea.scorpion;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.GestureDetectorCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.room.Room;
-
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,29 +13,37 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonArray;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import fr.yncrea.scorpion.adapters.PersonListAdapter;
 import fr.yncrea.scorpion.api.Aurion;
 import fr.yncrea.scorpion.api.GithubService;
 import fr.yncrea.scorpion.database.ScorpionDatabase;
+import fr.yncrea.scorpion.model.AurionResponse;
+import fr.yncrea.scorpion.model.CourseDetails;
 import fr.yncrea.scorpion.model.Planning;
 import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
-import fr.yncrea.scorpion.utils.Course;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import fr.yncrea.scorpion.utils.UtilsMethods;
 import retrofit2.Response;
@@ -51,11 +51,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, NavigationView.OnNavigationItemSelectedListener {
-    private Executor mExecutorFling = Executors.newSingleThreadExecutor();
-    private Executor mExecutorGit = Executors.newSingleThreadExecutor();
-    private Aurion mAurion = new Aurion();
+    private final Executor mExecutorFling = Executors.newSingleThreadExecutor();
+    private final Executor mExecutorFling2 = Executors.newSingleThreadExecutor();
+    private final Executor mExecutorGit = Executors.newSingleThreadExecutor();
+    private final Aurion mAurion = new Aurion();
     private GithubService mGithubService;
-    private List<Course> mCourses;
     private CoursesFragment mCoursesFragment = new CoursesFragment();
     private CoursesFragment mOtherCoursesFragment = new CoursesFragment();
     private boolean isOtherFragment = false;
@@ -64,11 +64,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private GestureDetectorCompat mDetector;
     private ScorpionDatabase db;
     private int weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
-    private int lastWeekShown;
-    private Timer mUpdater;
-    private AlertDialog confirmWindow;
 
-    private int retryingState = 0;
+    //private int retryingState = 0;
 
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
@@ -80,9 +77,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setSubtitle(PreferenceUtils.getName());
-        //getSupportActionBar().setTitle(getSupportActionBar().getTitle() + " " + getString(R.string.app_version));
-
-        //UtilsMethods.parseCourseDetails("");
 
         // drawer layout instance to toggle the menu icon to open
         // drawer and back button to close drawer
@@ -118,9 +112,16 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         // GestureDetector.OnGestureListener
         mDetector = new GestureDetectorCompat(this,this);
 
+        mGithubService = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build().create(GithubService.class);
+
         mExecutorFling.execute(() -> {
             db = Room.databaseBuilder(getApplicationContext(), ScorpionDatabase.class, "Scorpion.db").build();
+            getSupportFragmentManager().beginTransaction().add(R.id.container, mOtherCoursesFragment, "planning").commit();
             getSupportFragmentManager().beginTransaction().add(R.id.container, mCoursesFragment, "planning").commit();
+
             if(!PreferenceUtils.getMustReset().equals(getString(R.string.must_reset_id))) {
                 db.clearAllTables();
                 weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
@@ -128,54 +129,39 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 PreferenceUtils.setMustReset(getString(R.string.must_reset_id));
             }
             else {
-                runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
-                requestPlanning(weekIndex, false, true);
-                runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
+                List<CourseDetails> courses = getPlanning(weekIndex);
+                displayWeek(courses);
             }
         });
 
-        findViewById(R.id.toTheLeftButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toTheLeft();
-            }
-        });
+        findViewById(R.id.toTheLeftButton).setOnClickListener(v -> toTheLeft());
 
-        findViewById(R.id.toTheRightButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                toTheRight();
-            }
-        });
+        findViewById(R.id.toTheRightButton).setOnClickListener(v -> toTheRight());
 
-        findViewById(R.id.todaybutton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mExecutorFling.execute(() -> {
-                    weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
-                    if(lastWeekShown < weekIndex) animationType = 1;
-                    else animationType = -1;
-                    showWeek(weekIndex);
-                });
+        findViewById(R.id.todaybutton).setOnClickListener(v -> mExecutorFling.execute(() -> {
+            int todayWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+            animationType = Integer.compare(todayWeek, weekIndex);
+            List<CourseDetails> courses = getPlanning(todayWeek);
+            if(courses == null) {
+                return;
             }
-        });
-
-        mGithubService = new Retrofit.Builder()
-            .baseUrl("https://api.github.com")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build().create(GithubService.class);
-
-        mUpdater = new Timer();
-        mUpdater.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if(confirmWindow == null || !confirmWindow.isShowing()) requestUpdate();
-            }
-        }, 0, 43200000);
+            displayWeek(courses, animationType);
+            weekIndex = todayWeek;
+        }));
     }
 
-    public void requestUpdate() {
+    public void tryRequestUpdate() {
         mExecutorGit.execute(() -> {
+            Long lastTime = PreferenceUtils.getUpdateTime();
+            long now = Calendar.getInstance().getTimeInMillis();
+
+            if(now < lastTime + Long.parseLong(getString(R.string.update_timeout))) {
+                return;
+            }
+            else {
+                PreferenceUtils.setUpdateTime(now);
+            }
+
             try {
                 Response<JsonArray> releases = mGithubService.getReleases().execute();
                 if(releases.body() == null) return;
@@ -183,27 +169,21 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if(!latestVersion.equals(getString(R.string.app_version))) {
                     String latestVersionDesc = releases.body().get(0).getAsJsonObject().get("body").getAsString();
                     //String latestVersionLink = releases.body().get(0).getAsJsonObject().get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
-                    runOnUiThread(() -> {
-                        confirmWindow = new AlertDialog.Builder(this)
-                                .setTitle("Update available !")
-                                .setMessage("A new version of Scorpion is available !\n\n"
-                                        + "Version : " + latestVersion + "\n\n"
-                                        + "Description : \n" + latestVersionDesc)
-                                .setPositiveButton("Update now", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        try {
-                                            Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
-                                            startActivity(myIntent);
-                                        }
-                                        catch(ActivityNotFoundException e) {
-                                            //runOnUiThread(() -> showToast(this, "No application can handle this request." + " Please install a web browser",  Toast.LENGTH_LONG));
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                })
-                                .setNegativeButton("Maybe later", null).show();
-                    });
+                    runOnUiThread(() -> new AlertDialog.Builder(this)
+                            .setTitle("Update available !")
+                            .setMessage("A new version of Scorpion is available !\n\n"
+                                    + "Version : " + latestVersion + "\n\n"
+                                    + "Description : \n" + latestVersionDesc)
+                            .setPositiveButton("Update now", (dialog, which) -> {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    //runOnUiThread(() -> showToast(this, "No application can handle this request." + " Please install a web browser",  Toast.LENGTH_LONG));
+                                    e.printStackTrace();
+                                }
+                            })
+                            .setNegativeButton("Maybe later", null).show());
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -211,151 +191,173 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     });
     }
 
-    public void requestPlanning(int index, boolean forceRequest, boolean mustDraw) {
-
+    public boolean isPlanningInDatabase(int index) {
         Planning planning = db.aurionPlanningDao().getPlanningById(index);
-        List<Course> tmpCourses;
-        if(planning != null) {
-            tmpCourses = UtilsMethods.planningFromString(planning.toString());
-        } else {
-            tmpCourses = new ArrayList<>();
-        }
-        if(tmpCourses.size() != 0 && !forceRequest){
-            if(index == weekIndex && mustDraw) {
-                showWeek(index);
-            }
-        }
-        else{
-            Planning toInsert = new Planning();
-            String[] response = mAurion.getCalendarAsXML(PreferenceUtils.getSessionId(), index);
-            String xml;
-            if(response[0] == "success") {
-                xml = response[1];
-            }
-            else if(response[0].contains("authentication") && connect()) {
-                requestPlanning(index, forceRequest, mustDraw);
-                return;
-            }
-            else {
-                runOnUiThread(() -> showToast(ScorpionApplication.getContext(), response[0], Toast.LENGTH_LONG));
-                return;
-            }
-            JSONArray planningJSON = UtilsMethods.XMLToJSONArray(xml);
-            if(planningJSON == null) {
-                if(retryingState == 0)
-                {
-                    retryingState = 1;
-                    connect();
-                    requestPlanning(index, forceRequest, mustDraw);
-                }
-                else if(retryingState == 1)
-                {
-                    retryingState = 2;
-                    runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Request failed...Retrying...", Toast.LENGTH_LONG));
-                    requestPlanning(index, forceRequest, mustDraw);
-                }
-                else
-                {
-                    retryingState = 0;
-                    runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "There is a problem with Aurion. Please, consider reporting it.", Toast.LENGTH_LONG));
-                }
-                return;
-            }
-            try {
-                tmpCourses = UtilsMethods.JSONArrayToCourseList(planningJSON);
-                toInsert.id = index;
-                toInsert.planningString = UtilsMethods.planningToString(tmpCourses);
 
-                if(db.aurionPlanningDao().getPlanningById(index) == null) {
-                    db.aurionPlanningDao().insertPlanning(toInsert);
-                }
-                else {
-                    db.aurionPlanningDao().updatePlanning(toInsert);
-                }
-                if(index == weekIndex && mustDraw) {
-                    showWeek(index);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        return planning != null;
     }
 
-    public void showWeek(int index) {
-        Planning planning = db.aurionPlanningDao().getPlanningById(index);
-        int enterAnim;
-        int exitAnim;
-        if(animationType == 1) {
-            enterAnim = R.anim.slide_in_from_right;
-            exitAnim = R.anim.slide_out_from_right;
+    public List<CourseDetails> getPlanning(int index) {
+        return getPlanning(index, false);
+    }
+    public List<CourseDetails> getPlanning(int index, boolean forceRequest) {
+        tryRequestUpdate();
+
+        List<CourseDetails> result;
+
+        //////////////////// Look for planning in database ////////////////////
+        if(!forceRequest) {
+            Planning planning = db.aurionPlanningDao().getPlanningById(index);
+
+            if (planning != null) {
+                result = UtilsMethods.planningFromString(planning.toString());
+                return result;
+            }
+        }
+
+        //////////////////// Planning not found in database ////////////////////
+
+        // Prepare the planning to be inserted in the database
+        Planning toInsert = new Planning();
+
+        runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(true));
+        result = requestDetailsPlanning(index);
+        runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(false));
+        if(result == null) return null;
+
+        toInsert.id = index;
+        toInsert.planningString = UtilsMethods.planningToString(result);
+
+        // Save it into database
+        if(db.aurionPlanningDao().getPlanningById(index) == null) {
+            db.aurionPlanningDao().insertPlanning(toInsert);
         }
         else {
-            enterAnim = R.anim.slide_in_from_left;
-            exitAnim = R.anim.slide_out_from_left;
+            db.aurionPlanningDao().updatePlanning(toInsert);
         }
-        if(planning != null) {
-            mCourses = UtilsMethods.planningFromString(planning.toString());
-            if(lastWeekShown == index) {
-                runOnUiThread(() -> getCurrentCoursesFragment().onCoursesRetrieved(mCourses));
-            }
-            else if(isOtherFragment) {
-                mCoursesFragment = new CoursesFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(enterAnim, exitAnim)
-                        .replace(R.id.container, mCoursesFragment, "planning")
-                        .commit();
-                runOnUiThread(() -> mCoursesFragment.onCoursesRetrieved(mCourses));
-                isOtherFragment = false;
-            }
-            else {
-                mOtherCoursesFragment = new CoursesFragment();
-                getSupportFragmentManager().beginTransaction()
-                        .setCustomAnimations(enterAnim, exitAnim)
-                        .replace(R.id.container, mOtherCoursesFragment, "planning")
-                        .commit();
-                runOnUiThread(() -> mOtherCoursesFragment.onCoursesRetrieved(mCourses));
-                isOtherFragment = true;
-            }
+
+        return result;
+    }
+
+
+    public void displayWeek(List<CourseDetails> courses) {
+        displayWeek(courses, 0);
+    }
+    public void displayWeek(List<CourseDetails> courses, int animation) {
+
+        if(animation == 0) {
+            runOnUiThread(() -> getCurrentCoursesFragment().onCoursesRetrieved(courses));
         }
-        lastWeekShown = index;
+        else {
+            showCurrentCoursesFragment(courses, animation);
+        }
+
     }
 
     public boolean connect() {
-        String[] sessionID = mAurion.connect(PreferenceUtils.getLogin(), PreferenceUtils.getPassword());
-        if(sessionID[0].equals("success")){
-            PreferenceUtils.setSessionId(sessionID[1]);
+        AurionResponse sessionID = mAurion.connect(PreferenceUtils.getLogin(), PreferenceUtils.getPassword());
+        if(sessionID.status == AurionResponse.SUCCESS){
+            PreferenceUtils.setSessionId(sessionID.cookie);
             return true;
         }
-        if(sessionID[0].contains("connection")){
-            runOnUiThread(()-> showToast(ScorpionApplication.getContext(), "Connection error", Toast.LENGTH_LONG));
-        }
         else {
-            runOnUiThread(() -> showToast(ScorpionApplication.getContext(), "Authentication Failed", Toast.LENGTH_LONG));
+            runOnUiThread(()-> showToast(this, sessionID.message, Toast.LENGTH_LONG));
         }
         return false;
     }
 
-    public void requestDetailsPlanning(Long id) {
-        mExecutorFling.execute(() -> mAurion.detailsPlanning(id));
+    public List<CourseDetails> requestDetailsPlanning(int index) {
+        // Get Planning from Aurion
+        List<CourseDetails> p = mAurion.getPlanning(index);
+
+        // If there is an error, reconnect then try again
+        if(p == null && connect()) p = mAurion.getPlanning(index);
+
+        if(p == null) {
+            runOnUiThread(() -> showToast(this, "Connection error", Toast.LENGTH_LONG));
+        }
+
+        return p;
+    }
+
+    public void showDetails(Long id) {
+        mExecutorFling.execute(() -> {
+            List<CourseDetails> courses = getPlanning(weekIndex);
+            CourseDetails tmpDetails = null;
+
+            for (CourseDetails c : courses) {
+                if (c.id.equals(id)) {
+                    tmpDetails = c;
+                    break;
+                }
+            }
+
+            if (tmpDetails == null) return;
+
+            final CourseDetails details = tmpDetails;
+            runOnUiThread(() -> {
+                AlertDialog dialog = new AlertDialog.Builder(this).create();
+
+                View view = getLayoutInflater().inflate(R.layout.fragment_courses_details, null);
+
+                if (details.course.isEmpty()) details.course = "Aucun enregistrement";
+                if (details.status.isEmpty()) details.status = "Aucun enregistrement";
+                if (details.topic.isEmpty()) details.topic = "Aucun enregistrement";
+                if (details.type.isEmpty()) details.type = "Aucun enregistrement";
+                if (details.description.isEmpty()) details.description = "Aucun enregistrement";
+                if (details.examStatus.isEmpty()) details.examStatus = "Aucun enregistrement";
+                if (details.room.isEmpty()) details.room = "Aucun enregistrement";
+
+                ((TextView) view.findViewById(R.id.coursesDetailsDateTextView)).setText(details.longDate);
+                ((TextView) view.findViewById(R.id.coursesDetailsStartTextView)).setText(details.timeStart);
+                ((TextView) view.findViewById(R.id.coursesDetailsEndTextView)).setText(details.timeEnd);
+                ((TextView) view.findViewById(R.id.coursesDetailsStatusTextView)).setText(details.status);
+                ((TextView) view.findViewById(R.id.coursesDetailsTopicTextView)).setText(details.topic);
+                ((TextView) view.findViewById(R.id.coursesDetailsTypeTextView)).setText(details.type);
+                ((TextView) view.findViewById(R.id.coursesDetailsDescriptionTextView)).setText(details.description);
+                ((TextView) view.findViewById(R.id.coursesDetailsIsExamTextView)).setText(details.examStatus);
+                ((TextView) view.findViewById(R.id.coursesDetailsRoomTextView)).setText(details.room);
+                ((TextView) view.findViewById(R.id.coursesDetailsCourseTextView)).setText(details.course);
+
+                // TEACHERS
+                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.coursesDetailsTeachersRecyclerView);
+
+                LinearLayoutManager layoutManager = new LinearLayoutManager(dialog.getContext());
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(layoutManager);
+
+                PersonListAdapter adapter = new PersonListAdapter(details.teachers);
+                recyclerView.setAdapter(adapter);
+
+                // STUDENTS
+                recyclerView = (RecyclerView) view.findViewById(R.id.coursesDetailsStudentsRecyclerView);
+
+                layoutManager = new LinearLayoutManager(dialog.getContext());
+                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(layoutManager);
+
+                adapter = new PersonListAdapter(details.students);
+                recyclerView.setAdapter(adapter);
+
+                dialog.setView(view);
+                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Close", (dialogInterface, which) -> {
+                });
+                dialog.show();
+            });
+        });
     }
 
     public void refresh() {
         //Refresh the planning
-        Log.d("REFRESH", "Refreshing...");
-        if(isOtherFragment) {
-            runOnUiThread(() -> mOtherCoursesFragment.setRefreshing(true));
-        }
-        else {
-            runOnUiThread(() -> mCoursesFragment.setRefreshing(true));
-        }
-        requestPlanning(weekIndex, true, true);
-        if(isOtherFragment) {
-            runOnUiThread(() -> mOtherCoursesFragment.setRefreshing(false));
-        }
-        else {
-            runOnUiThread(() -> mCoursesFragment.setRefreshing(false));
-        }
-        Log.d("REFRESH", "Finish refreshing...");
+        mExecutorFling.execute(() -> {
+            Log.d("REFRESH", "Refreshing...");
+            int index = weekIndex;
+            List<CourseDetails> courses = getPlanning(index, true);
+            if (courses != null && index == weekIndex) {
+                displayWeek(courses);
+            }
+            Log.d("REFRESH", "Finish refreshing...");
+        });
     }
 
     @Override
@@ -375,9 +377,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         int id = item.getItemId();
 
         if( id == R.id.actionRefresh) {
-            mExecutorFling.execute(() -> {
-                refresh();
-            });
+            mExecutorFling.execute(this::refresh);
             return true;
         }
         else if( id == R.id.actionReset) {
@@ -391,14 +391,13 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return super.onOptionsItemSelected(item);
     }
 
+    @SuppressLint("RtlHardcoded")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         clickedItem = id;
-        if(id == R.id.nav_grades) {
-            mUpdater.cancel();
-        }
-        else if(id == R.id.nav_releases) {
+
+        if(id == R.id.nav_releases) {
             mExecutorFling.execute(() -> {
                 Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
                 startActivity(myIntent);
@@ -421,7 +420,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         }
         else if( id == R.id.nav_logout) {
             mExecutorFling.execute(() -> {
-                mUpdater.cancel();
                 PreferenceUtils.setPassword(null);
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
@@ -433,11 +431,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
     @Override
     public void onBackPressed() {
-        mExecutorFling.execute(() -> {
-            runOnUiThread(() -> super.onBackPressed());
-            /*startActivity(new Intent(this, LoginActivity.class));
-            finish();*/
-        });
+        // In an executor to wait for pending requests to finish
+        mExecutorFling.execute(() -> runOnUiThread(super::onBackPressed));
     }
 
     public void showToast(Context context, int resId, int duration){
@@ -486,30 +481,46 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     }
 
     public void toTheRight() {
-        mExecutorFling.execute(() -> {
-            weekIndex++;
-            animationType = 1;
-            runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(true));
-            requestPlanning(weekIndex, false, true);
-            runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(false));
-            /*mExecutor.execute(() -> {
-                requestPlanning(weekIndex + 1, false, false);
+        mExecutorFling2.execute(() -> {
+            Executor toUse;
+            if(isPlanningInDatabase(weekIndex + 1)) toUse = mExecutorFling2;
+            else toUse = mExecutorFling;
+
+            toUse.execute(() -> {
+                animationType = 1;
+                int index = weekIndex + 1;
+                List<CourseDetails> courses = getPlanning(index);
+                if(courses != null && index == weekIndex + 1) {
+                    displayWeek(courses, animationType);
+                    weekIndex = index;
+                }
+            /*mExecutorFling.execute(() -> {
+                getPlanning(weekIndex + 1, false);
                 //requestPlanning(weekIndex - 1, false, false);
             });*/
+            });
         });
     }
 
     public void toTheLeft() {
-        mExecutorFling.execute(() -> {
-            animationType = -1;
-            weekIndex--;
-            runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(true));
-            requestPlanning(weekIndex, false, true);
-            runOnUiThread(() -> getCurrentCoursesFragment().setRefreshing(false));
-            /*mExecutor.execute(() -> {
+        mExecutorFling2.execute(() -> {
+            Executor toUse;
+            if(isPlanningInDatabase(weekIndex - 1)) toUse = mExecutorFling2;
+            else toUse = mExecutorFling;
+
+            toUse.execute(() -> {
+                animationType = -1;
+                int index = weekIndex - 1;
+                List<CourseDetails> courses = getPlanning(index);
+                if(courses != null && index == weekIndex - 1) {
+                    displayWeek(courses, animationType);
+                    weekIndex = index;
+                }
+            /*mExecutorFling.execute(() -> {
                 //requestPlanning(weekIndex + 1, false, false);
-                requestPlanning(weekIndex - 1, false, false);
+                getPlanning(weekIndex - 1, false);
             });*/
+            });
         });
     }
 
@@ -533,10 +544,33 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         else return mCoursesFragment;
     }
 
+    public void resetCurrentCoursesFragment() {
+        if(isOtherFragment) mOtherCoursesFragment = new CoursesFragment();
+        else mCoursesFragment = new CoursesFragment();
+    }
+
+    public void toggleCoursesFragment() {
+        isOtherFragment = !isOtherFragment;
+    }
+
+    public void showCurrentCoursesFragment(List<CourseDetails> courses, int animation) {
+        resetCurrentCoursesFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if(animation > 0) {
+            transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.slide_out_from_right);
+        }
+        else if(animation < 0) {
+            transaction.setCustomAnimations(R.anim.slide_in_from_left, R.anim.slide_out_from_left);
+        }
+        toggleCoursesFragment();
+        transaction.replace(R.id.container, getCurrentCoursesFragment(), "planning")
+                .commit();
+        runOnUiThread(() -> getCurrentCoursesFragment().onCoursesRetrieved(courses));
+    }
+
     private Intent getGradesIntent()
     {
-        Intent intent = new Intent(this, GradesActivity.class);
-        return intent;
+        return new Intent(this, GradesActivity.class);
     }
 
 }

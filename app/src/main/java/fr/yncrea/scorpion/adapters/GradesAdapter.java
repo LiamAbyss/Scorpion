@@ -14,11 +14,10 @@ import java.util.Locale;
 
 import fr.yncrea.scorpion.R;
 import fr.yncrea.scorpion.ScorpionApplication;
-import fr.yncrea.scorpion.utils.Grade;
+import fr.yncrea.scorpion.model.Grade;
 
 public class GradesAdapter extends RecyclerView.Adapter<GradesAdapter.GradesViewHolder> {
     private List<Grade> mGrades;
-    private int mPosition;
 
     public GradesAdapter(List<Grade> grades) {
         mGrades = grades;

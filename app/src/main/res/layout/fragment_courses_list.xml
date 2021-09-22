@@ -11,6 +11,6 @@
         android:layout_height="match_parent"
         android:divider="@android:color/background_light"
         android:dividerHeight="10dp"
-        tools:listitem="@layout/course_listitem" />
+        tools:listitem="@layout/day_listitem" />
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

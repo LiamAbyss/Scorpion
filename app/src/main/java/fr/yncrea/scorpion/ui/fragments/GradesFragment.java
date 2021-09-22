@@ -18,13 +18,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import fr.yncrea.scorpion.GradesActivity;
-import fr.yncrea.scorpion.MainActivity;
 import fr.yncrea.scorpion.R;
 import fr.yncrea.scorpion.ScorpionApplication;
-import fr.yncrea.scorpion.adapters.CoursesAdapter;
 import fr.yncrea.scorpion.adapters.GradesAdapter;
-import fr.yncrea.scorpion.utils.Course;
-import fr.yncrea.scorpion.utils.Grade;
+import fr.yncrea.scorpion.model.Grade;
 
 public class GradesFragment  extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 

@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("fr.yncrea.fastaurion", appContext.getPackageName());
+        assertEquals("fr.yncrea.scorpion", appContext.getPackageName());
     }
 }

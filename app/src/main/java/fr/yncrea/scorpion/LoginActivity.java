@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,17 +20,14 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import fr.yncrea.scorpion.api.Aurion;
-import fr.yncrea.scorpion.api.AurionService;
 import fr.yncrea.scorpion.model.AurionResponse;
-import fr.yncrea.scorpion.utils.*;
-import fr.yncrea.scorpion.utils.security.EncryptionUtils;
+import fr.yncrea.scorpion.utils.PreferenceUtils;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
-    private Executor executor = Executors.newSingleThreadExecutor();
+    private final Executor executor = Executors.newSingleThreadExecutor();
     private EditText mLoginEditText;
     private EditText mPasswordEditText;
-    private AurionService aurionService;
-    private Aurion aurion = new Aurion();
+    private final Aurion aurion = new Aurion();
     private Toast mToast;
     private boolean canClick = false;
 
@@ -71,26 +67,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             View view = getLayoutInflater().inflate(R.layout.eula, null);
             CheckBox checkBox = (CheckBox) view.findViewById(R.id.eulaCheckBox);
 
-            checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-                if(isChecked) {
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
-                }
-                else {
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
-                }
-            });
+            checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(isChecked));
 
             ScrollView scrollView = (ScrollView) view.findViewById(R.id.eulaScrollView);
             DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
-            int dpHeight = (int) (displayMetrics.heightPixels / displayMetrics.density);
             scrollView.setLayoutParams(new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, (int)(displayMetrics.heightPixels * 0.5)));
 
             dialog.setCancelable(false);
             dialog.setView(view);
-            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue", (dialogInterface, which) -> {
-                PreferenceUtils.setAcceptedEula(getString(R.string.eula_id));
-                return;
-            });
+            dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Continue",
+                    (dialogInterface, which) -> PreferenceUtils.setAcceptedEula(getString(R.string.eula_id)));
             dialog.show();
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);
         });
@@ -105,8 +91,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             canClick = true;
             return;
         }
-
-        String login = mLoginEditText.getText().toString();
 
         if(TextUtils.isEmpty(mPasswordEditText.getText())){
             showToast(this, R.string.error_no_password, Toast.LENGTH_LONG);

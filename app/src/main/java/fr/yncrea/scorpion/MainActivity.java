@@ -138,15 +138,22 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         findViewById(R.id.toTheRightButton).setOnClickListener(v -> toTheRight());
 
-        findViewById(R.id.todaybutton).setOnClickListener(v -> mExecutorFling.execute(() -> {
-            int todayWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
-            animationType = Integer.compare(todayWeek, weekIndex);
-            List<CourseDetails> courses = getPlanning(todayWeek);
-            if(courses == null) {
-                return;
-            }
-            displayWeek(courses, animationType);
-            weekIndex = todayWeek;
+        findViewById(R.id.todaybutton).setOnClickListener(v -> mExecutorFling2.execute(() -> {
+
+            Executor toUse;
+            if(isPlanningInDatabase(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR))) toUse = mExecutorFling2;
+            else toUse = mExecutorFling;
+
+            toUse.execute(() -> {
+                int todayWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+                animationType = Integer.compare(todayWeek, weekIndex);
+                List<CourseDetails> courses = getPlanning(todayWeek);
+                if(courses == null) {
+                    return;
+                }
+                displayWeek(courses, animationType);
+                weekIndex = todayWeek;
+            });
         }));
     }
 
@@ -241,7 +248,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
 
     public void displayWeek(List<CourseDetails> courses) {
-        displayWeek(courses, 0);
+        displayWeek(courses, -1);
     }
     public void displayWeek(List<CourseDetails> courses, int animation) {
 

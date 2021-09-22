@@ -36,8 +36,7 @@ public class PreferenceUtils {
 
 	public static String getLogin(){
 		final SharedPreferences prefs = getSharedPreferences();
-		final String login = EncryptionUtils.decrypt(prefs.getString(Constants.Preferences.PREF_LOGIN, null));
-		return login;
+		return EncryptionUtils.decrypt(prefs.getString(Constants.Preferences.PREF_LOGIN, null));
 	}
 
 	public static void setLogin(String login){
@@ -57,8 +56,7 @@ public class PreferenceUtils {
 	
 	public static String getPassword(){
 		final SharedPreferences prefs = getSharedPreferences();
-		final String password = EncryptionUtils.decrypt(prefs.getString(Constants.Preferences.PREF_PASSWORD, null));
-		return password;
+		return EncryptionUtils.decrypt(prefs.getString(Constants.Preferences.PREF_PASSWORD, null));
 	}
 	
 	public static void setPassword(String password){

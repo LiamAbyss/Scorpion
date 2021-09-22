@@ -85,9 +85,7 @@ public class CoursesFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
-        mExecutor.execute(() -> {
-            parent.refresh();
-        });
+        mExecutor.execute(() -> parent.refresh());
     }
 
     public void setRefreshing(boolean bool) {

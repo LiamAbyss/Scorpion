@@ -29,11 +29,10 @@ import fr.yncrea.scorpion.model.CourseDetails;
 
 public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder> {
     private final List<String> daysList;
-    private List<CourseDetails> mCourses;
+    private final List<CourseDetails> mCourses;
     private List<List<CourseDetails>> daysCourses;
     private int mPosition;
     private MainActivity parent;
-    private RecyclerView rv;
 
     public DaysAdapter(List<CourseDetails> courses){
         mCourses = courses;
@@ -82,6 +81,8 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
                 dayCourses = new ArrayList<>();
             }
         } catch (ParseException e) {
+            newDaysList.add("");
+            daysCourses.add(mCourses);
             e.printStackTrace();
         }
         return newDaysList;
@@ -91,7 +92,6 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
     @Override
     public DayViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(ScorpionApplication.getContext()).inflate(R.layout.day_listitem, parent, false);
-        rv = (RecyclerView) view.findViewById(R.id.courses_recyclerview);
         return new DayViewHolder(view);
     }
 
@@ -105,6 +105,11 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         holder.coursesRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));
         holder.coursesRecyclerView.setHasFixedSize(false);
         holder.coursesRecyclerView.setAdapter(adapter);
+
+        if(holder.day.getText().length() == 0) {
+            holder.day.setVisibility(View.GONE);
+            return;
+        }
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMMM yyyy", Locale.FRANCE);
         try {

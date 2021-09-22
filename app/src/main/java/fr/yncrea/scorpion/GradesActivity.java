@@ -298,7 +298,6 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
     public void onBackPressed() {
         mExecutor.execute(() -> {
             //runOnUiThread(() -> super.onBackPressed());
-            mUpdater.cancel();
             startActivity(new Intent(this, MainActivity.class));
             finish();
         });

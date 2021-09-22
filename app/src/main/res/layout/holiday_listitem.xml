@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/course_list_item_left_padding"
-        android:layout_marginTop="@dimen/course_list_item_top_padding"
         android:layout_marginEnd="@dimen/course_list_item_right_padding"
         android:background="@drawable/white_round_corners_background"
         android:elevation="10dp"

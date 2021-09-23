@@ -1,5 +1,6 @@
 package fr.yncrea.scorpion.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -95,6 +96,7 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         return new DayViewHolder(view);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull DayViewHolder holder, int position) {
         if(daysList.get(position) != null){
@@ -105,6 +107,12 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
         holder.coursesRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));
         holder.coursesRecyclerView.setHasFixedSize(false);
         holder.coursesRecyclerView.setAdapter(adapter);
+        holder.coursesRecyclerView.setOnTouchListener((v, event) -> {
+            holder.coursesRecyclerView.onTouchEvent(event);
+            if(event != null)
+                parent.onTouchEvent(event);
+            return true;
+        });
 
         if(holder.day.getText().length() == 0) {
             holder.day.setVisibility(View.GONE);

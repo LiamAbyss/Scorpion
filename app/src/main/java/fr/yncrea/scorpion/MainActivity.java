@@ -462,6 +462,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return super.onTouchEvent(event);
     }
 
+
+
     @Override
     public boolean onDown(MotionEvent e) {
         return true;
@@ -534,12 +536,12 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         // To the left
-        if(Math.abs(velocityY) > 3000) return false;
-        if(velocityX > 3000) {
+        if(Math.abs(velocityY) > 4000) return false;
+        if(velocityX > 2000) {
             Log.d("FLING", "To the left !");
             toTheLeft();
         }
-        else if(velocityX < -3000) {
+        else if(velocityX < -2000) {
             Log.d("FLING", "To the right !");
             toTheRight();
         }

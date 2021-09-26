@@ -63,9 +63,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
     private Toast mToast;
     private GestureDetectorCompat mDetector;
     private ScorpionDatabase db;
-    private int weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
-
-    //private int retryingState = 0;
+    private int weekIndex = getCurrentWeekIndex();
 
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
@@ -124,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
             if(!PreferenceUtils.getMustReset().equals(getString(R.string.must_reset_id))) {
                 db.clearAllTables();
-                weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+                weekIndex = getCurrentWeekIndex();
                 refresh();
                 PreferenceUtils.setMustReset(getString(R.string.must_reset_id));
             }
@@ -141,11 +139,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         findViewById(R.id.todaybutton).setOnClickListener(v -> mExecutorFling2.execute(() -> {
 
             Executor toUse;
-            if(isPlanningInDatabase(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR))) toUse = mExecutorFling2;
+            if(isPlanningInDatabase(getCurrentWeekIndex())) toUse = mExecutorFling2;
             else toUse = mExecutorFling;
 
             toUse.execute(() -> {
-                int todayWeek = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+                int todayWeek = getCurrentWeekIndex();
                 animationType = Integer.compare(todayWeek, weekIndex);
                 List<CourseDetails> courses = getPlanning(todayWeek);
                 if(courses == null) {
@@ -390,7 +388,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         else if( id == R.id.actionReset) {
             mExecutorFling.execute(() -> {
                 db.clearAllTables();
-                weekIndex = Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);
+                weekIndex = getCurrentWeekIndex();
                 refresh();
             });
             return true;
@@ -575,6 +573,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         transaction.replace(R.id.container, getCurrentCoursesFragment(), "planning")
                 .commit();
         runOnUiThread(() -> getCurrentCoursesFragment().onCoursesRetrieved(courses));
+    }
+
+    private int getCurrentWeekIndex() {
+        Calendar c = Calendar.getInstance();
+        if(c.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY)
+            return c.get(Calendar.WEEK_OF_YEAR);
+        else
+            return c.get(Calendar.WEEK_OF_YEAR) + 1;
     }
 
     private Intent getGradesIntent()

@@ -359,7 +359,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             int index = weekIndex;
             List<CourseDetails> courses = getPlanning(index, true);
             if (courses != null && index == weekIndex) {
-                displayWeek(courses);
+                displayWeek(courses, 0);
             }
             Log.d("REFRESH", "Finish refreshing...");
         });

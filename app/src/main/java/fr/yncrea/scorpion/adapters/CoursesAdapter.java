@@ -96,8 +96,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             CourseDetails currentCourse = mCourses.get(position);
 
-            if(currentCourse.course.equals("Aucun enregistrement") && currentCourse.dateStart.equals("Aucun enregistrement")) {
-                HolidayViewHolder HolidayHolder = (HolidayViewHolder) mHolder;
+            if(currentCourse.id == -1 || currentCourse.course.equals("Aucun enregistrement") && currentCourse.dateStart.equals("Aucun enregistrement")) {
                 return;
             }
 
@@ -107,17 +106,23 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             });
 
             if(TextUtils.equals(currentCourse.course, "\u200B") || TextUtils.equals(currentCourse.course, "Aucun enregistrement")) {
-                holder.title.setVisibility(View.GONE);
+                holder.title.setVisibility(View.INVISIBLE);
             }
             else {
                 holder.title.setText(currentCourse.course);
             }
 
-            if(TextUtils.equals(currentCourse.description, "\u200B")) {
-                holder.description.setVisibility(View.GONE);
+            if(TextUtils.equals(currentCourse.description, "\u200B") || currentCourse.description.isEmpty()) {
+                holder.description.setVisibility(View.INVISIBLE);
             }
             else {
-                holder.description.setText(currentCourse.description);
+                if(holder.title.getVisibility() == View.INVISIBLE) {
+                    holder.title.setVisibility(View.VISIBLE);
+                    holder.description.setVisibility(View.INVISIBLE);
+                    holder.title.setText(currentCourse.description);
+                }
+                else
+                    holder.description.setText(currentCourse.description);
             }
 
             if(TextUtils.equals(currentCourse.room, "\u200B")) {
@@ -135,8 +140,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             }
 
             holder.time.setText(currentCourse.timeStart + " - " + currentCourse.timeEnd);
-
-            holder.courseType.setText(currentCourse.type);
         }
     }
 
@@ -162,7 +165,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public final TextView time;
         public final TextView room;
         public final TextView teacher;
-        public final TextView courseType;
         public final ConstraintLayout dayConstraintLayout;
         public final ConstraintLayout courseConstraintLayout;
         public final View mView;
@@ -176,7 +178,6 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             time = (TextView) view.findViewById(R.id.courseTimeTextView);
             room = (TextView) view.findViewById(R.id.courseRoomTextView);
             teacher = (TextView) view.findViewById(R.id.courseTeacherTextView);
-            courseType = (TextView) view.findViewById(R.id.courseTypeTextView);
             dayConstraintLayout = (ConstraintLayout) view.findViewById(R.id.dayConstraintLayout);
             courseConstraintLayout = (ConstraintLayout) view.findViewById(R.id.courseConstraintLayout);
             info = (ImageView) view.findViewById(R.id.courseInfoImageView);

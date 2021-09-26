@@ -38,29 +38,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/courseTypeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/course_list_item_left_padding"
-            android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
-            android:text="courseTypeTextView"
-            android:textColor="@color/colorContrast"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/courseDescriptionTextView" />
-
-        <TextView
             android:id="@+id/courseDescriptionTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_list_item_left_padding"
-            android:layout_marginTop="@dimen/course_list_item_top_padding"
-            android:layout_marginEnd="@dimen/course_list_item_right_padding"
             android:text="courseDescriptionTextView"
             android:textColor="@color/colorContrast"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/courseTitleTextView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/courseTeacherTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />
 
         <TextView
             android:id="@+id/courseTimeTextView"
@@ -77,8 +63,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_list_item_left_padding"
+            android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
             android:text="courseTeacherTextView"
             android:textColor="@color/colorContrast"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/courseTimeTextView" />
 
@@ -87,11 +75,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_list_item_left_padding"
-            android:layout_marginTop="@dimen/course_list_item_top_padding"
+            android:layout_marginTop="@dimen/course_list_item_bottom_padding"
             android:text="courseRoomTextView"
             android:textColor="@color/colorContrast"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/courseTitleTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/courseDescriptionTextView" />
 
         <ImageView
             android:id="@+id/courseInfoImageView"

@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+	  "module": "CommonJS",
+	  "target": "ES6",
+	  "lib": [
+		  "DOM",
+		  "ES2020"
+	  ],
+
+	  "outDir": "dist",
+	  "rootDir": "src",
+
+	  "allowJs": true,
+	  "strict": true,
+	  "esModuleInterop": true,
+	  "noImplicitAny": true,
+	  "jsx": "react",
+
+	  "importHelpers": true,
+	  "sourceMap": true
+	},
+
+	"include": [
+	  "src/**/*",
+	  "src/**/*.tsx"
+	],
+
+	"exclude": [
+	  "node_modules"
+	]
+  }

@@ -1,0 +1,28 @@
+{
+	"extends": [
+		"stylelint-config-standard",
+		"stylelint-config-sass-guidelines"
+	],
+
+	"plugins": [
+		"stylelint-order"
+	],
+
+	"rules": {
+		"selector-max-compound-selectors": null,
+		"max-nesting-depth": null,
+		"color-named": null,
+		"indentation": "tab",
+		"order/order": [
+			"custom-properties",
+			"declarations"
+		],
+		"order/properties-order": [
+			"width",
+			"height"
+		],
+		"selector-no-qualifying-type": [true, {
+			"ignore": ["attribute"]
+		}]
+	}
+}

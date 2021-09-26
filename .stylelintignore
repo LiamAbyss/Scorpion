@@ -1,0 +1,17 @@
+node_modules
+coverage
+dist
+public
+.vscode
+**/*.json
+**/*.log
+**/*.eot
+**/*.otf
+**/*.ttf
+**/*.ttf
+**/*.woff
+**/*.woff2
+**/*.gif
+**/*.jpg
+**/*.png
+**/*.svg

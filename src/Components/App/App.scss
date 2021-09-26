@@ -1,0 +1,27 @@
+$font-path: '../../Fonts';
+
+@font-face {
+	font-family: 'Montserrat';
+	font-style: normal;
+	src: url('#{$font-path}/Montserrat-Regular.ttf') format('truetype');
+}
+
+.app {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	* {
+		font-family: 'Montserrat', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	}
+
+	.banner {
+		max-height: 30%;
+		max-width: 30%;
+
+		@media screen and (max-width: 1280px) {
+			max-width: 80%;
+		}
+	}
+}

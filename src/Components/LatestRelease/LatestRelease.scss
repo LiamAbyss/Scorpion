@@ -1,0 +1,60 @@
+.download {
+	box-shadow: 0 1px 2px #dbdbdb;
+	color: #eee;
+	font-size: 20px;
+	max-width: 100%;
+	min-width: 350px;
+	text-align: center;
+
+	.title {
+		background-color: #e74c3c;
+		line-height: 1.2rem;
+		padding: 10px 20px;
+
+		small {
+			font-size: 14px;
+		}
+	}
+
+	.links {
+		background: #dbdbdb;
+		border-radius: 0 0 3px 3px;
+		border-top: 1px solid #dbdbdb;
+		display: grid;
+		grid-auto-columns: 1fr;
+		grid-auto-flow: column;
+		grid-gap: 1px;
+		grid-template-rows: 1fr 1fr;
+		margin: 0;
+		position: relative;
+
+		.link {
+			&:first-child {
+				grid-column-end: span 2;
+			}
+
+			a {
+				box-sizing: border-box;
+				color: #373a3c;
+				display: flex;
+				flex-direction: column;
+				font-size: 14px;
+				padding: 20px;
+				text-decoration: none;
+				width: 100%;
+
+				i {
+					font-size: 24px;
+				}
+
+				.link-label {
+					margin-top: 5px;
+				}
+			}
+
+			background-color: #fff;
+			grid-column-end: span 1;
+			grid-row-end: span 2;
+		}
+	}
+}

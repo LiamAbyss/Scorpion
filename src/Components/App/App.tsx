@@ -2,7 +2,7 @@ import './App.scss'
 
 import axios from 'axios'
 import React, { Component } from 'react'
-import banner from './banner.png'
+import banner from './Banner.png'
 import { GithubRelease } from '../../Github'
 import { LatestRelease } from '../LatestRelease/LatestRelease'
 

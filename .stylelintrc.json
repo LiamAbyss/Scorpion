@@ -10,6 +10,7 @@
 
 	"rules": {
 		"selector-max-compound-selectors": null,
+		"selector-no-qualifying-type": null,
 		"max-nesting-depth": null,
 		"color-named": null,
 		"indentation": "tab",
@@ -20,9 +21,6 @@
 		"order/properties-order": [
 			"width",
 			"height"
-		],
-		"selector-no-qualifying-type": [true, {
-			"ignore": ["attribute"]
-		}]
+		]
 	}
 }

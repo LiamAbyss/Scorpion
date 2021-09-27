@@ -5,6 +5,7 @@ import React, { Component } from 'react'
 import banner from './Banner.png'
 import { GithubRelease } from '../../Github'
 import { LatestRelease } from '../LatestRelease/LatestRelease'
+import { ReleaseList } from '../ReleaseList/ReleaseList'
 
 // ---- Properties -----------------------------------------------------------------------
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -13,7 +14,7 @@ export interface AppProps {}
 // ---- State ----------------------------------------------------------------------------
 export interface AppState {
 	latest: GithubRelease | null
-	all: GithubRelease[]
+	releases: GithubRelease[]
 }
 
 // ---- Component ------------------------------------------------------------------------
@@ -23,7 +24,7 @@ export class App extends Component<AppProps, AppState> {
 
 		this.state = {
 			latest: null,
-			all: []
+			releases: []
 		}
 	}
 
@@ -34,17 +35,18 @@ export class App extends Component<AppProps, AppState> {
 			const latest = res.data[0]
 			const all = res.data
 
-			this.setState({ latest, all })
+			this.setState({ latest, releases: all })
 		}
 	}
 
 	public render() {
-		const { all, latest } = this.state
+		const { releases: all, latest } = this.state
 
 		return (
 			<div className="app">
 				<img className="banner" src={banner} />
 				{latest != null && <LatestRelease release={latest} />}
+				<ReleaseList releases={all} />
 			</div>
 		)
 	}

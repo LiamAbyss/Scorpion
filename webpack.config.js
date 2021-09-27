@@ -19,7 +19,7 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, 'public', 'dist'),
 		filename: 'js/app.js',
-		publicPath: '/dist/'
+		publicPath: '/Scorpion/dist/'
 	},
 
 	module: {

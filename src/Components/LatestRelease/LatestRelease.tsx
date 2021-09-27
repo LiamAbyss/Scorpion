@@ -23,35 +23,33 @@ export class LatestRelease extends Component<LatestReleaseProps> {
 		const dayDiff = moment().diff(moment(release.published_at), 'days') + 1
 
 		return (
-			<div className="parent">
-				<div className="download">
-					<div className="title">
-						{release.prerelease ? (
-							<i className="fas fa-exclamation-triangle" title="This is a pre-release"></i>
-						) : (
-							<i className="fas fa-star-half-alt"></i>
-						)}{' '}
-						Download Latest
-						<br />
-						<small>{release.tag_name}</small>
-						<br />
-						<small>{dayDiff === 1 ? 'Today' : `${dayDiff} days ago`}</small>
+			<div className="latest-release">
+				<div className="title">
+					{release.prerelease ? (
+						<i className="fas fa-exclamation-triangle" title="This is a pre-release"></i>
+					) : (
+						<i className="fas fa-star-half-alt"></i>
+					)}{' '}
+					Download Latest
+					<br />
+					<small>{release.tag_name}</small>
+					<br />
+					<small>{dayDiff === 1 ? 'Today' : `${dayDiff} days ago`}</small>
+				</div>
+
+				<div className="links">
+					<div className="link">
+						<a href={release.assets[0].browser_download_url}>
+							<i className="fa fa-download"></i>
+							<span className="link-label">apk</span>
+						</a>
 					</div>
 
-					<div className="links">
-						<div className="link">
-							<a href={release.assets[0].browser_download_url}>
-								<i className="fa fa-download"></i>
-								<span className="link-label">apk</span>
-							</a>
-						</div>
-
-						<div className="link">
-							<a href={release.html_url}>
-								<i className="fas fa-file-alt"></i>
-								<span className="link-label">Changelog</span>
-							</a>
-						</div>
+					<div className="link">
+						<a href={release.html_url}>
+							<i className="fas fa-file-alt"></i>
+							<span className="link-label">Changelog</span>
+						</a>
 					</div>
 				</div>
 			</div>

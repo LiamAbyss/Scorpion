@@ -15,3 +15,9 @@ jobs:
     - uses: borales/actions-yarn@v2.3.0
       with:
         cmd: build
+    - uses: s0/git-publish-subdir-action@develop
+      env:
+        REPO: self
+        BRANCH: pages
+        FOLDER: public
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

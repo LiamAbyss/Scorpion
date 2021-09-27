@@ -41,6 +41,7 @@
 				font-size: 14px;
 				padding: 20px;
 				text-decoration: none;
+				transition: 0.5s;
 				width: 100%;
 
 				i {
@@ -49,6 +50,10 @@
 
 				.link-label {
 					margin-top: 5px;
+				}
+
+				&:hover {
+					background-color: rgba(0, 0, 0, 0.1);
 				}
 			}
 

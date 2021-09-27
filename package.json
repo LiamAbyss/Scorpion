@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "build": "webpack --mode production --progress",
+	"build:github": "webpack --mode production --progress --config webpack.config.github.js",
     "dev": "webpack serve --progress",
     "clean": "rimraf ./public/dist ./coverage",
     "lint": "run-s lint:eslint lint:stylelint",

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/grey_background">
+    android:background="@android:color/transparent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout3"
@@ -33,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_separator"
             android:layout_marginTop="@dimen/button_separator"
-            android:background="@color/colorContrast"
+            android:background="@color/colorContrastOldISEN"
             app:layout_constraintTop_toBottomOf="@+id/textView"
             tools:layout_editor_absoluteX="64dp">
 
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_separator"
             android:layout_marginTop="@dimen/button_separator"
-            android:background="@color/colorContrast"
+            android:background="@color/colorContrastOldISEN"
             app:layout_constraintTop_toBottomOf="@+id/gradeCodeTextView">
 
         </FrameLayout>
@@ -74,7 +74,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_separator"
             android:layout_marginTop="@dimen/button_separator"
-            android:background="@color/colorContrast"
+            android:background="@color/colorContrastOldISEN"
             app:layout_constraintTop_toBottomOf="@+id/gradeLibelleTextView"
             tools:layout_editor_absoluteX="135dp">
 
@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_separator"
             android:layout_marginTop="@dimen/button_separator"
-            android:background="@color/colorContrast"
+            android:background="@color/colorContrastOldISEN"
             app:layout_constraintTop_toBottomOf="@+id/textView4"
             tools:layout_editor_absoluteX="166dp">
 
@@ -116,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_separator"
             android:layout_marginTop="@dimen/button_separator"
-            android:background="@color/colorContrast"
+            android:background="@color/colorContrastOldISEN"
             app:layout_constraintTop_toBottomOf="@+id/gradeCoeffTextView"
             tools:layout_editor_absoluteX="159dp">
 
@@ -137,7 +137,7 @@
             android:layout_width="@dimen/button_separator"
             android:layout_height="0dp"
             android:layout_marginStart="@dimen/list_padding"
-            android:background="@color/colorContrast"
+            android:background="@color/colorContrastOldISEN"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView6"
             app:layout_constraintTop_toTopOf="parent"

@@ -15,6 +15,10 @@
 
     <group android:id="@+id/log_out_group">
         <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_outline_settings_48"
+            android:title="@string/action_settings" />
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_baseline_logout_48"
             android:title="@string/action_logout" />

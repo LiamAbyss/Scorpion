@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,12 +40,13 @@ import fr.yncrea.scorpion.model.AurionResponse;
 import fr.yncrea.scorpion.model.Grade;
 import fr.yncrea.scorpion.ui.fragments.GradesFragment;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
+import fr.yncrea.scorpion.utils.ThemedActivity;
 import fr.yncrea.scorpion.utils.UtilsMethods;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GradesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class GradesActivity extends ThemedActivity implements NavigationView.OnNavigationItemSelectedListener{
     private final Executor mExecutorGit = Executors.newSingleThreadExecutor();
     private final Executor mExecutor = Executors.newSingleThreadExecutor();
     private final Aurion mAurion = new Aurion();

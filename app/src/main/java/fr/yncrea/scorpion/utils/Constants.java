@@ -10,7 +10,8 @@ public class Constants {
 		public static final String PREF_NAME = "prefName";
 		public static final String PREF_ACCEPTED_EULA = "prefAcceptedEula";
 		public static final String PREF_MUST_RESET = "prefMustReset";
-        public static final String PREF_UPDATE_TIME = "prefUpdateTime";
+		public static final String PREF_UPDATE_TIME = "prefUpdateTime";
+		public static final String PREF_THEME = "prefTheme";
     }
 }
 	

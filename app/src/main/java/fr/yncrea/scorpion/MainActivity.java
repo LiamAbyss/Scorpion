@@ -1,11 +1,16 @@
 package fr.yncrea.scorpion;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -33,6 +38,7 @@ import com.google.gson.JsonArray;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -45,12 +51,13 @@ import fr.yncrea.scorpion.model.CourseDetails;
 import fr.yncrea.scorpion.model.Planning;
 import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
+import fr.yncrea.scorpion.utils.ThemedActivity;
 import fr.yncrea.scorpion.utils.UtilsMethods;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends ThemedActivity implements GestureDetector.OnGestureListener, NavigationView.OnNavigationItemSelectedListener {
     private final Executor mExecutorFling = Executors.newSingleThreadExecutor();
     private final Executor mExecutorFling2 = Executors.newSingleThreadExecutor();
     private final Executor mExecutorGit = Executors.newSingleThreadExecutor();
@@ -423,6 +430,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 startActivity(Intent.createChooser(intent, "Send Email"));
             });
         }
+        else if( id == R.id.nav_settings) {
+            mExecutorFling.execute(() -> {
+                startActivity(new Intent(this, OptionsActivity.class));
+            });
+        }
         else if( id == R.id.nav_logout) {
             mExecutorFling.execute(() -> {
                 PreferenceUtils.setPassword(null);
@@ -430,6 +442,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 finish();
             });
         }
+
         drawerLayout.closeDrawer(Gravity.LEFT);
         return true;
     }

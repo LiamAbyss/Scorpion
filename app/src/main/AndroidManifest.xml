@@ -4,24 +4,99 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <application android:name=".ScorpionApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/OldISENTheme">
+
         <activity android:name=".MainActivity">
         </activity>
         <activity android:name=".LoginActivity">
         </activity>
         <activity android:name=".GradesActivity">
         </activity>
-        <activity android:name=".SplashScreenActivity" android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity android:name=".OptionsActivity">
+        </activity>
+        <activity android:name=".SplashScreenActivity">
+        </activity>
+
+        <activity-alias
+            android:name=".OldISENIconActivity"
+            android:enabled="true"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:targetActivity="fr.yncrea.scorpion.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".JuniaHEIIconActivity"
+            android:roundIcon="@mipmap/ic_launcher_hei_round"
+            android:label="@string/app_name"
+            android:icon="@mipmap/ic_launcher_hei"
+            android:enabled="false"
+            android:targetActivity="fr.yncrea.scorpion.SplashScreenActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name=".JuniaISAIconActivity"
+            android:roundIcon="@mipmap/ic_launcher_isa_round"
+            android:label="@string/app_name"
+            android:icon="@mipmap/ic_launcher_isa"
+            android:enabled="false"
+            android:targetActivity="fr.yncrea.scorpion.SplashScreenActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name=".JuniaISENIconActivity"
+            android:roundIcon="@mipmap/ic_launcher_isen_round"
+            android:label="@string/app_name"
+            android:icon="@mipmap/ic_launcher_isen"
+            android:enabled="false"
+            android:targetActivity="fr.yncrea.scorpion.SplashScreenActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity-alias>
+
+        <activity-alias
+            android:name=".JuniaIconActivity"
+            android:roundIcon="@mipmap/ic_launcher_junia_round"
+            android:label="@string/app_name"
+            android:icon="@mipmap/ic_launcher_junia"
+            android:enabled="false"
+            android:targetActivity="fr.yncrea.scorpion.SplashScreenActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+        </activity-alias>
     </application>
 
 </manifest>

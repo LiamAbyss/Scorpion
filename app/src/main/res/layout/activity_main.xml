@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:ignore="HardcodedText"
-    tools:openDrawer="start">
+    tools:openDrawer="end">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -22,11 +22,11 @@
             android:id="@+id/container"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="?attr/colorAccent"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/grey_background"
             app:layout_constraintTop_toTopOf="parent">
 
         </FrameLayout>
@@ -43,7 +43,7 @@
                 android:id="@+id/toTheLeftButton"
                 android:layout_width="84dp"
                 android:layout_height="0dp"
-                android:background="@drawable/button"
+                android:background="?attr/colorPrimary"
                 android:padding="@dimen/navigation_button_width"
                 android:src="@drawable/ic_west_black_24dp"
                 android:text="@string/toTheLeft"
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/button_separator"
                 android:layout_marginEnd="@dimen/button_separator"
-                android:background="@drawable/button"
+                android:background="?attr/colorPrimary"
                 android:elevation="10dp"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
@@ -77,7 +77,7 @@
                 android:id="@+id/toTheRightButton"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:background="@drawable/button"
+                android:background="?attr/colorPrimary"
                 android:padding="@dimen/navigation_button_width"
                 android:src="@drawable/ic_east_black_24dp"
                 app:layout_constraintBottom_toBottomOf="@+id/todaybutton"
@@ -92,11 +92,12 @@
     <!--include the menu created in the menu folder-->
     <!--app:headerLayout="@layout/header_navigation_drawer"/-->
     <com.google.android.material.navigation.NavigationView
-    android:id="@+id/planning_navigationView"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    app:menu="@menu/navigation_menu">
+        android:id="@+id/planning_navigationView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="?attr/colorAccent"
+        app:menu="@menu/navigation_menu">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

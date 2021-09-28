@@ -1,11 +1,17 @@
 package fr.yncrea.scorpion.ui.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -23,7 +29,7 @@ import fr.yncrea.scorpion.ScorpionApplication;
 import fr.yncrea.scorpion.adapters.GradesAdapter;
 import fr.yncrea.scorpion.model.Grade;
 
-public class GradesFragment  extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class GradesFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
@@ -43,15 +49,15 @@ public class GradesFragment  extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_grades_list, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.gradesRecyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(ScorpionApplication.getContext()));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setOnTouchListener((v, event) -> {
             mRecyclerView.onTouchEvent(event);
-            if(event != null)
+            if(event != null) {
                 parent.onTouchEvent(event);
+            }
             return true;
         });
         return rootView;

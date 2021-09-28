@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="themes">
+        <item>Junia</item>
+        <item>Junia ISEN</item>
+        <item>Junia HEI</item>
+        <item>Junia ISA</item>
+        <item>Ancien ISEN</item>
+    </array>
+</resources>

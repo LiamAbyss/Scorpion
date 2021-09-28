@@ -71,4 +71,5 @@ SOFTWARE.</string>
     <string name="action_go_to_mail">Envoyer un mail</string>
     <string name="scorpion_email_address">scorpion.fast-android@outlook.com</string>
     <string name="email_subject_question">Feedback</string>
+    <string name="action_settings">Options</string>
 </resources>

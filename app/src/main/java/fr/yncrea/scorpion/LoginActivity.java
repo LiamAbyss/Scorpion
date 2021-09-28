@@ -22,8 +22,9 @@ import java.util.concurrent.Executors;
 import fr.yncrea.scorpion.api.Aurion;
 import fr.yncrea.scorpion.model.AurionResponse;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
+import fr.yncrea.scorpion.utils.ThemedActivity;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
+public class LoginActivity extends ThemedActivity implements View.OnClickListener{
     private final Executor executor = Executors.newSingleThreadExecutor();
     private EditText mLoginEditText;
     private EditText mPasswordEditText;

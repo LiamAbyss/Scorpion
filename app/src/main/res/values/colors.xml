@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#E30613</color>
-    <color name="colorPrimaryDark">#C20525</color>
-    <color name="colorContrast">#000000</color>
-    <color name="colorAccent">#A8A8A8</color>
+    <color name="colorPrimaryOldISEN">#C20525</color>
+    <color name="colorPrimaryDarkOldISEN">#000000</color>
+    <color name="colorContrastOldISEN">#000000</color>
+    <color name="colorAccentOldISEN">#D0D0CE</color>
+
+    <color name="colorPrimaryJuniaISEN">#006D68</color>
+    <color name="colorPrimaryDarkJuniaISEN">#006D68</color>
+    <color name="colorContrastJuniaISEN">#FF5C39</color>
+    <color name="colorAccentJuniaISEN">#D0D0CE</color>
+
+    <color name="colorPrimaryJuniaHEI">#0033A0</color>
+    <color name="colorPrimaryDarkJuniaHEI">#0033A0</color>
+    <color name="colorContrastJuniaHEI">#FF5C39</color>
+    <color name="colorAccentJuniaHEI">#D0D0CE</color>
+
+    <color name="colorPrimaryJuniaISA">#48A240</color>
+    <color name="colorPrimaryDarkJuniaISA">#48A240</color>
+    <color name="colorContrastJuniaISA">#FF5C39</color>
+    <color name="colorAccentJuniaISA">#D0D0CE</color>
+
+    <color name="colorPrimaryJunia">#3F2A56</color>
+    <color name="colorPrimaryDarkJunia">#3F2A56</color>
+    <color name="colorContrastJunia">#FF5C39</color>
+    <color name="colorAccentJunia">#D0D0CE</color>
+
     <color name="white">#FFFFFF</color>
 </resources>

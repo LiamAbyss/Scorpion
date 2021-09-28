@@ -27,6 +27,7 @@ import fr.yncrea.scorpion.MainActivity;
 import fr.yncrea.scorpion.R;
 import fr.yncrea.scorpion.ScorpionApplication;
 import fr.yncrea.scorpion.model.CourseDetails;
+import fr.yncrea.scorpion.utils.ThemeManager;
 
 public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder> {
     private final List<String> daysList;
@@ -128,6 +129,8 @@ public class DaysAdapter extends RecyclerView.Adapter<DaysAdapter.DayViewHolder>
             if(TextUtils.equals(first, second)) {
                 holder.todayLayout1.setVisibility(View.VISIBLE);
                 holder.todayLayout2.setVisibility(View.VISIBLE);
+                holder.todayLayout1.setBackgroundColor(parent.getColor(ThemeManager.getColorId(R.attr.colorPrimary)));
+                holder.todayLayout2.setBackgroundColor(parent.getColor(ThemeManager.getColorId(R.attr.colorPrimary)));
             }
             else {
                 holder.todayLayout1.setVisibility(View.INVISIBLE);

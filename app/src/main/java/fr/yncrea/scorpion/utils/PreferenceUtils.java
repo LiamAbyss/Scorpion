@@ -20,6 +20,7 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.GCMParameterSpec;
 
+import fr.yncrea.scorpion.R;
 import fr.yncrea.scorpion.ScorpionApplication;
 import fr.yncrea.scorpion.utils.security.EncryptionUtils;
 
@@ -94,7 +95,7 @@ public class PreferenceUtils {
 		final SharedPreferences prefs = getSharedPreferences();
 		prefs.edit().putString(Constants.Preferences.PREF_MUST_RESET, val).apply();
 	}
-	
+
 	public static Long getUpdateTime(){
 		final SharedPreferences prefs = getSharedPreferences();
 		return prefs.getLong(Constants.Preferences.PREF_UPDATE_TIME, 0L);
@@ -103,5 +104,15 @@ public class PreferenceUtils {
 	public static void setUpdateTime(Long time){
 		final SharedPreferences prefs = getSharedPreferences();
 		prefs.edit().putLong(Constants.Preferences.PREF_UPDATE_TIME, time).apply();
+	}
+
+	public static int getTheme(){
+		final SharedPreferences prefs = getSharedPreferences();
+		return prefs.getInt(Constants.Preferences.PREF_THEME, R.style.OldISENTheme);
+	}
+
+	public static void setTheme(int themeId){
+		final SharedPreferences prefs = getSharedPreferences();
+		prefs.edit().putInt(Constants.Preferences.PREF_THEME, themeId).apply();
 	}
 }

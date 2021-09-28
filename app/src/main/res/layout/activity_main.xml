@@ -117,6 +117,7 @@
                 android:layout_marginStart="@dimen/list_padding"
                 android:layout_marginBottom="@dimen/list_padding"
                 android:text="Version"
+                android:textColor="@android:color/tertiary_text_light"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -127,6 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/list_padding"
                 android:text="@string/app_version"
+                android:textColor="@android:color/tertiary_text_light"
                 app:layout_constraintEnd_toEndOf="@+id/textView8"
                 app:layout_constraintTop_toTopOf="@+id/textView8" />
         </androidx.constraintlayout.widget.ConstraintLayout>

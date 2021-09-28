@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_padding"
             android:text="@string/hour_template"
+            android:textColor="@color/colorContrast"
             app:layout_constraintStart_toEndOf="@+id/textView14"
             app:layout_constraintTop_toTopOf="@+id/textView14" />
 
@@ -33,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_padding"
             android:text="@string/long_date_template"
+            android:textColor="@color/colorContrast"
             app:layout_constraintStart_toEndOf="@+id/textView7"
             app:layout_constraintTop_toTopOf="@+id/textView7" />
 
@@ -43,6 +45,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="@dimen/course_padding"
             android:text="@string/the"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,6 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_padding"
             android:text="@string/hour_template"
+            android:textColor="@color/colorContrast"
             app:layout_constraintStart_toEndOf="@+id/textView16"
             app:layout_constraintTop_toTopOf="@+id/textView16" />
 
@@ -62,6 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_padding"
             android:text="@string/at"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/coursesDetailsStartTextView"
             app:layout_constraintTop_toTopOf="@+id/coursesDetailsStartTextView" />
@@ -74,6 +79,7 @@
             android:layout_marginTop="@dimen/course_padding"
             android:layout_marginBottom="@dimen/course_padding"
             android:text="@string/from"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -99,6 +105,7 @@
             android:layout_marginStart="@dimen/course_padding"
             android:layout_marginTop="@dimen/course_padding"
             android:text="@string/status"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -109,6 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/course_padding"
             android:text="@string/topic"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/textView18"
             app:layout_constraintTop_toBottomOf="@+id/textView18" />
@@ -119,6 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/course_padding"
             android:text="@string/course_type"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/textView19"
             app:layout_constraintTop_toBottomOf="@+id/textView19" />
@@ -129,6 +138,7 @@
             android:layout_height="0dp"
             android:gravity="center_vertical"
             android:text="@string/description"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/coursesDetailsDescriptionTextView"
             app:layout_constraintStart_toStartOf="@+id/textView20"
@@ -141,6 +151,7 @@
             android:layout_marginTop="@dimen/course_padding"
             android:layout_marginBottom="@dimen/course_padding"
             android:text="@string/isExam"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView21"
@@ -153,6 +164,7 @@
             android:layout_marginStart="@dimen/course_detail_padding"
             android:layout_marginEnd="@dimen/course_padding"
             android:text="TextView"
+            android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView20"
             app:layout_constraintTop_toTopOf="@+id/textView20" />
@@ -163,6 +175,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/course_padding"
             android:text="TextView"
+            android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/coursesDetailsTypeTextView"
             app:layout_constraintTop_toTopOf="@+id/textView19" />
@@ -173,6 +186,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/course_padding"
             android:text="TextView"
+            android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/coursesDetailsTopicTextView"
             app:layout_constraintTop_toTopOf="@+id/textView18" />
@@ -184,6 +198,7 @@
             android:layout_marginTop="@dimen/course_padding"
             android:layout_marginEnd="@dimen/course_padding"
             android:text="TextView"
+            android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/coursesDetailsTypeTextView"
             app:layout_constraintTop_toBottomOf="@+id/coursesDetailsTypeTextView" />
@@ -194,6 +209,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/course_padding"
             android:text="TextView"
+            android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/coursesDetailsDescriptionTextView"
             app:layout_constraintTop_toTopOf="@+id/textView22" />
@@ -219,6 +235,7 @@
             android:layout_marginStart="@dimen/course_padding"
             android:layout_marginTop="@dimen/course_padding"
             android:text="@string/room"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -229,6 +246,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_detail_padding"
             android:text="TextView"
+            android:textColor="@color/colorContrast"
             app:layout_constraintStart_toEndOf="@+id/textView28"
             app:layout_constraintTop_toTopOf="@+id/textView28" />
 
@@ -263,6 +281,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/teachers"
+                android:textColor="@color/colorContrast"
                 android:textStyle="bold" />
 
             <TextView
@@ -273,6 +292,7 @@
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:text="@string/students"
+                android:textColor="@color/colorContrast"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -351,6 +371,7 @@
             android:layout_marginEnd="@dimen/course_padding"
             android:gravity="center_horizontal"
             android:text="@string/course"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

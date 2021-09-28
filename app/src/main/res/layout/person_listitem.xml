@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/button_separator"
         android:text="Prénom Nom"
+        android:textColor="@color/colorContrast"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

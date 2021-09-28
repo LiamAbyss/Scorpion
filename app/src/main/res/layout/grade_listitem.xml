@@ -24,6 +24,7 @@
             android:layout_marginStart="@dimen/list_padding"
             android:layout_marginTop="@dimen/button_separator"
             android:text="Date"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -44,6 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Code"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/gradeCodeTextView"
             app:layout_constraintStart_toStartOf="@+id/textView"
@@ -64,6 +66,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Libellé"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/gradeLibelleTextView"
             app:layout_constraintStart_toStartOf="@+id/textView2"
@@ -86,6 +89,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_separator"
             android:text="Note"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="@+id/textView3"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout3" />
@@ -106,6 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Coefficient"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/gradeCoeffTextView"
             app:layout_constraintStart_toStartOf="@+id/textView4"
@@ -127,6 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Appréciation"
+            android:textColor="@color/colorContrast"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/gradeAppreciationTextView"
             app:layout_constraintStart_toStartOf="@+id/textView5"
@@ -151,6 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/list_padding"
             android:text="DD/MM/AAAA"
+            android:textColor="@color/colorContrast"
             app:layout_constraintStart_toEndOf="@+id/frameLayout7"
             app:layout_constraintTop_toTopOf="@+id/textView" />
 
@@ -160,6 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_separator"
             android:text="/"
+            android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/gradeDateTextView"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout" />
@@ -171,6 +179,7 @@
             android:layout_marginTop="@dimen/button_separator"
             android:layout_marginEnd="@dimen/button_separator"
             android:text="/"
+            android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/gradeCodeTextView"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout2" />
@@ -180,6 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="/"
+            android:textColor="@color/colorContrast"
             app:layout_constraintStart_toStartOf="@+id/gradeLibelleTextView"
             app:layout_constraintTop_toTopOf="@+id/textView4" />
 
@@ -189,6 +199,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/button_separator"
             android:text="@string/empty_grade"
+            android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/gradeNoteTextView"
             app:layout_constraintTop_toBottomOf="@+id/frameLayout4" />
@@ -200,6 +211,7 @@
             android:layout_marginTop="@dimen/button_separator"
             android:layout_marginBottom="@dimen/button_separator"
             android:text="@string/empty_grade"
+            android:textColor="@color/colorContrast"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/gradeCoeffTextView"

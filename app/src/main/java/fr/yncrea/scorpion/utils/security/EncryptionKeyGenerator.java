@@ -9,7 +9,7 @@ import javax.crypto.KeyGenerator;
 
 public class EncryptionKeyGenerator {
     public static final String ANDROID_KEY_STORE = "AndroidKeyStore";
-    public static final String KEY_ALIAS = "KEY_ALIAS";
+    public static final String KEY_ALIAS = "SCORPION_KEY_ALIAS";
 
     static SecurityKey generateSecretKey(KeyStore keyStore) {
         try {

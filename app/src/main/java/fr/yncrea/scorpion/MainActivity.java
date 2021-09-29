@@ -2,6 +2,8 @@ package fr.yncrea.scorpion;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -52,6 +54,7 @@ import fr.yncrea.scorpion.model.Planning;
 import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import fr.yncrea.scorpion.utils.UtilsMethods;
+import fr.yncrea.scorpion.utils.notifications.ReminderBroadcast;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -82,6 +85,14 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setSubtitle(PreferenceUtils.getName());
+
+        ////////////////////////// TEST NOTIFICATIONS //////////////////////////
+
+        Intent notifyIntent = new Intent(this, ReminderBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast
+                (this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
 
         // drawer layout instance to toggle the menu icon to open
         // drawer and back button to close drawer

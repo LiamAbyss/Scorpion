@@ -1,5 +1,7 @@
 package fr.yncrea.scorpion.model;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,7 +50,7 @@ public class CourseDetails {
 
     }
 
-    public CourseDetails(CourseDetails details) {
+    public CourseDetails(@NonNull CourseDetails details) {
         id = details.id;
         date = details.date;
         dateStart = details.dateStart;

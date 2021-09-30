@@ -232,7 +232,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
         toInsert.id = index;
         toInsert.planningString = UtilsMethods.planningToString(result);
-
+        result = UtilsMethods.planningFromString(toInsert.planningString);
+        
         // Save it into database
         if(db.aurionPlanningDao().getPlanningById(index) == null) {
             db.aurionPlanningDao().insertPlanning(toInsert);
@@ -290,6 +291,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             List<CourseDetails> courses = getPlanning(weekIndex);
             CourseDetails tmpDetails = null;
 
+            if(courses == null) return;
+
             for (CourseDetails c : courses) {
                 if (c.id.equals(id)) {
                     tmpDetails = c;
@@ -299,7 +302,8 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
 
             if (tmpDetails == null) return;
 
-            final CourseDetails details = tmpDetails;
+            final CourseDetails details = new CourseDetails(tmpDetails);
+
             runOnUiThread(() -> {
                 AlertDialog dialog = new AlertDialog.Builder(this).create();
 

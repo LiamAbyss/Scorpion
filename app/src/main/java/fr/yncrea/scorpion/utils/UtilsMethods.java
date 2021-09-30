@@ -109,7 +109,11 @@ public class UtilsMethods {
     public static String planningToString(List<CourseDetails> planning) {
         StringBuilder planningString = new StringBuilder();
         for(CourseDetails c : planning){
-            planningString.append(c.toString()).append(";END_OF_SCORPION_LINE;");
+            planningString.append(c.toString()
+                    .replace("&amp;", "&")
+                    .replace("&gt;", ">")
+                    .replace("&lt;", "<")
+            ).append(";END_OF_SCORPION_LINE;");
         }
         return planningString.toString();
     }

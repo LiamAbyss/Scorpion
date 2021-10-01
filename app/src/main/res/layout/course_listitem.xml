@@ -88,12 +88,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
+                android:ellipsize="end"
                 android:text="courseRoomTextView"
                 android:textColor="@color/colorContrast"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/courseInfoImageView"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/courseTeacherTextView"
-                app:layout_constraintTop_toBottomOf="@+id/courseTeacherTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/courseTeacherTextView"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/courseInfoImageView"
@@ -128,11 +132,11 @@
                 android:id="@+id/arrowImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:src="@drawable/ic_south_primary_24dp"
                 app:layout_constraintBottom_toTopOf="@+id/courseTimeEndTextView"
                 app:layout_constraintEnd_toEndOf="@+id/courseTimeEndTextView"
                 app:layout_constraintStart_toStartOf="@+id/courseTimeStartTextView"
-                app:layout_constraintTop_toBottomOf="@+id/courseTimeStartTextView"
-                android:src="@drawable/ic_south_primary_24dp" />
+                app:layout_constraintTop_toBottomOf="@+id/courseTimeStartTextView" />
 
             <View
                 android:id="@+id/divider"

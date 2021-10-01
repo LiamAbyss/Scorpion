@@ -16,6 +16,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -25,8 +28,8 @@ import fr.yncrea.scorpion.utils.PreferenceUtils;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     private final Executor executor = Executors.newSingleThreadExecutor();
-    private EditText mLoginEditText;
-    private EditText mPasswordEditText;
+    private TextInputEditText mLoginEditText;
+    private TextInputEditText mPasswordEditText;
     private final Aurion aurion = new Aurion();
     private Toast mToast;
     private boolean canClick = false;
@@ -35,8 +38,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_layout);
-        mLoginEditText = (EditText) findViewById(R.id.loginEditText);
-        mPasswordEditText = (EditText) findViewById(R.id.passwordEditText);
+        TextInputLayout mLoginLayout = findViewById(R.id.loginTextInputLayout);
+        mLoginEditText = (TextInputEditText) mLoginLayout.getEditText();
+        mPasswordEditText = findViewById(R.id.passwordEditText);
 
         if(!PreferenceUtils.getAcceptedEula().equals(getString(R.string.eula_id))) {
             PreferenceUtils.setPassword("");

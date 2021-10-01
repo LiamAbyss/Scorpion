@@ -12,6 +12,8 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -138,8 +140,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             else {
                 holder.teacher.setText(currentCourse.teachers.get(0).firstName + " " + currentCourse.teachers.get(0).lastName);
             }
-
-            holder.time.setText(currentCourse.timeStart + " - " + currentCourse.timeEnd);
+            holder.timeStart.setText(currentCourse.timeStart);
+            holder.timeEnd.setText(currentCourse.timeEnd);
         }
     }
 
@@ -162,25 +164,29 @@ public class CoursesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public final TextView title;
         public final TextView description;
-        public final TextView time;
+        public final TextView timeStart;
+        public final TextView timeEnd;
         public final TextView room;
         public final TextView teacher;
         public final ConstraintLayout dayConstraintLayout;
         public final ConstraintLayout courseConstraintLayout;
         public final View mView;
         public final ImageView info;
+        public final MaterialCardView card;
 
-        public CoursesViewHolder(final View view) {
+        public CoursesViewHolder(final View view)   {
             super(view);
             mView = view;
             title = (TextView) view.findViewById(R.id.courseTitleTextView);
             description = (TextView) view.findViewById(R.id.courseDescriptionTextView);
-            time = (TextView) view.findViewById(R.id.courseTimeTextView);
+            timeStart = (TextView) view.findViewById(R.id.courseTimeStartTextView);
+            timeEnd = (TextView) view.findViewById(R.id.courseTimeEndTextView);
             room = (TextView) view.findViewById(R.id.courseRoomTextView);
             teacher = (TextView) view.findViewById(R.id.courseTeacherTextView);
             dayConstraintLayout = (ConstraintLayout) view.findViewById(R.id.dayConstraintLayout);
             courseConstraintLayout = (ConstraintLayout) view.findViewById(R.id.courseConstraintLayout);
             info = (ImageView) view.findViewById(R.id.courseInfoImageView);
+            card = (MaterialCardView) view.findViewById(R.id.courseMaterialCard);
         }
 
     }

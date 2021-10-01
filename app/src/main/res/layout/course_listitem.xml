@@ -85,10 +85,11 @@
 
             <TextView
                 android:id="@+id/courseRoomTextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:ellipsize="end"
+                android:maxLines="2"
                 android:text="courseRoomTextView"
                 android:textColor="@color/colorContrast"
                 android:textStyle="bold"

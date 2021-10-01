@@ -53,8 +53,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_list_item_left_padding"
+            android:layout_marginBottom="@dimen/course_list_item_bottom_padding"
             android:text="courseTimeTextView"
             android:textColor="@color/colorContrast"
+            app:layout_constraintBottom_toTopOf="@+id/courseTeacherTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/courseRoomTextView" />
 
@@ -67,8 +69,7 @@
             android:text="courseTeacherTextView"
             android:textColor="@color/colorContrast"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/courseTimeTextView" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/courseRoomTextView"

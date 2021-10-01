@@ -113,7 +113,7 @@ public class CourseDetails {
         CourseDetails res = new CourseDetails();
 
         String[] data = s.split(";");
-        if(data.length < 19) return res;
+        if(data.length != 19) return res;
 
         res.id = Long.parseLong(data[0]);
         res.course = data[1];
@@ -134,11 +134,13 @@ public class CourseDetails {
 
         // TEACHERS
         String[] array = data[16].split(",");
-        for(int i = 0; i < array.length; i++) {
-            Person p = new Person();
-            p.firstName = array[i].split("_")[0];
-            p.lastName = array[i].split("_")[1];
-            res.teachers.add(p);
+        if(array[0].contains("_")) {
+            for (int i = 0; i < array.length; i++) {
+                Person p = new Person();
+                p.firstName = array[i].split("_")[0];
+                p.lastName = array[i].split("_")[1];
+                res.teachers.add(p);
+            }
         }
 
         // Students

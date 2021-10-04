@@ -7,6 +7,8 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.jaredrummler.android.widget.AnimatedSvgView;
+
 public class SplashScreenActivity extends AppCompatActivity {
 
     private static int SPLASH_TIME_OUT = 1500;
@@ -15,6 +17,9 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
+        AnimatedSvgView svgView = (AnimatedSvgView) findViewById(R.id.animated_svg_view);
+        svgView.start();
 
         new Handler(Looper.myLooper()).postDelayed(() -> {
             // This method will be executed once the timer is over

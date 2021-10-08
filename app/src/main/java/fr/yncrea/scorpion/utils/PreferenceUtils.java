@@ -2,25 +2,13 @@ package fr.yncrea.scorpion.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
 
-import androidx.annotation.RequiresApi;
-
-import java.security.Key;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.UnrecoverableKeyException;
-import java.util.Base64;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.spec.GCMParameterSpec;
+import java.util.ArrayList;
+import java.util.List;
 
 import fr.yncrea.scorpion.ScorpionApplication;
+import fr.yncrea.scorpion.utils.notifications.NotificationUtils;
+import fr.yncrea.scorpion.utils.notifications.ScorpionNotification;
 import fr.yncrea.scorpion.utils.security.EncryptionUtils;
 
 public class PreferenceUtils {
@@ -103,5 +91,36 @@ public class PreferenceUtils {
 	public static void setUpdateTime(Long time){
 		final SharedPreferences prefs = getSharedPreferences();
 		prefs.edit().putLong(Constants.Preferences.PREF_UPDATE_TIME, time).apply();
+	}
+
+	public static List<ScorpionNotification> getNotifications() {
+		final SharedPreferences prefs = getSharedPreferences();
+		String notifs = prefs.getString(Constants.Preferences.PREF_NOTIFICATIONS_ARRAY, null);
+		ArrayList<ScorpionNotification> notifications = new ArrayList<>();
+
+		if(notifs == null) return notifications;
+		for(String notifString : notifs.split(";END_OF_SCORPION_LINE;")) {
+			String[] data = notifString.split(";");
+			if(data.length != 5) return notifications;
+			notifications.add(new ScorpionNotification(
+					ScorpionApplication.getContext(),
+					NotificationUtils.TYPE.valueOf(data[0]),
+					Long.parseLong(data[1]),
+					data[3],
+					data[4],
+					Long.parseLong(data[2])
+			));
+		}
+		return notifications;
+	}
+
+	public static void setNotifications(List<ScorpionNotification> notifications) {
+		final SharedPreferences prefs = getSharedPreferences();
+		StringBuilder builder = new StringBuilder();
+
+		for(ScorpionNotification notif : notifications) {
+			builder.append(notif.toString()).append(";END_OF_SCORPION_LINE;");
+		}
+		prefs.edit().putString(Constants.Preferences.PREF_NOTIFICATIONS_ARRAY, builder.toString()).apply();
 	}
 }

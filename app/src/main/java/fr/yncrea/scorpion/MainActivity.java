@@ -38,8 +38,13 @@ import com.google.gson.JsonArray;
 
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -54,7 +59,9 @@ import fr.yncrea.scorpion.model.Planning;
 import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
 import fr.yncrea.scorpion.utils.UtilsMethods;
+import fr.yncrea.scorpion.utils.notifications.NotificationUtils;
 import fr.yncrea.scorpion.utils.notifications.ReminderBroadcast;
+import fr.yncrea.scorpion.utils.notifications.ScorpionNotification;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -85,14 +92,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().setSubtitle(PreferenceUtils.getName());
-
-        ////////////////////////// TEST NOTIFICATIONS //////////////////////////
-
-        Intent notifyIntent = new Intent(this, ReminderBroadcast.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast
-                (this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);
 
         // drawer layout instance to toggle the menu icon to open
         // drawer and back button to close drawer
@@ -313,6 +312,34 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return p;
     }
 
+    public CourseDetails getNextCourse() {
+        return getNextCourse(System.currentTimeMillis());
+    }
+    public CourseDetails getNextCourse(Long time) {
+        CourseDetails res = null;
+        int offset = 0;
+        while(res == null && offset < 3 && isPlanningInDatabase(getCurrentWeekIndex() + offset)) {
+            ArrayList<CourseDetails> coursesList = (ArrayList<CourseDetails>) getPlanning(getCurrentWeekIndex() + offset);
+            for(CourseDetails course : coursesList) {
+                //if(now < course.)
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ", Locale.FRANCE);
+                try {
+                    Date date = dateFormat.parse(course.dateStart);
+                    Long dateTime = date.getTime();
+                    if(time < dateTime) {
+                        res = course;
+                        break;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return res;
+                }
+            }
+            offset++;
+        }
+        return res;
+    }
+
     public void showDetails(Long id) {
         mExecutorFling.execute(() -> {
             List<CourseDetails> courses = getPlanning(weekIndex);
@@ -505,8 +532,6 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
         return super.onTouchEvent(event);
     }
 
-
-
     @Override
     public boolean onDown(MotionEvent e) {
         return true;
@@ -626,6 +651,56 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             return c.get(Calendar.WEEK_OF_YEAR);
         else
             return c.get(Calendar.WEEK_OF_YEAR) + 1;
+    }
+
+    @Override
+    protected void onPause() {
+        ////////////////////////// TEST NOTIFICATIONS //////////////////////////
+
+        /*Intent notifyIntent = new Intent(this, ReminderBroadcast.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast
+                (this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 5000, pendingIntent);*/
+
+        mExecutorFling.execute(() -> {
+            NotificationUtils.clearAllNotifications();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ssZ", Locale.FRANCE);
+            CourseDetails lastCourse = null;
+            Date date;
+            for(int i = 0; i < 3; i++) {
+                CourseDetails course;
+                if(lastCourse == null)
+                    course = getNextCourse();
+                else {
+                    try {
+                        date = dateFormat.parse(lastCourse.dateStart);
+                        course = getNextCourse(date.getTime());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                }
+
+                if(course == null) return;
+
+                try {
+                    date = dateFormat.parse(course.dateStart);
+                    new ScorpionNotification(
+                            this,
+                            NotificationUtils.TYPE.COURSE_NOTIFICATION,
+                            course.course,
+                            "Salle : " + course.room + "\nDate : " + course.longDate + "\n" + course.timeStart + " => " + course.timeEnd,
+                            /*System.currentTimeMillis() + 5000 + i * 3000*/date.getTime() - (1000 * 60 * 10)
+                    ).commit();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                lastCourse = course;
+            }
+        });
+        super.onPause();
     }
 
     private Intent getGradesIntent()

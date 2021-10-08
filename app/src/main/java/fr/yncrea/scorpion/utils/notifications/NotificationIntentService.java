@@ -14,25 +14,32 @@ import android.os.IBinder;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import java.util.ArrayList;
+
 import fr.yncrea.scorpion.R;
 import fr.yncrea.scorpion.SplashScreenActivity;
+import fr.yncrea.scorpion.utils.PreferenceUtils;
 
 public class NotificationIntentService extends Service {
 
     private static final String CHANNEL_ID = "SCORPION_NOTIFICATION";
-    private static final String channelName = "Scorpion Channel";
+    private static final String channelName = "Notifications de cours";
+    private String title;
+    private String body;
+    private int id;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        startMyOwnForeground();
     }
+
+
 
     private void startMyOwnForeground()
     {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL_ID) == null) {
-            NotificationChannel chan = new NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel chan = new NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH);
             chan.setLightColor(Color.BLUE);
             chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
             manager.createNotificationChannel(chan);
@@ -43,22 +50,44 @@ public class NotificationIntentService extends Service {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_foreground)
-                .setContentTitle("Test")
+                .setContentTitle(title)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Ceci est le corps de la notification de test, qui ne tient pas sur une seule ligne."))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                        .bigText(body))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
         Notification notification = builder.build();
-        manager.notify(2, notification);
+
+        // Prevent most crashes
+        startForeground(id, new NotificationCompat.Builder(this, CHANNEL_ID).build());
+        stopForeground(true);
+
+
+        manager.notify(id, notification);
+        /*startForeground(id, notification);
+        stopForeground(false);*/
     }
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        return START_STICKY;
+        if(intent.hasExtra("ID")) {
+            Long id = intent.getLongExtra("ID", 0);
+            ArrayList<ScorpionNotification> notifications = (ArrayList<ScorpionNotification>) PreferenceUtils.getNotifications();
+            for(ScorpionNotification notif : notifications) {
+                if(notif.getId() == id) {
+                    title = notif._title;
+                    body = notif._body;
+                    this.id = id.intValue();
+                    break;
+                }
+            }
+        }
+        startMyOwnForeground();
+        return START_STICKY_COMPATIBILITY;
     }
 
 

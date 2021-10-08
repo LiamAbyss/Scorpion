@@ -14,6 +14,8 @@ public class ScorpionApplication extends Application {
 		sContext = getApplicationContext();
 	}
 
+
+
 	// Used to access Context anywhere within the app
 	public static Context getContext() {
 		return sContext;

@@ -34,7 +34,6 @@ public class NotificationIntentService extends Service {
     }
 
 
-
     private void startMyOwnForeground()
     {
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -53,7 +52,7 @@ public class NotificationIntentService extends Service {
                 .setContentTitle(title)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText(body))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);

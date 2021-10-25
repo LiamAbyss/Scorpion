@@ -23,6 +23,7 @@ public class ScorpionNotification {
     private static final String CHANNEL_ID = "SCORPION_NOTIFICATION";
 
     /**
+     * @param context
      * @param type Type of the notification (course, grade, homework...)
      * @param title Title of the notification
      * @param body Body of the notification
@@ -39,6 +40,7 @@ public class ScorpionNotification {
 
     /**
      * Shouldn't be called manually outside of PreferenceUtils
+     * @param context
      * @param type Type of the notification (course, grade, homework...)
      * @param id Id of the notification (automatic)
      * @param title Title of the notification
@@ -105,7 +107,7 @@ public class ScorpionNotification {
                 (_context, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) _context.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, _time, pendingIntent);
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, _time, pendingIntent);
         /*AlarmManager alarmManager2 = (AlarmManager) _context.getSystemService(Context.ALARM_SERVICE);
         alarmManager2.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 7000, pendingIntent);*/
     }

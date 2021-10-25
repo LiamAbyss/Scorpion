@@ -230,7 +230,7 @@ public class UtilsMethods {
         details.examStatus = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
 
         // ROOMCODE
-        from = "Code</span></th><th id=\"form:onglets:j_idt163:j_idt167\" class=\"ui-state-default\" role=\"columnheader\" aria-label=\"Libellé\" scope=\"col\"><span class=\"ui-column-title\">Libellé</span></th></tr></thead><tbody id=\"form:onglets:j_idt163_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">";
+        from = "<tbody id=\"form:onglets:j_idt194_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">";
         to = "</td>";
         endFromIndex = s.indexOf(from) + from.length();
         if(s.contains(from)) {
@@ -240,7 +240,7 @@ public class UtilsMethods {
 
         // ROOM
         if(details.roomCode != "Aucun enregistrement") {
-            from = "Code</span></th><th id=\"form:onglets:j_idt163:j_idt167\" class=\"ui-state-default\" role=\"columnheader\" aria-label=\"Libellé\" scope=\"col\"><span class=\"ui-column-title\">Libellé</span></th></tr></thead><tbody id=\"form:onglets:j_idt163_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">"
+            from = "<tbody id=\"form:onglets:j_idt194_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">"
                     + details.roomCode
                     + "</td><td role=\"gridcell\">";
             to = "</td>";
@@ -251,7 +251,7 @@ public class UtilsMethods {
 
         // TEACHERS
         details.teachers = new ArrayList<Person>();
-        from = "Prénom</span></th></tr></thead><tbody id=\"form:onglets:j_idt171_data\" class=\"ui-datatable-data ui-widget-content\">";
+        from = "<tbody id=\"form:onglets:j_idt202_data\" class=\"ui-datatable-data ui-widget-content\">";
         to = "</tbody></table>";
         endFromIndex = s.indexOf(from) + from.length();
         zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
@@ -271,7 +271,7 @@ public class UtilsMethods {
 
         // STUDENTS
         details.students = new ArrayList<Person>();
-        from = "Prénom</span></th></tr></thead><tbody id=\"form:onglets:apprenantsTable_data\" class=\"ui-datatable-data ui-widget-content\">";
+        from = "<tbody id=\"form:onglets:apprenantsTable_data\" class=\"ui-datatable-data ui-widget-content\">";
         to = "</tbody></table>";
         endFromIndex = s.indexOf(from) + from.length();
         zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
@@ -288,7 +288,7 @@ public class UtilsMethods {
 
         // GROUPS
         details.groups = new ArrayList<String>();
-        from = "<tbody id=\"form:onglets:j_idt210_data\" class=\"ui-datatable-data ui-widget-content\">";
+        from = "<tbody id=\"form:onglets:j_idt251_data\" class=\"ui-datatable-data ui-widget-content\">";
         to = "</tbody></table>";
         endFromIndex = s.indexOf(from) + from.length();
         zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
@@ -301,7 +301,7 @@ public class UtilsMethods {
         }
 
         // COURSE NAME
-        from = "<tbody id=\"form:onglets:j_idt215_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">";
+        from = "<tbody id=\"form:onglets:j_idt260_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">";
         to = "</td>";
         endFromIndex = s.indexOf(from) + from.length();
         if(s.contains(from)) {
@@ -311,7 +311,7 @@ public class UtilsMethods {
 
         // MODULE
         if(details.course != "Aucun enregistrement") {
-            from = "<tbody id=\"form:onglets:j_idt215_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">"
+            from = "<tbody id=\"form:onglets:j_idt260_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">"
                     + details.course
                     + "</td><td role=\"gridcell\">";
             to = "</td>";

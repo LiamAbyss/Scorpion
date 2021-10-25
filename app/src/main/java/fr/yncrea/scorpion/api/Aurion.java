@@ -398,11 +398,11 @@ public class Aurion {
             viewState = data.viewState;
         }
         //postState
-        String defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt117&" +
-                "javax.faces.partial.execute=form%3Aj_idt117&javax.faces.partial.render=form%3AmodaleDetail+form%3AconfirmerSuppression&" +
+        String defaultFields = "javax.faces.partial.ajax=true&javax.faces.source=form%3Aj_idt144&" +
+                "javax.faces.partial.execute=form%3Aj_idt144&javax.faces.partial.render=form%3AmodaleDetail+form%3AconfirmerSuppression&" +
                 "javax.faces.behavior.event=eventSelect&javax.faces.partial.event=eventSelect&" +
-                "form%3Aj_idt117_selectedEventId=" + id + "&" +
-                "form=form&form%3AlargeurDivCenter=1219&form%3Adate_input=30%2F08%2F2021&form%3Aweek=35-2021&form%3Aj_idt117_view=agendaWeek&" +
+                "form%3Aj_idt144_selectedEventId=" + id + "&" +
+                "form=form&form%3AlargeurDivCenter=1219&form%3Aj_idt144_view=agendaWeek&" +
                 "form%3AoffsetFuseauNavigateur=-7200000&form%3Aonglets_activeIndex=0&form%3Aonglets_scrollState=0&form%3Aj_idt236_focus=&" +
                 "form%3Aj_idt236_input=44323";
         HashMap<String, String> fields = new HashMap<String, String>();

@@ -15,7 +15,7 @@ import retrofit2.http.POST;
 public interface AurionService {
     @FormUrlEncoded
     @POST("/login")
-    Call<ResponseBody> getSessionIdResponse(@Field("username") String username, @Field("password") String password);
+    Call<ResponseBody> getSessionIdResponse(@Field("username") String username, @Field("password") String password, @Field("j_idt28") String form);
 
     @GET("/")
     Call<ResponseBody> getHomePageHtml(@Header("Cookie") String cookie);

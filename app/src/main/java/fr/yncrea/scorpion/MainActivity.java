@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             } catch (IOException e) {
                 e.printStackTrace();
             }
-    });
+        });
     }
 
     public boolean isPlanningInDatabase(int index) {

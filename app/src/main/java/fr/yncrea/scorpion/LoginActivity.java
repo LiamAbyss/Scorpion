@@ -1,7 +1,9 @@
 package fr.yncrea.scorpion;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -16,15 +18,25 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.gson.JsonArray;
+
+import java.io.IOException;
+import java.util.Calendar;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import fr.yncrea.scorpion.api.Aurion;
+import fr.yncrea.scorpion.api.GithubService;
 import fr.yncrea.scorpion.model.AurionResponse;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     private final Executor executor = Executors.newSingleThreadExecutor();
+    private final Executor mExecutorGit = Executors.newSingleThreadExecutor();
+    private GithubService mGithubService;
     private EditText mLoginEditText;
     private EditText mPasswordEditText;
     private final Aurion aurion = new Aurion();
@@ -58,6 +70,53 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         canClick = true;
+
+        mGithubService = new Retrofit.Builder()
+                .baseUrl("https://api.github.com")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build().create(GithubService.class);
+        tryRequestUpdate();
+    }
+
+    public void tryRequestUpdate() {
+        mExecutorGit.execute(() -> {
+            Long lastTime = PreferenceUtils.getUpdateTime();
+            long now = Calendar.getInstance().getTimeInMillis();
+
+            if(now < lastTime + Long.parseLong(getString(R.string.update_timeout))) {
+                return;
+            }
+            else {
+                PreferenceUtils.setUpdateTime(now);
+            }
+
+            try {
+                Response<JsonArray> releases = mGithubService.getReleases().execute();
+                if(releases.body() == null) return;
+                String latestVersion = releases.body().get(0).getAsJsonObject().get("tag_name").getAsString();
+                if(!latestVersion.equals(getString(R.string.app_version))) {
+                    String latestVersionDesc = releases.body().get(0).getAsJsonObject().get("body").getAsString();
+                    //String latestVersionLink = releases.body().get(0).getAsJsonObject().get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
+                    runOnUiThread(() -> new AlertDialog.Builder(this)
+                            .setTitle("Update available !")
+                            .setMessage("A new version of Scorpion is available !\n\n"
+                                    + "Version : " + latestVersion + "\n\n"
+                                    + "Description : \n" + latestVersionDesc)
+                            .setPositiveButton("Update now", (dialog, which) -> {
+                                try {
+                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
+                                    startActivity(myIntent);
+                                } catch (ActivityNotFoundException e) {
+                                    //runOnUiThread(() -> showToast(this, "No application can handle this request." + " Please install a web browser",  Toast.LENGTH_LONG));
+                                    e.printStackTrace();
+                                }
+                            })
+                            .setNegativeButton("Maybe later", null).show());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void showEula() {

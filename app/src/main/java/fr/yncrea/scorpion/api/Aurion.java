@@ -49,7 +49,7 @@ public class Aurion {
      */
     public AurionResponse connect(String username, String password){
         Response<ResponseBody> res = null;
-        Call<ResponseBody> request = aurionService.getSessionIdResponse(username, password);
+        Call<ResponseBody> request = aurionService.getSessionIdResponse(username, password, "");
         AurionResponse aurionResponse = new AurionResponse();
 
         try {

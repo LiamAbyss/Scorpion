@@ -229,20 +229,25 @@ public class UtilsMethods {
         endFromIndex = s.indexOf(from) + from.length();
         details.examStatus = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
 
+        String[] data;
+
         // ROOMCODE
-        from = "<tbody id=\"form:onglets:j_idt194_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">";
-        to = "</td>";
+        from = "Code</span></th>";
+        to = "</td><td role=\"gridcell\">";
         endFromIndex = s.indexOf(from) + from.length();
         if(s.contains(from)) {
-            details.roomCode = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
+            zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
+            data = zoomStr.split("<td role=\"gridcell\">");
+            if(data.length == 2)
+                details.roomCode = data[1];
+            else details.roomCode = "Aucun enregistrement";
+
         }
         else details.roomCode = "Aucun enregistrement";
 
         // ROOM
         if(details.roomCode != "Aucun enregistrement") {
-            from = "<tbody id=\"form:onglets:j_idt194_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">"
-                    + details.roomCode
-                    + "</td><td role=\"gridcell\">";
+            from = details.roomCode + "</td><td role=\"gridcell\">";
             to = "</td>";
             endFromIndex = s.indexOf(from) + from.length();
             details.room = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
@@ -251,17 +256,23 @@ public class UtilsMethods {
 
         // TEACHERS
         details.teachers = new ArrayList<Person>();
-        from = "<tbody id=\"form:onglets:j_idt202_data\" class=\"ui-datatable-data ui-widget-content\">";
+        from = "Prénom</span></th></tr></thead>";
         to = "</tbody></table>";
         endFromIndex = s.indexOf(from) + from.length();
         zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
+        data = zoomStr.split("<tbody id=\"form:onglets:j_idt[0-9]+_data\" class=\"ui-datatable-data ui-widget-content\">");
+
+        if(data.length == 2)
+            zoomStr = data[1];
+        else
+            zoomStr = "Aucun enregistrement";
 
         if(!zoomStr.contains("Aucun enregistrement")) {
             String[] teachers = zoomStr.split("<tr data-ri=\"[0-9]+\" class=\"ui-widget-content ui-datatable-(even|odd)\" role=\"row\">");
             for (String t : teachers) {
                 if (t.isEmpty()) continue;
                 Person p = new Person();
-                String[] data = t.split("<td role=\"gridcell\">");
+                data = t.split("<td role=\"gridcell\">");
                 if(data.length != 3) continue;
                 p.lastName = data[1].substring(0, data[1].indexOf("</td>"));
                 p.firstName = data[2].substring(0, data[2].indexOf("</td>"));
@@ -280,7 +291,7 @@ public class UtilsMethods {
         for (String st : students) {
             if(st.isEmpty()) continue;
             Person p = new Person();
-            String[] data = st.split("<td role=\"gridcell\">");
+            data = st.split("<td role=\"gridcell\">");
             p.lastName = data[1].substring(0, data[1].indexOf("</td>"));
             p.firstName = data[2].substring(0, data[2].indexOf("</td>"));
             details.students.add(p);
@@ -288,32 +299,38 @@ public class UtilsMethods {
 
         // GROUPS
         details.groups = new ArrayList<String>();
-        from = "<tbody id=\"form:onglets:j_idt251_data\" class=\"ui-datatable-data ui-widget-content\">";
+        from = zoomStr + "</tbody></table>";
         to = "</tbody></table>";
         endFromIndex = s.indexOf(from) + from.length();
         zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
 
-        String[] groups = zoomStr.split("<tr data-ri=\"[0-9]+\" class=\"ui-widget-content ui-datatable-(even|odd)\" role=\"row\">");
-        for (String g : groups) {
-            if(g.isEmpty()) continue;
-            String[] data = g.split("<td role=\"gridcell\">");
-            details.groups.add(data[1].substring(0, data[1].indexOf("</td>")));
+        data = zoomStr.split("<tbody id=\"form:onglets:j_idt[0-9]+_data\" class=\"ui-datatable-data ui-widget-content\">");
+        if(data.length == 2) {
+            zoomStr = data[1];
+            String[] groups = zoomStr.split("<tr data-ri=\"[0-9]+\" class=\"ui-widget-content ui-datatable-(even|odd)\" role=\"row\">");
+            for (String g : groups) {
+                if (g.isEmpty()) continue;
+                data = g.split("<td role=\"gridcell\">");
+                details.groups.add(data[1].substring(0, data[1].indexOf("</td>")));
+            }
         }
 
         // COURSE NAME
-        from = "<tbody id=\"form:onglets:j_idt260_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">";
+        from = "Module</span></th></tr></thead>";
         to = "</td>";
         endFromIndex = s.indexOf(from) + from.length();
         if(s.contains(from)) {
-            details.course = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
+            zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
+            data = zoomStr.split("<td role=\"gridcell\">");
+            if(data.length == 2)
+                details.course = data[1];
+            else details.course = "Aucun enregistrement";
         }
         else details.course = "Aucun enregistrement";
 
         // MODULE
         if(details.course != "Aucun enregistrement") {
-            from = "<tbody id=\"form:onglets:j_idt260_data\" class=\"ui-datatable-data ui-widget-content\"><tr data-ri=\"0\" class=\"ui-widget-content ui-datatable-even\" role=\"row\"><td role=\"gridcell\">"
-                    + details.course
-                    + "</td><td role=\"gridcell\">";
+            from = details.course + "</td><td role=\"gridcell\">";
             to = "</td>";
             endFromIndex = s.indexOf(from) + from.length();
             details.moduleContext = s.substring(endFromIndex, s.indexOf(to, endFromIndex));

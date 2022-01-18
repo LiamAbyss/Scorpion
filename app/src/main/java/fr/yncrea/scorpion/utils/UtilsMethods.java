@@ -233,17 +233,29 @@ public class UtilsMethods {
 
         // ROOMCODE
         from = "Code</span></th>";
-        to = "</td><td role=\"gridcell\">";
-        endFromIndex = s.indexOf(from) + from.length();
-        if(s.contains(from)) {
-            zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
-            data = zoomStr.split("<td role=\"gridcell\">");
-            if(data.length == 2)
-                details.roomCode = data[1];
-            else details.roomCode = "Aucun enregistrement";
 
+        // Check validity
+        to = "</tbody>";
+        endFromIndex = s.indexOf(from) + from.length();
+        zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
+        if(zoomStr.contains("Aucun enregistrement"))
+        {
+            details.roomCode = "Aucun enregistrement";
         }
-        else details.roomCode = "Aucun enregistrement";
+        else
+        {
+            to = "</td><td role=\"gridcell\">";
+            endFromIndex = s.indexOf(from) + from.length();
+            if(s.contains(from)) {
+                zoomStr = s.substring(endFromIndex, s.indexOf(to, endFromIndex));
+                data = zoomStr.split("<td role=\"gridcell\">");
+                if(data.length == 2)
+                    details.roomCode = data[1];
+                else details.roomCode = "Aucun enregistrement";
+
+            }
+            else details.roomCode = "Aucun enregistrement";
+        }
 
         // ROOM
         if(details.roomCode != "Aucun enregistrement") {

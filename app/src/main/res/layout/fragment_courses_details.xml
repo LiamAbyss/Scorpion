@@ -242,11 +242,13 @@
 
         <TextView
             android:id="@+id/coursesDetailsRoomTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_detail_padding"
+            android:layout_marginEnd="@dimen/course_list_item_right_padding"
             android:text="TextView"
-            android:textColor="@color/colorContrast"
+            app:layout_constraintBottom_toBottomOf="@+id/textView28"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textView28"
             app:layout_constraintTop_toTopOf="@+id/textView28" />
 

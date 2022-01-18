@@ -22,7 +22,7 @@
             android:id="@+id/container"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+            app:layout_constraintBottom_toTopOf="@+id/buttonsConstraintLayout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,40 +32,39 @@
         </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout2"
+            android:id="@+id/buttonsConstraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:elevation="5dp"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary"
+            android:elevation="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/toTheLeftButton"
                 android:layout_width="84dp"
-                android:layout_height="0dp"
-                android:background="@drawable/button"
+                android:layout_height="match_parent"
                 android:padding="@dimen/navigation_button_width"
-                android:src="@drawable/ic_west_black_24dp"
                 android:text="@string/toTheLeft"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintBottom_toBottomOf="@+id/todaybutton"
+                android:theme="@style/AppTheme"
+                app:icon="@drawable/ic_west_white_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/todaybutton" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/todaybutton"
-                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/button_separator"
                 android:layout_marginEnd="@dimen/button_separator"
-                android:background="@drawable/button"
-                android:elevation="10dp"
+                android:fontFamily="sans-serif-smallcaps"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/todayButton"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/toTheRightButton"
@@ -73,15 +72,36 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <ImageButton
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/toTheRightButton"
                 android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:background="@drawable/button"
+                android:layout_height="match_parent"
                 android:padding="@dimen/navigation_button_width"
-                android:src="@drawable/ic_east_black_24dp"
-                app:layout_constraintBottom_toBottomOf="@+id/todaybutton"
+                android:paddingBottom="0dp"
+                android:theme="@style/AppTheme"
+                app:icon="@drawable/ic_east_white_24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/buttonsDividerLeft"
+                android:layout_width="2dp"
+                android:layout_height="48dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/todaybutton"
+                app:layout_constraintStart_toEndOf="@+id/toTheLeftButton"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/buttonsDividerRight"
+                android:layout_width="2dp"
+                android:layout_height="48dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/toTheRightButton"
+                app:layout_constraintStart_toEndOf="@+id/todaybutton"
                 app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -108,10 +128,10 @@
                 android:layout_height="1dp"
                 android:layout_marginBottom="@dimen/list_padding"
                 android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toTopOf="@+id/textView8" />
+                app:layout_constraintBottom_toTopOf="@+id/versionTextView" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/versionTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/list_padding"
@@ -123,14 +143,14 @@
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/versionNumberTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/list_padding"
                 android:text="@string/app_version"
                 android:textColor="@android:color/tertiary_text_light"
-                app:layout_constraintEnd_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toTopOf="@+id/textView8" />
+                app:layout_constraintEnd_toEndOf="@+id/versionTextView"
+                app:layout_constraintTop_toTopOf="@+id/versionTextView" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.navigation.NavigationView>

@@ -14,23 +14,35 @@
         android:layout_marginEnd="@dimen/login_panel_right_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/AppTheme">
 
-        <EditText
-            android:id="@+id/loginEditText"
-            android:layout_width="0dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/loginTextInputLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/login_item_left_padding"
-            android:layout_marginTop="@dimen/login_item_top_padding"
-            android:layout_marginEnd="@dimen/login_item_right_padding"
-            android:ems="10"
-            android:hint="@string/loginHint"
-            android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/loginEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/login_item_left_padding"
+                android:layout_marginTop="@dimen/login_item_top_padding"
+                android:layout_marginEnd="@dimen/login_item_right_padding"
+                android:ems="10"
+                android:hint="@string/loginHint"
+                android:inputType="textPersonName"
+                android:theme="@style/AppTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/passwordEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,7 +54,8 @@
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/loginEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/loginTextInputLayout"
+            android:theme="@style/AppTheme"/>
 
         <Button
             android:id="@+id/button"

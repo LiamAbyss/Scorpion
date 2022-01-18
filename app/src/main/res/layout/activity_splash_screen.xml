@@ -7,6 +7,7 @@
     android:background="@color/colorPrimaryDark">
 
     <TextView
+        android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/login_item_left_padding"
@@ -18,7 +19,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
+    <com.jaredrummler.android.widget.AnimatedSvgView
+        android:id="@+id/animated_svg_view"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        app:animatedSvgTraceMarkerLength="50"
+        app:animatedSvgFillColors="@array/scorpion_glyph_colors"
+        app:animatedSvgFillStart="850"
+        app:animatedSvgFillTime="500"
+        app:animatedSvgGlyphStrings="@array/scorpion_glyph_strings"
+        app:animatedSvgImageSizeX="1392"
+        app:animatedSvgImageSizeY="1219"
+        app:animatedSvgTraceTime="1125"
+        app:animatedSvgTraceTimePerGlyph="1400"
+        app:layout_constraintBottom_toTopOf="@+id/textView13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--<ImageView
         android:id="@+id/imageView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -33,5 +53,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@mipmap/ic_launcher_foreground" />
+        app:srcCompat="@mipmap/ic_launcher_foreground" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

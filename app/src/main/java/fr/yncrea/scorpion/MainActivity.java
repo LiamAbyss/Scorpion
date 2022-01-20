@@ -31,6 +31,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.gson.JsonArray;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -339,6 +340,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 recyclerView.setAdapter(adapter);
 
                 // STUDENTS
+                ((TextView) view.findViewById(R.id.textView33)).setText(MessageFormat.format("{0} ({1})", getString(R.string.students), String.valueOf(details.students.size())));
                 recyclerView = (RecyclerView) view.findViewById(R.id.coursesDetailsStudentsRecyclerView);
 
                 layoutManager = new LinearLayoutManager(dialog.getContext());

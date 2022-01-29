@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,7 @@ import fr.yncrea.scorpion.api.GithubService;
 import fr.yncrea.scorpion.database.ScorpionDatabase;
 import fr.yncrea.scorpion.model.AurionResponse;
 import fr.yncrea.scorpion.model.CourseDetails;
+import fr.yncrea.scorpion.model.Person;
 import fr.yncrea.scorpion.model.Planning;
 import fr.yncrea.scorpion.ui.fragments.CoursesFragment;
 import fr.yncrea.scorpion.utils.PreferenceUtils;
@@ -306,7 +309,11 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
             final CourseDetails details = new CourseDetails(tmpDetails);
 
             runOnUiThread(() -> {
-                AlertDialog dialog = new AlertDialog.Builder(this).create();
+                AlertDialog dialog = new AlertDialog.Builder(new ContextThemeWrapper(this, R.style.AlertDialogCustom)).create();
+                PersonListAdapter adapter;
+                RecyclerView recyclerView;
+                LinearLayoutManager layoutManager = new LinearLayoutManager(dialog.getContext());
+
 
                 View view = getLayoutInflater().inflate(R.layout.fragment_courses_details, null);
 
@@ -318,26 +325,26 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 if (details.examStatus.isEmpty()) details.examStatus = "Aucun enregistrement";
                 if (details.room.isEmpty()) details.room = "Aucun enregistrement";
 
-                ((TextView) view.findViewById(R.id.coursesDetailsDateTextView)).setText(details.longDate);
-                ((TextView) view.findViewById(R.id.coursesDetailsStartTextView)).setText(details.timeStart);
-                ((TextView) view.findViewById(R.id.coursesDetailsEndTextView)).setText(details.timeEnd);
-                ((TextView) view.findViewById(R.id.coursesDetailsStatusTextView)).setText(details.status);
-                ((TextView) view.findViewById(R.id.coursesDetailsTopicTextView)).setText(details.topic);
                 ((TextView) view.findViewById(R.id.coursesDetailsTypeTextView)).setText(details.type);
                 ((TextView) view.findViewById(R.id.coursesDetailsDescriptionTextView)).setText(details.description);
                 ((TextView) view.findViewById(R.id.coursesDetailsIsExamTextView)).setText(details.examStatus);
-                ((TextView) view.findViewById(R.id.coursesDetailsRoomTextView)).setText(details.room);
                 ((TextView) view.findViewById(R.id.coursesDetailsCourseTextView)).setText(details.course);
 
                 // TEACHERS
-                RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.coursesDetailsTeachersRecyclerView);
+                if(details.teachers.size() <= 1){
+                    // don't show teachers list if it is redundant
+                    view.findViewById(R.id.textView32).setVisibility(View.GONE);
+                    view.findViewById(R.id.teachersScrollView).setVisibility(View.GONE);
+                }
+                else{
+                    recyclerView = (RecyclerView) view.findViewById(R.id.coursesDetailsTeachersRecyclerView);
 
-                LinearLayoutManager layoutManager = new LinearLayoutManager(dialog.getContext());
-                layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                recyclerView.setLayoutManager(layoutManager);
+                    layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                    recyclerView.setLayoutManager(layoutManager);
 
-                PersonListAdapter adapter = new PersonListAdapter(details.teachers);
-                recyclerView.setAdapter(adapter);
+                    adapter = new PersonListAdapter(details.teachers);
+                    recyclerView.setAdapter(adapter);
+                }
 
                 // STUDENTS
                 ((TextView) view.findViewById(R.id.textView33)).setText(MessageFormat.format("{0} ({1})", getString(R.string.students), String.valueOf(details.students.size())));
@@ -347,13 +354,19 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(layoutManager);
 
+                // Add empty student to end of list for readability
+                details.students.add(new Person(" ", " "));
+
                 adapter = new PersonListAdapter(details.students);
                 recyclerView.setAdapter(adapter);
 
                 dialog.setView(view);
-                dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Close", (dialogInterface, which) -> {
+                view.findViewById(R.id.detailsExitActionButton).setOnClickListener(v -> {
+                    dialog.dismiss();
                 });
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.show();
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             });
         });
     }

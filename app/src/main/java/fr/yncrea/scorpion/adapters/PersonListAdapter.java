@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import fr.yncrea.scorpion.R;
@@ -33,7 +34,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.Pe
         if(mPersonList.get(position) != null) {
             Person person = mPersonList.get(position);
 
-            holder.firstName.setText(person.firstName + " " + person.lastName);
+            holder.firstName.setText(MessageFormat.format("{0} {1}", person.lastName, person.firstName));
         }
     }
 

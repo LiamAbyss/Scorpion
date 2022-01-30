@@ -9,7 +9,14 @@
         <item name="textInputStyle">@style/AppTextField</item>
         <item name="materialButtonStyle">@style/textButtonStyle</item>
     </style>
-
+        
+    <style name="AlertDialogCustom" parent="@android:style/Theme.Dialog">
+        <item name="colorPrimary">@color/colorPrimaryDark</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    
     <style name="textButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="backgroundTint">@color/colorPrimary</item>
         <item name="iconTint">@color/white</item>

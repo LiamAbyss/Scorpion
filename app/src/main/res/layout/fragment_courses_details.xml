@@ -15,22 +15,24 @@
         android:layout_marginEnd="@dimen/course_padding"
         android:background="@drawable/white_round_corners_background"
         android:elevation="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/detailsInfoConstraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <TextView
             android:id="@+id/coursesDetailsCourseTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/course_padding"
+            android:layout_marginTop="@dimen/course_padding"
             android:layout_marginEnd="@dimen/course_padding"
+            android:layout_marginBottom="@dimen/course_padding"
             android:gravity="center_horizontal"
             android:text="@string/course"
             android:textColor="@color/colorContrast"
             android:textStyle="bold"
-            android:layout_marginTop="@dimen/course_padding"
-            android:layout_marginBottom="@dimen/course_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,18 +42,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/detailsInfoConstraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/course_padding"
         android:layout_marginTop="@dimen/course_padding"
         android:layout_marginEnd="@dimen/course_padding"
-        android:layout_marginBottom="@dimen/course_padding"
         android:background="@drawable/white_round_corners_background"
         android:elevation="5dp"
-        app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@id/detailsTopGuideline"
+        app:layout_constrainedHeight="false"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailsTitleConstraintLayout">
+        app:layout_constraintTop_toBottomOf="@id/detailsTitleConstraintLayout">
 
         <TextView
             android:id="@+id/textView20"
@@ -108,6 +108,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/course_padding"
             android:layout_marginEnd="@dimen/course_padding"
+            android:maxLines="3"
+            android:scrollbars="vertical"
             android:text="TextView"
             android:textColor="@color/colorContrast"
             app:layout_constraintEnd_toEndOf="parent"
@@ -126,15 +128,6 @@
             app:layout_constraintTop_toTopOf="@+id/textView22" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/detailsTopGuideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.25"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/detailsParticipantsConstraintLayout"
         android:layout_width="match_parent"
@@ -142,13 +135,14 @@
         android:layout_marginStart="@dimen/course_padding"
         android:layout_marginTop="@dimen/course_padding"
         android:layout_marginEnd="@dimen/course_padding"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:background="@drawable/white_round_corners_background"
         android:elevation="5dp"
         app:layout_constrainedHeight="true"
-        app:layout_constraintBottom_toTopOf="@id/detailsBottomGuideline"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailsTopGuideline">
+        app:layout_constraintTop_toBottomOf="@id/detailsInfoConstraintLayout">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -191,6 +185,7 @@
             android:layout_marginTop="@dimen/course_padding"
             android:layout_marginEnd="@dimen/course_padding"
             android:layout_marginBottom="@dimen/course_padding"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -243,15 +238,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/detailsBottomGuideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.95"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/detailsExitActionButton"
         android:layout_width="wrap_content"
@@ -264,12 +250,12 @@
         android:longClickable="false"
         android:scaleX=".8"
         android:scaleY=".8"
+        android:translationY="5dp"
         app:backgroundTint="@color/colorPrimaryDark"
         app:elevation="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.98"
         app:srcCompat="@drawable/close_white_24dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

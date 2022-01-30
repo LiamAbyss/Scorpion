@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.GestureDetector;
@@ -329,6 +330,9 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                 ((TextView) view.findViewById(R.id.coursesDetailsDescriptionTextView)).setText(details.description);
                 ((TextView) view.findViewById(R.id.coursesDetailsIsExamTextView)).setText(details.examStatus);
                 ((TextView) view.findViewById(R.id.coursesDetailsCourseTextView)).setText(details.course);
+
+                // Make description text view scrollable
+                ((TextView) view.findViewById(R.id.coursesDetailsDescriptionTextView)).setMovementMethod(new ScrollingMovementMethod());
 
                 // TEACHERS
                 if(details.teachers.size() <= 1){

@@ -1,6 +1,7 @@
 package fr.yncrea.scorpion;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -54,6 +55,7 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
     public int clickedItem;
+    private AlertDialog updateDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +118,12 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
         });
     }
 
+    @Override
+    protected void onStop() {
+        if (updateDialog != null) updateDialog.dismiss();
+        super.onStop();
+    }
+
     public void tryRequestUpdate() {
         mExecutorGit.execute(() -> {
             Long lastTime = PreferenceUtils.getUpdateTime();
@@ -135,21 +143,23 @@ public class GradesActivity extends AppCompatActivity implements NavigationView.
                 if(!latestVersion.equals(getString(R.string.app_version))) {
                     String latestVersionDesc = releases.body().get(0).getAsJsonObject().get("body").getAsString();
                     //String latestVersionLink = releases.body().get(0).getAsJsonObject().get("assets").getAsJsonArray().get(0).getAsJsonObject().get("browser_download_url").getAsString();
-                    runOnUiThread(() -> new AlertDialog.Builder(this)
-                            .setTitle("Update available !")
-                            .setMessage("A new version of Scorpion is available !\n\n"
-                                    + "Version : " + latestVersion + "\n\n"
-                                    + "Description : \n" + latestVersionDesc)
-                            .setPositiveButton("Update now", (dialog, which) -> {
-                                try {
-                                    Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
-                                    startActivity(myIntent);
-                                } catch (ActivityNotFoundException e) {
-                                    //runOnUiThread(() -> showToast(this, "No application can handle this request." + " Please install a web browser",  Toast.LENGTH_LONG));
-                                    e.printStackTrace();
-                                }
-                            })
-                            .setNegativeButton("Maybe later", null).show());
+                    runOnUiThread(() -> {
+                        updateDialog = new AlertDialog.Builder(this)
+                                .setTitle("Update available !")
+                                .setMessage("A new version of Scorpion is available !\n\n"
+                                        + "Version : " + latestVersion + "\n\n"
+                                        + "Description : \n" + latestVersionDesc)
+                                .setPositiveButton("Update now", (dialog, which) -> {
+                                    try {
+                                        Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://liamabyss.github.io/Scorpion/"));
+                                        startActivity(myIntent);
+                                    } catch (ActivityNotFoundException e) {
+                                        //runOnUiThread(() -> showToast(this, "No application can handle this request." + " Please install a web browser",  Toast.LENGTH_LONG));
+                                        e.printStackTrace();
+                                    }
+                                })
+                                .setNegativeButton("Maybe later", null).show();
+                    });
                 }
             } catch (IOException e) {
                 e.printStackTrace();

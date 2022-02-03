@@ -1,7 +1,7 @@
 <resources>
     <!-- APP PARAMETERS -->
     <string name="app_name">Scorpion</string>
-    <string name="app_version">v0.5.2.1-beta</string>
+    <string name="app_version">v0.5.2.2-beta</string>
     <string name="update_timeout">3600000</string>
     <string name="must_reset_id">sgN3rGJabcwifX63IhbV</string>
     <string name="eula_id">bgH2mOKrOvTgdEpqSY0M</string>

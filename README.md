@@ -51,9 +51,9 @@ Votre navigateur vous demandera sans doute une autorisation pour installer l'app
 
 ## Planning
 
-- Accès au détail des cours
+- Accès au détail des cours (Fait)
 - Pré-chargement des semaines pour fluidifier l'application
-- Amélioration de l'affichage, pour le moment très limité par **Aurion**
+- Amélioration de l'affichage, pour le moment très limité par **Aurion** (Fait)
 
 ## Notes
 

@@ -692,7 +692,7 @@ public class MainActivity extends AppCompatActivity implements GestureDetector.O
                             NotificationUtils.TYPE.COURSE_NOTIFICATION,
                             course.course,
                             "Salle : " + course.room + "\nDate : " + course.longDate + "\n" + course.timeStart + " => " + course.timeEnd,
-                            /*System.currentTimeMillis() + 5000 + i * 3000*/date.getTime() - (1000 * 60 * 60)
+                            System.currentTimeMillis() + 5000 + i * 3000/*date.getTime() - (1000 * 60 * 60)*/
                     ).commit();
 
                     new ScorpionNotification(

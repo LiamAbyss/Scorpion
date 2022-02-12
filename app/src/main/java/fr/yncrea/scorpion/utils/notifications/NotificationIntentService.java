@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -34,8 +35,8 @@ public class NotificationIntentService extends Service {
     }
 
 
-    private void startMyOwnForeground()
-    {
+    private void startMyOwnForeground() {
+        Log.d("NOTIF", "Foreground started");
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O && manager.getNotificationChannel(CHANNEL_ID) == null) {
             NotificationChannel chan = new NotificationChannel(CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH);
@@ -58,11 +59,12 @@ public class NotificationIntentService extends Service {
                 .setAutoCancel(true);
 
         Notification notification = builder.build();
+        Log.d("NOTIF", "Notification built");
 
         // Prevent most crashes
         startForeground(id, new NotificationCompat.Builder(this, CHANNEL_ID).build());
         stopForeground(true);
-
+        stopSelf();
 
         manager.notify(id, notification);
         /*startForeground(id, notification);
